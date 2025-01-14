@@ -1,24 +1,19 @@
 const express = require('express');
-const cors = require('cors'); 
+const cors = require('cors');
 const app = express();
+const connectDB = require('./db');
+const userRouter = require('./routes/users');
 
 const corsOptions = {
-  origin: 'http://localhost:3000',  
-  methods: ['GET', 'POST'],  
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST'],
 };
 
-app.use(cors(corsOptions)); 
-app.use(express.json());  
+app.use(cors(corsOptions));
+app.use(express.json()); 
+connectDB();
 
-app.post('/api/users', (req, res) => {
-  const { username, email } = req.body;
-  console.log(`User created: ${username}, ${email}`);
-  
-  res.status(201).json({
-    message: 'User created successfully',
-    user: { username, email }
-  });
-});
+app.use('/api', userRouter); 
 
 const PORT = 5000;
 app.listen(PORT, () => {

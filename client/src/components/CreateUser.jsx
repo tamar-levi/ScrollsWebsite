@@ -5,11 +5,11 @@ import { TextField, Button, Container, Box, Dialog, DialogActions, DialogContent
 // קומפוננטת כפתורים לפתיחה של חלוניות
 const ActionButtons = ({ onOpenCreateUser, onOpenLogin }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}>
       <Button variant="contained" color="primary" onClick={onOpenCreateUser}>
         יצירת משתמש
       </Button>
-      <Button variant="contained" color="secondary" onClick={onOpenLogin}>
+      <Button variant="contained" color="primary" onClick={onOpenLogin}>
         התחברות
       </Button>
     </Box>
@@ -42,7 +42,19 @@ const CreateUser = () => {
         city,
         password
       });
+      const token = response.data.token;
+      console.log('Received token:', token);
+      document.cookie = `authToken=${token}; path=/; secure; HttpOnly`;
       console.log('User created:', response.data);
+      handleCloseCreateUserDialog();
+      setFullName('');
+      setDisplayName('');
+      setPhone('');
+      setAdditionalPhone('');
+      setEmail('');
+      setCity('');
+      setPassword('');
+
     } catch (error) {
       console.error('Error creating user:', error);
     }
@@ -57,6 +69,9 @@ const CreateUser = () => {
         password: loginPassword
       });
       console.log('Login successful:', response.data);
+      handleCloseLoginDialog();
+      setLoginUsername('');
+      setLoginPassword('');
     } catch (error) {
       console.error('Error logging in:', error);
     }
@@ -86,16 +101,16 @@ const CreateUser = () => {
       <Dialog open={openCreateUserDialog} onClose={handleCloseCreateUserDialog}>
         <DialogTitle>יצירת משתמש</DialogTitle>
         <DialogContent sx={{ direction: 'rtl' }}>
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              backgroundColor: 'background.paper', 
-              borderRadius: 2, 
-              boxShadow: 3, 
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'background.paper',
+              borderRadius: 2,
+              boxShadow: 3,
               padding: 2,
-              width: '300px' 
+              width: '300px'
             }}
           >
             <form onSubmit={handleCreateUserSubmit} style={{ width: '100%' }}>
@@ -106,7 +121,7 @@ const CreateUser = () => {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                sx={{ mb: 1, fontSize: '0.875rem' }} 
+                sx={{ mb: 1, fontSize: '0.875rem' }}
               />
               <TextField
                 label="שם תצוגה"
@@ -145,7 +160,6 @@ const CreateUser = () => {
                 required
                 type="email"
                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                helperText="אנא הזן כתובת אימייל תקינה"
                 sx={{ mb: 1, fontSize: '0.875rem' }}
               />
               <TextField
@@ -168,7 +182,7 @@ const CreateUser = () => {
                 sx={{ mb: 2, fontSize: '0.875rem' }}
               />
               <DialogActions>
-                <Button onClick={handleCloseCreateUserDialog} color="secondary">
+                <Button onClick={handleCloseCreateUserDialog} color="primary">
                   סגור
                 </Button>
                 <Button type="submit" variant="contained" color="primary">
@@ -184,16 +198,16 @@ const CreateUser = () => {
       <Dialog open={openLoginDialog} onClose={handleCloseLoginDialog}>
         <DialogTitle>התחברות</DialogTitle>
         <DialogContent sx={{ direction: 'rtl' }}>
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              backgroundColor: 'background.paper', 
-              borderRadius: 2, 
-              boxShadow: 3, 
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: 'background.paper',
+              borderRadius: 2,
+              boxShadow: 3,
               padding: 2,
-              width: '300px' 
+              width: '300px'
             }}
           >
             <form onSubmit={handleLoginSubmit} style={{ width: '100%' }}>
@@ -217,7 +231,7 @@ const CreateUser = () => {
                 sx={{ mb: 1, fontSize: '0.875rem' }}
               />
               <DialogActions>
-                <Button onClick={handleCloseLoginDialog} color="secondary">
+                <Button onClick={handleCloseLoginDialog} color="primary">
                   סגור
                 </Button>
                 <Button type="submit" variant="contained" color="primary">
