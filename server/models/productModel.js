@@ -30,6 +30,11 @@ const productSchema = new mongoose.Schema({
     isPremiumAd: {
         type: Boolean,
         default: false 
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true 
     }
 })
 

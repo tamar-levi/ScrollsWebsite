@@ -1,5 +1,6 @@
 const Product = require('../models/productModel'); 
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const getAllProducts = async (req, res) => {
     try {
@@ -45,29 +46,60 @@ const getAllProductsByUser = async (req, res) => {
 };
 
 const updateProductsDetails = async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    console.log('Update request received');
+    console.log('ID:', id);
+    console.log('Updates:', updates);
+
     try {
-        const userId = req.user.id; 
-        const productId = req.params.id; 
-        const updates = req.body; 
-
-        const product = await Product.findById(productId);
-
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+        if (!id) {
+            console.error('ID is missing');
+            return res.status(400).send('ID is required');
         }
 
-        if (product.userId.toString() !== userId) {
-            return res.status(403).json({ message: 'You are not authorized to update this product' });
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            console.error('Invalid ID format:', id);
+            return res.status(400).send('Invalid ID format');
         }
 
-        const updatedProduct = await Product.findByIdAndUpdate(productId, updates, { new: true });
+        console.log('ID is valid');
 
-        res.json({ message: 'Product updated successfully', product: updatedProduct });
+        const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true });
+
+        if (!updatedProduct) {
+            console.error('Product not found for ID:', id);
+            return res.status(404).send('Product not found');
+        }
+
+        console.log('Product updated successfully:', updatedProduct);
+
+        res.json({
+            message: 'Product updated successfully',
+            product: updatedProduct
+        });
     } catch (err) {
-        console.error('Error updating product', err);
-        res.status(500).send('Database error');
+        console.error('Error updating product:', err.message);
+        console.error('Stack trace:', err.stack);
+        res.status(500).send('Server error');
     }
 };
 
 
-module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser};
+const deleteProduct = async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(id); 
+        if (!deletedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.json({ message: 'Product deleted successfully', product: deletedProduct });
+    } catch (err) {
+        console.error('Error deleting product', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct};

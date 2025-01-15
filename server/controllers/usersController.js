@@ -3,6 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 const bcrypt = require('bcryptjs');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 
 const getAllUsers = async (req, res) => {
@@ -40,6 +41,7 @@ const addUser = async (req, res) => {
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+        await sendWelcomeEmail(email, fullName);
 
         res.json({
             message: 'User created successfully',
@@ -50,7 +52,6 @@ const addUser = async (req, res) => {
         res.status(500).send('Database error');
     }
 };
-
 
 const updateUserDetails = async (req, res) => {
     try {
