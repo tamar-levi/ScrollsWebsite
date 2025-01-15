@@ -3,7 +3,9 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 const bcrypt = require('bcryptjs');
-const { sendWelcomeEmail } = require('../services/emailService');
+// const { sendWelcomeEmail } = require('../services/emailService');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 const getAllUsers = async (req, res) => {
@@ -41,7 +43,7 @@ const addUser = async (req, res) => {
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        await sendWelcomeEmail(email, fullName);
+        // await sendWelcomeEmail(email, fullName);
 
         res.json({
             message: 'User created successfully',
@@ -112,4 +114,43 @@ const deleteUser = async (req, res) => {
     }
 };
 
-module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser };
+const handleGoogleLogin = async (req, res) => {
+    const { googleToken } = req.body;
+    
+    try {
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                Authorization: `Bearer ${googleToken}`
+            }
+        });
+        
+        const googleUserInfo = await response.json();
+        
+        let user = await User.findOne({ email: googleUserInfo.email });
+        if (!user) {
+            user = await User.create({
+                email: googleUserInfo.email,
+                fullName: googleUserInfo.name,
+                displayName: googleUserInfo.given_name,
+                phoneNumber: 0,  // מספר במקום מחרוזת
+                city: 'לא צוין',
+                isSeller: false,
+                password: require('crypto').randomBytes(16).toString('hex')
+            });
+        }
+        
+        const payload = { id: user._id, email: user.email };
+        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+        
+        res.json({
+            message: 'Google login successful',
+            token
+        });
+    } catch (err) {
+        console.error('Google login error:', err);
+        res.status(500).send('Server error');
+    }
+};
+
+
+module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin };

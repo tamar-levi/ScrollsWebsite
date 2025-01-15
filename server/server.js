@@ -10,6 +10,12 @@ const corsOptions = {
   methods: ['GET', 'POST'],
 };
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://googleapis.com https://apis.google.com; script-src-elem 'self' https://apis.google.com; object-src 'none';");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+});
+
 app.use(cors(corsOptions));
 app.use(express.json()); 
 connectDB();

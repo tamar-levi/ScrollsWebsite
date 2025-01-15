@@ -1,12 +1,13 @@
 import React from 'react';
-import CreateUser from './components/CreateUser'; 
+import GoogleAuth from './components/GoogleAuth';
 
 function App() {
   return (
     <div className="App">
-      <CreateUser />  {}
+      <GoogleAuth />
     </div>
   );
 }
 
 export default App;
+
