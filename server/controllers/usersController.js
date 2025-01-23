@@ -48,6 +48,7 @@ const addUser = async (req, res) => {
         res.json({
             message: 'User created successfully',
             token: token,
+            user: newUser
         });
     } catch (err) {
         console.error('Error creating user', err);
@@ -91,6 +92,7 @@ const loginUser = async (req, res) => {
         res.json({
             message: 'Login successful',
             token: token,
+            user: user
         });
     } catch (err) {
         console.error('Error logging in', err);
@@ -132,7 +134,7 @@ const handleGoogleLogin = async (req, res) => {
                 email: googleUserInfo.email,
                 fullName: googleUserInfo.name,
                 displayName: googleUserInfo.given_name,
-                phoneNumber: 0,  // מספר במקום מחרוזת
+                phoneNumber: 0,
                 city: 'לא צוין',
                 isSeller: false,
                 password: require('crypto').randomBytes(16).toString('hex')
@@ -144,7 +146,8 @@ const handleGoogleLogin = async (req, res) => {
         
         res.json({
             message: 'Google login successful',
-            token
+            token,
+            user: user
         });
     } catch (err) {
         console.error('Google login error:', err);
