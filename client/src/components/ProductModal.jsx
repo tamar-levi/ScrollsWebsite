@@ -24,8 +24,8 @@ const ProductModal = ({ product, onClose }) => {
     fontWeight: 500,
     '& .MuiButton-endIcon': {
       marginRight: '4px',
-      marginLeft: '-4px'
-    }
+      marginLeft: '-4px',
+    },
   };
 
   const handleSellerDetailsClick = () => {
@@ -38,23 +38,12 @@ const ProductModal = ({ product, onClose }) => {
 
   return (
     <>
-      <Dialog
-        open={true}
-        onClose={onClose}
-        maxWidth="sm"
-        fullWidth
-        dir="rtl"
-      >
+      <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth dir="rtl">
         <DialogTitle sx={{ textAlign: 'right' }}>
           {product.title}
         </DialogTitle>
         <DialogContent>
-          <Box
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            sx={{ textAlign: 'right' }}
-          >
+          <Box display="flex" flexDirection="column" gap={2} sx={{ textAlign: 'right' }}>
             <ImageSlider images={[product.primaryImage, ...product.additionalImages]} />
             <Typography variant="body1" paragraph>
               {product.note}
@@ -71,30 +60,15 @@ const ProductModal = ({ product, onClose }) => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ padding: 2, gap: 2 }}>
-          <Button
-            variant="outlined"
-            sx={{ ...buttonStyle }}
-            endIcon={<PersonIcon />}
-            onClick={handleSellerDetailsClick}
-          >
+          <Button variant="outlined" sx={{ ...buttonStyle }} endIcon={<PersonIcon />} onClick={handleSellerDetailsClick}>
             פרטי המוכר
           </Button>
-          <Button
-            onClick={onClose}
-            variant="outlined"
-            sx={{ ...buttonStyle }}
-            endIcon={<CloseIcon />}
-          >
+          <Button onClick={onClose} variant="outlined" sx={{ ...buttonStyle }} endIcon={<CloseIcon />}>
             סגור
           </Button>
         </DialogActions>
       </Dialog>
-
-      <SellerDetailsModal
-        sellerId={product.userId}
-        isOpen={isSellerModalOpen}
-        onClose={handleSellerModalClose}
-      />
+      <SellerDetailsModal sellerId={product.userId} isOpen={isSellerModalOpen} onClose={handleSellerModalClose} />
     </>
   );
 };

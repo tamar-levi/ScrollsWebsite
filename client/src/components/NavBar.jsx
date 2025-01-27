@@ -8,6 +8,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountMenu from './AccountMenu';
 import { useTheme } from '@mui/material/styles';
+import { Link } from 'react-router-dom'; // הוספת ייבוא של Link מ- react-router-dom
 
 export default function NavBar({ user }) {
   const theme = useTheme();
@@ -33,10 +34,10 @@ export default function NavBar({ user }) {
       <Toolbar>
         <AccountMenu user={user} color={theme.palette.primary.main} />
         <Box sx={{ flexGrow: 1 }} />
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-          <Button 
-            sx={{ 
+          <Button
+            sx={{
               color: theme.palette.primary.main,
               fontFamily: 'Rubik, sans-serif',
               fontSize: '1rem',
@@ -45,11 +46,14 @@ export default function NavBar({ user }) {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
+          // component={Link} // שינוי לכפתור קישור
+          // to="/contact" // קישור לעמוד צור קשר
           >
             צור קשר
           </Button>
-          <Button 
-            sx={{ 
+
+          <Button
+            sx={{
               color: theme.palette.primary.main,
               fontFamily: 'Rubik, sans-serif',
               fontSize: '1rem',
@@ -58,13 +62,15 @@ export default function NavBar({ user }) {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
+            component={Link} 
+            to="/about" 
           >
             אודות
           </Button>
-          
-          <Button 
+
+          <Button
             onMouseEnter={handleMouseEnter}
-            sx={{ 
+            sx={{
               color: theme.palette.primary.main,
               fontFamily: 'Rubik, sans-serif',
               fontSize: '1rem',
@@ -73,40 +79,14 @@ export default function NavBar({ user }) {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
+            component={Link}
+            to="/products"
           >
             מוצרים
           </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            MenuListProps={{ 
-              onMouseLeave: handleClose,
-              sx: { direction: 'rtl' }
-            }}
-            sx={{ 
-              '& .MuiPaper-root': {
-                marginTop: '8px',
-                minWidth: '150px'
-              }
-            }}
-          >
-            {productCategories.map((category) => (
-              <MenuItem 
-                key={category}
-                onClick={handleClose}
-                sx={{ 
-                  fontFamily: 'Rubik, sans-serif',
-                  fontSize: '0.9rem',
-                }}
-              >
-                {category}
-              </MenuItem>
-            ))}
-          </Menu>
 
-          <Button 
-            sx={{ 
+          <Button
+            sx={{
               color: theme.palette.primary.main,
               fontFamily: 'Rubik, sans-serif',
               fontSize: '1rem',
@@ -115,13 +95,15 @@ export default function NavBar({ user }) {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
+            component={Link} 
+            to="/" 
           >
             בית
           </Button>
-          
-          <Typography 
-            variant="h6" 
-            sx={{ 
+
+          <Typography
+            variant="h6"
+            sx={{
               color: theme.palette.primary.main,
               fontFamily: 'Rubik, sans-serif',
               fontWeight: 500

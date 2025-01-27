@@ -2,34 +2,32 @@ import React, { useState } from 'react';
 import imageCompression from 'browser-image-compression';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
-    Container,
+    Box,
     TextField,
     Button,
     Checkbox,
     FormControlLabel,
     CircularProgress,
-    Box,
-    Typography,
     Grid,
-    Select,
-    MenuItem,
     InputLabel,
     FormControl,
-    LinearProgress
+    Select,
+    MenuItem,
+    Alert,
 } from '@mui/material';
 
-const AddProduct = () => {
-    const [formData, setFormData] = useState({
-        scriptType: '',
-        scrollType: '',
-        price: '',
-        primaryImage: null,
-        additionalImages: [],
-        note: '',
-        isPremiumAd: true,
-    });
 
-    const [uploadProgress, setUploadProgress] = useState(0);
+const AddProduct = ({ onNext, onFormSubmit, productData }) => {
+    const [formData, setFormData] = useState({
+        scriptType: productData ? productData.scriptType : '',
+        scrollType: productData ? productData.scrollType : '',
+        price: productData ? productData.price : '',
+        primaryImage: productData ? productData.primaryImage : null,
+        additionalImages: productData ? productData.additionalImages : [],
+        note: productData ? productData.note : '',
+        isPremiumAd: productData ? productData.isPremiumAd : false,
+    });
+    const [showAlert, setShowAlert] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
     const compressionOptions = {
@@ -46,7 +44,7 @@ const AddProduct = () => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value,
+            [name]: type === 'checkbox' || type === 'radio' ? checked : value,
         }));
     };
 
@@ -61,211 +59,254 @@ const AddProduct = () => {
     };
 
     const handleAdditionalImagesChange = async (e) => {
-        const files = Array.from(e.target.files); // המרת הקבצים למערך
+        const files = Array.from(e.target.files);
         const compressedImages = await Promise.all(
-          files.map((file) => compressImage(file)) // כיווץ התמונות
+            files.map((file) => compressImage(file))
         );
         setFormData((prev) => ({
-          ...prev,
-          additionalImages: [...prev.additionalImages, ...compressedImages], // הוספת התמונות החדשות למערך
+            ...prev,
+            additionalImages: [...prev.additionalImages, ...compressedImages],
         }));
-      };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsUploading(true);
-
-        const data = new FormData();
-        data.append('scriptType', formData.scriptType);
-        data.append('scrollType', formData.scrollType);
-        data.append('price', formData.price);
-        data.append('note', formData.note);
-        data.append('isPremiumAd', formData.isPremiumAd);
-
-        if (formData.primaryImage) {
-            data.append('primaryImage', formData.primaryImage);
+        if (!formData.primaryImage || !formData.scriptType || !formData.scrollType || !formData.price) {
+            setShowAlert(true);
+            return;
         }
-
-        formData.additionalImages.forEach(image => {
-            data.append('additionalImages', image);
-        });
-
-        try {
-            const response = await fetch('http://localhost:5000/productsApi/addProduct', {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                },
-                body: data,
-                onUploadProgress: (progressEvent) => {
-                    const percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
-                    setUploadProgress(percentCompleted);
-                }
-            });
-
-            if (response.ok) {
-                alert('המוצר נוסף בהצלחה!');
-                setFormData({
-                    scriptType: '',
-                    scrollType: '',
-                    price: '',
-                    primaryImage: null,
-                    additionalImages: [],
-                    note: '',
-                    isPremiumAd: true,
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        } finally {
-            setIsUploading(false);
-            setUploadProgress(0);
-        }
+        onNext();
+        console.log("Form data before sending:", formData);
+        onFormSubmit(formData);
     };
 
     return (
-        <Container maxWidth="sm" style={{ marginTop: '20px' }}>
-            <Typography variant="h4" gutterBottom>
-                הוספת מוצר חדש
-            </Typography>
-
-            <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>סוג כתב</InputLabel>
-                            <Select
-                                name="scriptType"
-                                value={formData.scriptType}
-                                onChange={handleChange}
-                                required
-                            >
-                                <MenuItem value="בית יוסף">בית יוסף</MenuItem>
-                                <MenuItem value="ספרדי">ספרדי</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>סוג ספר תורה</InputLabel>
-                            <Select
-                                name="scrollType"
-                                value={formData.scrollType}
-                                onChange={handleChange}
-                                required
-                            >
-                                <MenuItem value="11 שורות">11 שורות</MenuItem>
-                                <MenuItem value="המלך">המלך</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <TextField
-                            label="מחיר"
-                            type="number"
-                            name="price"
-                            value={formData.price}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <label htmlFor="primary-image-upload">
-                            <input
-                                id="primary-image-upload"
-                                type="file"
-                                accept="image/*"
-                                onChange={handlePrimaryImageChange}
-                                required
-                                style={{ display: 'none' }} // מחביא את שדה הקובץ
-                            />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<CloudUploadIcon />}
-                                component="span"
-                            >
-                                הוסף תמונה ראשית
-                            </Button>
-                        </label>
-                    </Grid>
-
-
-                    <Grid item xs={12}>
-                        <label htmlFor="additional-images-upload">
-                            <input
-                                id="additional-images-upload"
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={handleAdditionalImagesChange}
-                                style={{ display: 'none' }} // הסתרת השדה
-                            />
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                                startIcon={<CloudUploadIcon />}
-                                component="span"
-                            >
-                                העלה תמונות נוספות
-                            </Button>
-                        </label>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <TextField
-                            label="הערות"
-                            name="note"
-                            value={formData.note}
-                            onChange={handleChange}
-                            fullWidth
-                            multiline
-                            rows={4}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name="isPremiumAd"
-                                    checked={formData.isPremiumAd}
-                                    onChange={handleChange}
-                                />
-                            }
-                            label="מודעה מקודמת"
-                        />
-                    </Grid>
-
-                    {uploadProgress > 0 && (
-                        <Grid item xs={12}>
-                            <LinearProgress variant="determinate" value={uploadProgress} />
-                            <Box textAlign="center" marginTop="8px">
-                                <Typography>{uploadProgress}%</Typography>
-                            </Box>
-                        </Grid>
-                    )}
-
-                    <Grid item xs={12}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            disabled={isUploading}
+        <Box sx={{ padding: 3, direction: 'rtl', fontFamily: 'Roboto, sans-serif', width: '100%', maxWidth: 600 }}>
+{showAlert && (
+    <Alert 
+        severity="error" 
+        sx={{ 
+            marginBottom: 2,
+            '& .MuiAlert-icon': {
+                marginLeft: 2
+            }
+        }}
+    >
+        יש למלא את כל פרטי המוצר
+    </Alert>
+)}            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <FormControl fullWidth>
+                        <InputLabel
+                            shrink
+                            sx={{
+                                color: 'black',
+                                backgroundColor: 'white',
+                                padding: '0 4px',
+                            }}
                         >
-                            {isUploading ? <CircularProgress size={24} /> : 'הוסף מוצר'}
-                        </Button>
-                    </Grid>
+                            סוג כתב
+                        </InputLabel>
+                        <Select
+                            name="scriptType"
+                            value={formData.scriptType}
+                            onChange={handleChange}
+                            required
+                            sx={{
+                                fontFamily: 'Roboto, sans-serif',
+                                fontSize: '1rem',
+                                height: '45px',
+                            }}
+                        >
+                            <MenuItem value="בית יוסף">בית יוסף</MenuItem>
+                            <MenuItem value="ספרדי">ספרדי</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
-            </form>
-        </Container>
+
+                <Grid item xs={12}>
+                    <FormControl fullWidth>
+                        <InputLabel
+                            shrink
+                            sx={{
+                                color: 'black',
+                                backgroundColor: 'white',
+                                padding: '0 4px',
+                            }}
+                        >
+                            סוג המגילה
+                        </InputLabel>
+                        <Select
+                            name="scrollType"
+                            value={formData.scrollType}
+                            onChange={handleChange}
+                            required
+                            sx={{
+                                fontFamily: 'Roboto, sans-serif',
+                                fontSize: '1rem',
+                                height: '45px',
+                            }}
+                        >
+                            <MenuItem value="שורות 11">שורות 11</MenuItem>
+                            <MenuItem value="המלך">המלך</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <TextField
+                        label="מחיר"
+                        type="number"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                        fullWidth
+                        required
+                        InputLabelProps={{
+                            style: { color: 'black' },
+                            shrink: true,
+                        }}
+                        sx={{
+                            fontSize: '1rem',
+                            height: '45px',
+                        }}
+                        inputProps={{
+                            min: 100,
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <TextField
+                        label="הערות"
+                        name="note"
+                        value={formData.note}
+                        onChange={handleChange}
+                        fullWidth
+                        multiline
+                        rows={1.2}
+                        InputLabelProps={{
+                            style: { color: 'black' },
+                            shrink: true,
+                        }}
+                        sx={{
+                            fontFamily: 'Roboto, sans-serif',
+                            fontSize: '1rem',
+                            height: '100px',
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: '-45px' }}>
+                    <label htmlFor="primary-image-upload">
+                        <input
+                            id="primary-image-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handlePrimaryImageChange}
+                            required
+                            style={{ display: 'none' }}
+                        />
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                borderColor: '#1976d2',
+                                color: '#1976d2',
+                                border: 1,
+                                margin: '0 8px',
+                                fontFamily: 'Roboto, sans-serif',
+                                fontSize: '0.9rem',
+                                padding: '6px 12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                            }}
+                            startIcon={<CloudUploadIcon />}
+                            component="span"
+                        >
+                            הוסף תמונה ראשית
+                        </Button>
+                    </label>
+
+                    <label htmlFor="additional-images-upload">
+                        <input
+                            id="additional-images-upload"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleAdditionalImagesChange}
+                            style={{ display: 'none' }}
+                        />
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                borderColor: '#1976d2',
+                                color: '#1976d2',
+                                border: 1,
+                                margin: '0 8px',
+                                fontFamily: 'Roboto, sans-serif',
+                                fontSize: '0.9rem',
+                                padding: '6px 12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                            }}
+                            startIcon={<CloudUploadIcon />}
+                            component="span"
+                        >
+                            העלה תמונות נוספות
+                        </Button>
+                    </label>
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', fontSize: '0.9rem' }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                name="isPremiumAd"
+                                checked={formData.isPremiumAd}
+                                onChange={handleChange}
+                                size="small"
+                                sx={{ fontFamily: 'Roboto, sans-serif' }}
+                            />
+                        }
+                        label="מודעת פרימיום"
+                        sx={{
+                            fontFamily: 'Roboto, sans-serif',
+                            fontSize: '0.9rem',
+                            margin: '0',
+                            marginTop: '-15px',
+                        }}
+                    />
+                </Grid>
+            </Grid>
+            <Box
+                sx={[
+                    {
+                        position: 'absolute',
+                        bottom: '10%',
+                        display: 'flex',
+                        flexDirection: { xs: 'column-reverse', sm: 'row' },
+                        alignItems: 'end',
+                        gap: 1,
+                        pb: { xs: 12, sm: 0 },
+                        mt: { xs: 0, sm: 0 },
+                        width: '100%',
+                        maxWidth: 600,
+                        justifyContent: 'flex-end',
+                    },
+                ]}
+            >
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    sx={{ width: { xs: '100%', sm: 'fit-content' } }}
+                >
+                    הבא
+                </Button>
+            </Box>
+        </Box>
+        
     );
 };
 
