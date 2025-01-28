@@ -9,9 +9,11 @@ import Typography from '@mui/material/Typography';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useSelector } from 'react-redux';
 
-export default function AccountMenu({ user = { name: 'אורח', email: '' } }) {
+export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const user = useSelector((state) => state.user.currentUser);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -22,11 +24,11 @@ export default function AccountMenu({ user = { name: 'אורח', email: '' } }) 
     setAnchorEl(null);
   };
 
-  const firstLetter = user?.name ? user.name.charAt(0) : 'א';
+  const firstLetter = user?.fullName ? user.fullName.charAt(0) : 'א';
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-      <Tooltip title={user?.name || 'אורח'}>
+      <Tooltip title={user?.fullName || 'אורח'}>
         <IconButton onClick={handleClick}>
           <Avatar sx={{ bgcolor: 'primary.main' }}>{firstLetter}</Avatar>
         </IconButton>
@@ -52,7 +54,7 @@ export default function AccountMenu({ user = { name: 'אורח', email: '' } }) 
             {firstLetter}
           </Avatar>
           <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>
-            {user?.name || 'אורח'}
+            {user?.fullName || 'אורח'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {user?.email}

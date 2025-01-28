@@ -8,7 +8,7 @@ import ProductList from './components/ProductList';
 import AccountMenu from './components/AccountMenu.jsx';
 import PaymentForm from './components/PaymentForm';
 import NavBar from './components/NavBar';
-import LoginDialog from './components/LoginDialog.tsx';
+import LoginDialog from './components/LoginDialog';
 import HomePage from './components/HomePage';
 import About from './components/About'; 
 import Checkout from './components/Checkout';
@@ -27,7 +27,7 @@ function App() {
   return (
     <Router>
       <Box sx={{ width: '100%', height: '100vh' }}>
-        <NavBar user={{ name: 'Tamar Levi', email: "T0527144636@example.com" }} />
+        <NavBar/>
         <Box sx={{ 
           p: 2,
           display: 'flex',

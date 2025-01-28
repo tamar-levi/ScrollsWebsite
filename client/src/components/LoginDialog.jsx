@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -16,13 +16,20 @@ import { useNavigate } from 'react-router-dom';
 import GoogleAuth from './GoogleAuth';
 import CreateUser from './CreateUser';
 import GoogleLogo from '../assets/google-logo.png';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/userSlice'
 
-const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+const LoginDialog = ({ open, onClose }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showGoogleAuth, setShowGoogleAuth] = useState(false);
     const [showCreateUser, setShowCreateUser] = useState(false);
+
+    useEffect(() => {
+        console.log('showCreateUser state:', showCreateUser);
+    }, [showCreateUser]);
 
     const handleClose = () => {
         setUsername('');
@@ -30,7 +37,7 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
         onClose();
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e) => {
         console.log('Form submitted!');
         e.preventDefault();
         console.log('Login attempt with:', { username, password });
@@ -43,6 +50,8 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
             });
             console.log('Login response:', response.data);
             localStorage.setItem('token', response.data.token);
+            console.log('User:', response.data.user);
+            dispatch(setUser(response.data.user));
             alert('התחברת בהצלחה!');
             handleClose();
             navigate('/products');
@@ -66,11 +75,13 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
         setShowGoogleAuth(false);
     };
 
-    const handleCreateUserOpen = () => {
+    const handleCreateUserOpen = (e) => {
+        e.preventDefault();
         console.log('Opening create user dialog');
         setShowCreateUser(true);
-        console.log('showCreateUser state:', showCreateUser);
-        handleClose();
+        setTimeout(() => {
+            handleClose();
+        }, 0);
     };
 
     const handleCreateUserClose = () => {
@@ -151,7 +162,7 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
                                 <img
                                     src={GoogleLogo}
                                     alt="Google logo"
-                                    style={{ width: '45px', height: '38px' }}
+                                    style={{ width: '45px', height: '35px' }}
                                 />
                             }
                             onClick={handleGoogleLogin}

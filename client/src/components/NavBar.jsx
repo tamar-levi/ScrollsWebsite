@@ -4,13 +4,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import AccountMenu from './AccountMenu';
 import { useTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom'; // הוספת ייבוא של Link מ- react-router-dom
+import { Link } from 'react-router-dom'; 
 
-export default function NavBar({ user }) {
+
+export default function NavBar() {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -22,17 +21,10 @@ export default function NavBar({ user }) {
     setAnchorEl(null);
   };
 
-  const productCategories = [
-    'מגילות קלף',
-    'ספרי תורה',
-    'תפילין',
-    'מזוזות'
-  ];
-
   return (
     <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
       <Toolbar>
-        <AccountMenu user={user} color={theme.palette.primary.main} />
+        <AccountMenu color={theme.palette.primary.main} />
         <Box sx={{ flexGrow: 1 }} />
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -46,8 +38,6 @@ export default function NavBar({ user }) {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
-          // component={Link} // שינוי לכפתור קישור
-          // to="/contact" // קישור לעמוד צור קשר
           >
             צור קשר
           </Button>
