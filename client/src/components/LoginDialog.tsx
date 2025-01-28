@@ -12,11 +12,10 @@ import {
     Link
 } from '@mui/material';
 import axios from 'axios';
-import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom';
 import GoogleAuth from './GoogleAuth';
 import CreateUser from './CreateUser';
-
+import GoogleLogo from '../assets/google-logo.png';
 
 const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
     const navigate = useNavigate();
@@ -122,8 +121,7 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
                         >
                             התחבר
                         </Button>
-                        <Typography variant="body2" sx={{ mt: 1 }}>
-                            אין לך חשבון?{' '}
+                        <Typography variant="body2" sx={{ mt: 1, textAlign: 'right', paddingRight: 1 }}>
                             <Link
                                 component="button"
                                 variant="body2"
@@ -132,16 +130,35 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
                             >
                                 הירשם עכשיו
                             </Link>
+                            {' '}?אין לך חשבון
                         </Typography>
                         <Divider sx={{ my: 2 }}>או</Divider>
                         <Button
                             variant="outlined"
                             fullWidth
-                            startIcon={<GoogleIcon />}
+                            sx={{
+                                gap: '4px',
+                                fontFamily: 'Assistant, sans-serif',
+                                fontSize: '16px',
+                                textTransform: 'none',
+                                '& .MuiButton-startIcon': {
+                                    marginLeft: '-4px',
+                                    marginRight: '-4px'
+                                },
+                                height: '40px'
+                            }}
+                            startIcon={
+                                <img
+                                    src={GoogleLogo}
+                                    alt="Google logo"
+                                    style={{ width: '45px', height: '38px' }}
+                                />
+                            }
                             onClick={handleGoogleLogin}
                         >
-                        Google  התחבר עם 
+                            Google התחבר עם
                         </Button>
+
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -149,7 +166,6 @@ const LoginDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) 
                 </DialogActions>
             </Dialog>
             {showGoogleAuth && <GoogleAuth onSuccess={handleGoogleSuccess} />}
-
             {showCreateUser && (
                 <CreateUser
                     open={showCreateUser}

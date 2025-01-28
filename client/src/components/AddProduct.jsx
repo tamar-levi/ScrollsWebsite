@@ -7,7 +7,6 @@ import {
     Button,
     Checkbox,
     FormControlLabel,
-    CircularProgress,
     Grid,
     InputLabel,
     FormControl,
@@ -28,8 +27,22 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
         isPremiumAd: productData ? productData.isPremiumAd : false,
     });
     const [showAlert, setShowAlert] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
-
+    const scriptTypes = [
+        "בית יוסף",
+        "האר''י",
+        "ספרדי (וועליש)",
+        "חב''ד",
+        "תימני",
+        "אחר"
+    ];
+    const scrollTypes = [
+        "המלך 28 שורות",
+        "המלך 21 שורות",
+        "11 שורות",
+        "42 שורות",
+        "11 שורות הרב עובדיה",
+        "אחר"
+    ];
     const compressionOptions = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1920,
@@ -82,19 +95,20 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
 
     return (
         <Box sx={{ padding: 3, direction: 'rtl', fontFamily: 'Roboto, sans-serif', width: '100%', maxWidth: 600 }}>
-{showAlert && (
-    <Alert 
-        severity="error" 
-        sx={{ 
-            marginBottom: 2,
-            '& .MuiAlert-icon': {
-                marginLeft: 2
-            }
-        }}
-    >
-        יש למלא את כל פרטי המוצר
-    </Alert>
-)}            <Grid container spacing={3}>
+            {showAlert && (
+                <Alert
+                    severity="error"
+                    sx={{
+                        marginBottom: 2,
+                        '& .MuiAlert-icon': {
+                            marginLeft: 2
+                        }
+                    }}
+                >
+                    יש למלא את כל פרטי המוצר
+                </Alert>
+            )}
+            <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <FormControl fullWidth>
                         <InputLabel
@@ -118,8 +132,11 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                                 height: '45px',
                             }}
                         >
-                            <MenuItem value="בית יוסף">בית יוסף</MenuItem>
-                            <MenuItem value="ספרדי">ספרדי</MenuItem>
+                             {scriptTypes.map((type) => (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -147,8 +164,11 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                                 height: '45px',
                             }}
                         >
-                            <MenuItem value="שורות 11">שורות 11</MenuItem>
-                            <MenuItem value="המלך">המלך</MenuItem>
+                            {scrollTypes.map((type) => (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -306,7 +326,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                 </Button>
             </Box>
         </Box>
-        
+
     );
 };
 

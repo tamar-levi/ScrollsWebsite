@@ -10,8 +10,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import AddProduct from './AddProduct';
 import Info from './Info';
 import PaymentForm from './PaymentForm';
@@ -42,8 +40,11 @@ export default function Checkout() {
         if (activeStep === 2) {
             handleFinalSubmit();
         }
-        setActiveStep((prev) => prev + 1);
+        else {
+            setActiveStep((prev) => prev + 1);
+        }
     };
+
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
@@ -65,7 +66,7 @@ export default function Checkout() {
     const processPayment = async (paymentDetails) => {
         console.log("The payment details are:", paymentDetails);
     };
-    // לוגיקת הוספת מוצר
+
     const addProduct = async () => {
         console.log("Adding product:", productData);
         try {
@@ -76,8 +77,6 @@ export default function Checkout() {
             formData.append('note', productData.note);
             formData.append('isPremiumAd', productData.isPremiumAd);
             formData.append('primaryImage', productData.primaryImage);
-
-            // Handle additional images array
             productData.additionalImages.forEach((image) => {
                 formData.append('additionalImages', image);
             });
@@ -91,13 +90,12 @@ export default function Checkout() {
             });
 
             if (response.ok) {
-                alert('המוצר נוסף בהצלחה!');
+                setActiveStep((prev) => prev + 1);
             }
         } catch (error) {
             console.error('Error:', error);
         }
     };
-
 
     return (
         <>

@@ -20,10 +20,7 @@ export default function Review({ productData, paymentData, onNext, onBack }) {
   return (
     <Stack spacing={2} sx={{ position: 'relative', minHeight: '400px', pr: 3, pt: 5 }}>
       <Box sx={{ textAlign: 'right', mb: 4 }}>
-        <Typography variant="subtitle1" gutterBottom sx={{ mb: 3 }}>
-          סיכום הזמנה
-        </Typography>
-        <Stack spacing={3}>
+         <Stack spacing={3}>
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, pr: 0 }}>
               <Typography variant="subtitle">פרטי המוצר</Typography>
@@ -41,7 +38,7 @@ export default function Review({ productData, paymentData, onNext, onBack }) {
               </Box>
             </Box>
           </Box>
-
+          {productData?.price >= 1000 && (
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, pr: 0 }}>
               <Typography variant="subtitle">פרטי תשלום</Typography>
@@ -58,7 +55,7 @@ export default function Review({ productData, paymentData, onNext, onBack }) {
                 <Typography variant="subtitle2" sx={{ textAlign: 'right', mt: 1 }}>{`cvv : ${paymentData?.cvv} `}</Typography>
               </Box>
             </Box>
-          </Box>
+          </Box>)}
         </Stack>
       </Box>
       <Divider />
