@@ -105,7 +105,7 @@ export default function Checkout() {
                 sx={{
                     mt: {
                         xs: 4,
-                        sm: 0,
+                        sm: 8,
                     },
                     direction: 'rtl',
                     height: '100vh',

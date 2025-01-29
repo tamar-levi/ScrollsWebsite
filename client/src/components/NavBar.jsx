@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import AccountMenu from './AccountMenu';
 import { useTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 
 
 export default function NavBar() {
@@ -17,16 +17,11 @@ export default function NavBar() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
+    <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
       <Toolbar>
         <AccountMenu color={theme.palette.primary.main} />
         <Box sx={{ flexGrow: 1 }} />
-
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
           <Button
             sx={{
@@ -41,7 +36,6 @@ export default function NavBar() {
           >
             צור קשר
           </Button>
-
           <Button
             sx={{
               color: theme.palette.primary.main,
@@ -52,12 +46,11 @@ export default function NavBar() {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
-            component={Link} 
-            to="/about" 
+            component={Link}
+            to="/about"
           >
             אודות
           </Button>
-
           <Button
             onMouseEnter={handleMouseEnter}
             sx={{
@@ -74,7 +67,6 @@ export default function NavBar() {
           >
             מוצרים
           </Button>
-
           <Button
             sx={{
               color: theme.palette.primary.main,
@@ -85,12 +77,11 @@ export default function NavBar() {
                 borderBottom: `2px solid ${theme.palette.primary.main}`
               }
             }}
-            component={Link} 
-            to="/" 
+            component={Link}
+            to="/"
           >
             בית
           </Button>
-
           <Typography
             variant="h6"
             sx={{
