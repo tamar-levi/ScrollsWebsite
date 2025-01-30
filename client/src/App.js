@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import AddProduct from './components/AddProduct';
 import CreateUser from './components/CreateUser';
-import GoogleAuth from './components/GoogleAuth';
 import ProductList from './components/ProductList';
-import AccountMenu from './components/AccountMenu.jsx';
 import PaymentForm from './components/PaymentForm';
 import NavBar from './components/NavBar';
 import LoginDialog from './components/LoginDialog';
 import HomePage from './components/HomePage';
 import About from './components/About'; 
 import Checkout from './components/Checkout';
+import UserProducts from './components/UserProducts';
 
 function App() {
   const [openLogin, setOpenLogin] = useState(false);
@@ -43,7 +41,8 @@ function App() {
             <Route path="/add-product" element={<Checkout />} />
             <Route path="/create-user" element={<CreateUser />} />
             <Route path="/payment" element={<PaymentForm />} />
-            <Route path="/about" element={<About />} /> {/* הוספת נתיב לעמוד אודות */}
+            <Route path="/about" element={<About />} /> 
+            <Route path="/myProducts" element={<UserProducts />} /> 
           </Routes>
         </Box>
 

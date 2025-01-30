@@ -10,6 +10,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -66,6 +68,13 @@ export default function AccountMenu() {
             <AccountCircleIcon />
           </ListItemIcon>
           החשבון שלי
+        </MenuItem>
+
+        <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
+          <ListItemIcon sx={{ marginLeft: 1 }}>
+            <InventoryIcon />
+          </ListItemIcon>
+          המוצרים שלי
         </MenuItem>
 
         <MenuItem onClick={handleClose} dir="rtl">
