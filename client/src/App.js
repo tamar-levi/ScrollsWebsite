@@ -8,6 +8,8 @@ import HomePage from './components/HomePage';
 import About from './components/About'; 
 import Checkout from './components/Checkout';
 import UserProducts from './components/UserProducts';
+import UserAccount from './components/UserAccount';
+import EditUser from './components/EditUser';
 import { Box } from '@mui/material';
 
 function App() {
@@ -32,6 +34,8 @@ function App() {
             <Route path="/payment" element={<PaymentForm />} />
             <Route path="/about" element={<About />} /> 
             <Route path="/myProducts" element={<UserProducts />} /> 
+            <Route path="/account" element={<UserAccount />} /> {/* נתיב לעמוד החשבון */}
+            <Route path="/editUser" element={<EditUser />} />
           </Routes>
         </Box>
       </Box>
