@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {  deleteUser, deleteUserProducts, updateUser } from '../redux/userSlice';
+import { deleteUser, deleteUserProducts, updateUser } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Avatar } from '@mui/material';
 import axios from 'axios';
@@ -13,13 +13,14 @@ export default function EditUser() {
 
   const [fullName, setFullName] = useState(user?.fullName || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [address, setAddress] = useState(user?.city || '');
+  const [city, setCity] = useState(user?.city || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSave = async () => {
     setLoading(true);
-    const userData = { fullName, email, address };
+    const userData = { fullName, email, city };
+    console.log("Sending data to update:", userData);
     try {
       const response = await axios.put('http://localhost:5000/usersApi/updateUserDetails', userData, {
         headers: {
@@ -27,7 +28,7 @@ export default function EditUser() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-  
+
       if (response.data) {
         dispatch(updateUser(response.data));
         alert('הפרטים עודכנו בהצלחה');
@@ -39,7 +40,7 @@ export default function EditUser() {
       setLoading(false);
     }
   };
-  
+
 
   const handleDelete = () => {
     if (window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש?')) {
@@ -76,8 +77,8 @@ export default function EditUser() {
       <TextField
         fullWidth
         label="כתובת"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
         sx={{ mt: 2 }}
       />
 
