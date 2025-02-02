@@ -39,9 +39,10 @@ const CreateUser = ({ open, onClose }) => {
     }
     e.preventDefault();
     try {
+      console.log('Sending data:', formData);
       const response = await axios.post('http://localhost:5000/usersApi/addUser', formData);
       const token = response.data.token;
-      document.cookie = `authToken=${token}; path=/; secure; HttpOnly`;
+      localStorage.setItem('token', token);
       dispatch(setUser(response.data.user));
       setSnackbar({ open: true, message: 'משתמש נוצר בהצלחה!', severity: 'success' });
       onClose();

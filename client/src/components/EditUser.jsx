@@ -19,8 +19,17 @@ export default function EditUser() {
 
   const handleSave = async () => {
     setLoading(true);
-    const userData = { fullName, email, city };
-    console.log("Sending data to update:", userData);
+    const userData = {};
+
+    if (fullName !== user.fullName) userData.fullName = fullName;
+    if (email.toLowerCase() !== user.email.toLowerCase()) userData.email = email;
+    if (city !== user.city) userData.city = city;
+  
+    if (Object.keys(userData).length === 0) {
+      alert('לא בוצע שינוי בשדות');
+      setLoading(false);
+      return;
+    }
     try {
       const response = await axios.put('http://localhost:5000/usersApi/updateUserDetails', userData, {
         headers: {
@@ -28,18 +37,26 @@ export default function EditUser() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-
+  
       if (response.data) {
         dispatch(updateUser(response.data));
         alert('הפרטים עודכנו בהצלחה');
         navigate('/account');
       }
     } catch (err) {
-      setError('לא הצלחנו לעדכן את הפרטים, נסה שנית');
+      if (err.response && err.response.data === 'Email already exists') {
+        setError('המייל כבר קיים, אנא השתמש במייל אחר');
+      } else {
+        setError('לא הצלחנו לעדכן את הפרטים, נסה שנית');
+      }
+      setTimeout(() => {
+        setError(null); 
+      }, 3000);
     } finally {
       setLoading(false);
     }
   };
+  
 
 
   const handleDelete = () => {

@@ -33,16 +33,17 @@ const getCurrentUser = async (req, res) => {
 
 const addUser = async (req, res) => {
     const { fullName, displayName, phoneNumber, email, city, isSeller, password } = req.body;
+    const emailLowerCase = email.toLowerCase();
 
     try {
         const newUser = new User({
-            fullName, displayName, phoneNumber, email, city, isSeller, password
+            fullName, displayName, phoneNumber, email: emailLowerCase, city, isSeller, password
         });
 
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        await sendWelcomeEmail(email, fullName);
+        // await sendWelcomeEmail(email, fullName);
 
         res.json({
             message: 'User created successfully',
@@ -60,8 +61,13 @@ const updateUserDetails = async (req, res) => {
         console.log(req.user);
         const userId = req.user.id;
         const updates = req.body;
-        console.log(updates);
-
+        if (updates.email) {
+            updates.email = updates.email.toLowerCase();
+            const existingUser = await User.findOne({ email: updates.email });
+            if (existingUser && existingUser._id !== userId) {
+                return res.status(400).send('Email already exists');
+            }
+        }
         const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
         if (!updatedUser) {
             return res.status(404).send('User not found');
@@ -73,6 +79,7 @@ const updateUserDetails = async (req, res) => {
         res.status(500).send('Database error');
     }
 };
+
 
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
