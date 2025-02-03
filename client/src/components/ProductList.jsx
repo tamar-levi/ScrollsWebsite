@@ -14,7 +14,7 @@ const ProductList = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [noProducts, setNoProducts] = useState(false);
-  const [loading, setLoading] = useState(true);  // מצב הטעינה
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,10 +23,10 @@ const ProductList = () => {
         const data = await response.json();
         setProducts(data);
         setFilteredProducts(data);
-        setLoading(false);  // לאחר סיום טעינת המוצרים
+        setLoading(false);  
       } catch (error) {
         console.error('Failed to fetch products:', error);
-        setLoading(false);  // גם אם יש שגיאה נוודא שהטעינה מסתיימת
+        setLoading(false);  
       }
     };
 
@@ -60,14 +60,12 @@ const ProductList = () => {
   return (
     <>
       <Box sx={{ marginTop: 8, marginRight: '20%' }}>
-        {/* עטיפה עם CircularProgress */}
         <Stack spacing={2} direction="row">
           <Button variant="outlined" onClick={() => navigate('/add-product')} startIcon={<AddIcon />}>
             פרסם את המגילה שלך
           </Button>
         </Stack>
 
-        {/* אם המוצרים נטענים, נציג את עיגול הטעינה מתחת לכפתור */}
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 2 }}>
             <CircularProgress />
