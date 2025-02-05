@@ -28,7 +28,7 @@ function App() {
           minHeight: 'calc(100vh - 64px)' 
         }}>
           <Routes>
-            <Route path="/" element={<PdfProductsList />} /> 
+            <Route path="/" element={<HomePage />} /> 
             <Route path="/products" element={<ProductList />} />
             <Route path="/add-product" element={<Checkout />} />
             <Route path="/create-user" element={<CreateUser />} />

@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const { sendWelcomeEmail } = require('../services/emailService');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const Product = require('../models/productModel');
+
 
 const getAllUsers = async (req, res) => {
     try {
@@ -112,12 +114,13 @@ const loginUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     const userId = req.user.id;
     try {
+        await Product.deleteMany({ userId: userId });
         const user = await User.findByIdAndDelete(userId);
         if (!user) {
             return res.status(404).send('User not found');
         }
         res.json({
-            message: 'User deleted successfully'
+            message: 'User and associated products deleted successfully'
         });
     } catch (err) {
         console.error('Error deleting user', err);

@@ -24,14 +24,20 @@ const FilterComponent = ({ onFilter, products }) => {
     };
 
     const applyFilters = () => {
+        const normalizedFontType = fontType
+            .replace(/["']/g, '')
+            .replace('הארי', 'האר"י')
+            .replace('חבד', 'חב"ד');
+            
         console.log('Applying filters:', {
             priceRange,
-            fontType,
+            fontType: normalizedFontType,
             scrollType,
         });
+        
         onFilter({
             priceRange,
-            fontType: fontType || null,
+            fontType: normalizedFontType || null,
             scrollType: scrollType || null,
         });
     };
