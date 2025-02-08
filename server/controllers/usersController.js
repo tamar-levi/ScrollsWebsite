@@ -36,16 +36,17 @@ const getCurrentUser = async (req, res) => {
 const addUser = async (req, res) => {
     const { fullName, displayName, phoneNumber, email, city, isSeller, password } = req.body;
     const emailLowerCase = email.toLowerCase();
+    console.log(addUser);
 
     try {
         const newUser = new User({
             fullName, displayName, phoneNumber, email: emailLowerCase, city, isSeller, password
         });
-
+        console.log(newUser);
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        // await sendWelcomeEmail(email, fullName);
+        await sendWelcomeEmail(email, fullName);
 
         res.json({
             message: 'User created successfully',
@@ -74,7 +75,7 @@ const updateUserDetails = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).send('User not found');
         }
-        console.log("Updated user:", updatedUser); 
+        console.log("Updated user:", updatedUser);
         res.json(updatedUser);
     } catch (err) {
         console.error('Error updating user', err);
@@ -85,7 +86,7 @@ const updateUserDetails = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
-
+    console.log(loginUser);
     try {
         const user = await User.findOne({ displayName: username });
         if (!user) {
@@ -155,6 +156,7 @@ const handleGoogleLogin = async (req, res) => {
 
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+        await sendWelcomeEmail(user.email, user.fullName);
 
         res.json({
             message: 'Google login successful',
@@ -183,4 +185,31 @@ const getUserById = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById };
+
+const addUserFromForm = async (req, res) => {
+    const { sellerName, phoneNumber, email } = req.body; 
+
+    const emailLowerCase = email.toLowerCase();  
+
+    try {
+        const newUser = new User({
+            fullName: sellerName,  
+            displayName: sellerName,  
+            phoneNumber,
+            email: emailLowerCase,
+            city: 'לא צוין',  
+            isSeller: true,  
+            password: require('crypto').randomBytes(16).toString('hex')  
+        });
+
+        await newUser.save();
+
+        res.status(201).json({ message: 'User created successfully', userId: newUser._id });
+
+    } catch (err) {
+        console.error('Error creating user from form', err);
+        res.status(500).send('Database error');
+    }
+}
+
+module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm   };

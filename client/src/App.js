@@ -12,7 +12,6 @@ import UserAccount from './components/UserAccount';
 import EditUser from './components/EditUser';
 import PdfProductsList from './components/PdfProductsList';
 import { Box } from '@mui/material';
-
 function App() {
   return (
     <Router>

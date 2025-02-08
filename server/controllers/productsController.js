@@ -122,4 +122,45 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct};
+const addProductFromForm = async (req, res) => {
+    const { scriptType, scrollType, price, note, isPremiumAd, primaryImage, additionalImages, sellerName, phoneNumber, email } = req.body;  
+
+    try {
+
+        let user = await User.findOne({ email: email.toLowerCase() });
+
+        if (!user) {
+            const userResponse = await new Promise((resolve) => {
+                addUserFromForm({ body: { sellerName, phoneNumber, email } }, {
+                    status: () => ({ json: resolve }),
+                    json: resolve
+                });
+            });
+
+            if (!userResponse || !userResponse.userId) {
+                return res.status(500).json({ message: 'Failed to create user' });
+            }
+            user = { _id: userResponse.userId };
+        }
+
+        const newProduct = new Product({
+            scriptType,
+            scrollType,
+            price,
+            primaryImage,
+            additionalImages: additionalImages || [],
+            note,
+            isPremiumAd,
+            userId: user._id 
+        });
+
+        await newProduct.save();
+        res.status(201).json({ message: 'Product created successfully', product: newProduct });
+    } catch (err) {
+        console.error('Error adding product from form', err);
+        res.status(500).send('Database error');
+    }
+};
+
+
+module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm};

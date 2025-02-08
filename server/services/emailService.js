@@ -7,13 +7,13 @@ const clientSecret = process.env.GOOGLE_CLIENT_SECERT;
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 const sendWelcomeEmail = async (email, fullName) => {
     const oauth2Client = new OAuth2(
-        clientId,     
-        clientSecret, 
+        clientId,
+        clientSecret,
         'https://developers.google.com/oauthplayground'
     );
 
     oauth2Client.setCredentials({
-        refresh_token: refreshToken 
+        refresh_token: refreshToken
     });
 
     const accessToken = await oauth2Client.getAccessToken();
@@ -31,8 +31,8 @@ const sendWelcomeEmail = async (email, fullName) => {
     });
 
     const mailOptions = {
-        from: 'ScrollsSite@gmail.com',  
-        to: email,                   
+        from: 'ScrollsSite@gmail.com',
+        to: email,
         subject: 'Welcome to Our Platform!',
         html: `
         <html>
@@ -100,4 +100,51 @@ const sendWelcomeEmail = async (email, fullName) => {
     }
 };
 
-module.exports = { sendWelcomeEmail };
+const sendEmailWithPDF = async (email, pdfData) => {
+    const oauth2Client = new OAuth2(
+        process.env.GOOGLE_CLIENT_ID_EMAILS,
+        process.env.GOOGLE_CLIENT_SECRET,
+        'https://developers.google.com/oauthplayground'
+    );
+
+    oauth2Client.setCredentials({
+        refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+    });
+
+    const accessToken = await oauth2Client.getAccessToken();
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            type: 'OAuth2',
+            user: 'your-email@gmail.com',
+            clientId: process.env.GOOGLE_CLIENT_ID_EMAILS,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+            accessToken: accessToken.token,
+        },
+    });
+
+    const mailOptions = {
+        from: 'scrollsSite@gmail.com',
+        to: email,
+        subject: 'הקטלוג שלך',
+        text: 'שלום! מצורף הקטלוג שביקשת.',
+        attachments: [
+            {
+                filename: 'catalog.pdf',
+                content: pdfData,
+                encoding: 'base64',
+            },
+        ],
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent with PDF attachment!');
+    } catch (error) {
+        console.error('Error sending email with PDF:', error);
+    }
+};
+
+module.exports = { sendWelcomeEmail, sendEmailWithPDF };

@@ -1,0 +1,108 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            page-break-before: always;
+        }
+
+        .product-container {
+            page-break-inside: avoid;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            page-break-inside: avoid;
+        }
+
+        .card img {
+            width: 33%;
+            height: auto;
+            border-radius: 8px;
+            margin-left: 20px;
+            object-fit: contain;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .page {
+            page-break-after: always;
+        }
+
+        .card:nth-child(4n) {
+            page-break-after: always;
+        }
+
+        .title {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+
+        .user-info h4 {
+            margin-bottom: 8px;
+        }
+
+        .user-info p {
+            margin: 5px 0;
+        }
+
+        .user-info i {
+            font-size: 14px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="title">לוח המגילות </h2>
+        {{#each products}}
+        <div class="card">
+            <img src="{{primaryImage}}" alt="{{note}}" style="max-width: 100%; height: auto; object-fit: contain;">
+            <div>
+                <h4>פרטי המגילה:</h4>
+                <p>סוג המגילה: {{scriptType}}</p>
+                <p>סוג כתב: {{scrollType}}</p>
+                <p>מחיר: {{price}} ₪</p>
+                <p>{{note}}</p>
+                <div class="user-info">
+                    <h4>פרטי המוכר:</h4>
+                    <p><i class="fas fa-user"></i> {{user.fullName}}</p>
+                    <p><i class="fas fa-envelope"></i> {{user.email}}</p>
+                    <p><i class="fas fa-phone"></i> {{user.phoneNumber}}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> {{user.city}}</p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</body>
+</html>

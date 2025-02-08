@@ -5,6 +5,8 @@ require('dotenv').config();
 const connectDB = require('./db');
 const userRouter = require('./routes/users');
 const productRouter = require('./routes/products');
+const emailRouter = require('./routes/email');
+require('./services/subscribeToCatalogRequests');
 
 const corsOptions = {
   origin: process.env.REACT_URL,
@@ -28,6 +30,7 @@ connectDB();
 
 app.use('/usersApi', userRouter); 
 app.use('/productsApi', productRouter); 
+app.use('/emailApi', emailRouter);
 
 const PORT = 5000;
 app.listen(PORT, () => {
