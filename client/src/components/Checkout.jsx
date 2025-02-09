@@ -43,7 +43,7 @@ export default function Checkout() {
             handleFinalSubmit();
         }
         else {
-            if (activeStep < 2) { setActiveStep((prev) => prev + 1); }
+            if (activeStep <= 2) { setActiveStep((prev) => prev + 1); }
         }
     };
 
@@ -72,7 +72,6 @@ export default function Checkout() {
     const addProduct = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
-        console.log("Adding product:", productData);
 
         try {
             const formData = new FormData();
@@ -95,6 +94,7 @@ export default function Checkout() {
             });
 
             if (response.ok) {
+                console.log('Product added successfully');
                 setActiveStep((prev) => prev + 1);
             }
         } catch (error) {
@@ -176,34 +176,34 @@ export default function Checkout() {
                         overflow: 'hidden',
                     }}
                 >
-<Card 
-    sx={{
-        display: { xs: 'flex', md: 'none' },
-        width: '100%',
-        mb: 2,
-        mt: 3,
-        padding: 0
-    }}
->
-    <CardContent
-        sx={{
-            display: 'flex',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            padding: '4px !important',
-            '&:last-child': {
-                paddingBottom: '4px !important'
-            },
-            '& > *': {
-                textAlign: 'center'
-            }
-        }}
-    >
-        <InfoMobile />
-    </CardContent>
-</Card>
+                    <Card
+                        sx={{
+                            display: { xs: 'flex', md: 'none' },
+                            width: '100%',
+                            mb: 2,
+                            mt: 3,
+                            padding: 0
+                        }}
+                    >
+                        <CardContent
+                            sx={{
+                                display: 'flex',
+                                width: '100%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+                                padding: '4px !important',
+                                '&:last-child': {
+                                    paddingBottom: '4px !important'
+                                },
+                                '& > *': {
+                                    textAlign: 'center'
+                                }
+                            }}
+                        >
+                            <InfoMobile />
+                        </CardContent>
+                    </Card>
                     <Box
                         sx={{
                             display: 'flex',

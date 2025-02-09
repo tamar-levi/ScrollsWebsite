@@ -310,34 +310,39 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                 </Grid>
             </Grid>
             <Box
-                sx={{
-                    position: 'absolute',
-                    bottom: { xs: '5%', sm: '10%' },
-                    display: 'flex',
-                    flexDirection: { xs: 'column-reverse', sm: 'row' },
-                    alignItems: 'end',
-                    gap: 1,
-                    pb: { xs: 8, sm: 0 },
-                    mt: { xs: 0, sm: 0 },
-                    width: '100%',
-                    maxWidth: 600,
-                    justifyContent: 'flex-end',
-                    px: { xs: 2, sm: 0 }
-                }}
-            >
-                <Button
-                    variant="contained"
-                    onClick={handleSubmit}
-                    sx={{
-                        width: { xs: '120px', sm: 'fit-content' },
-                        alignSelf: { xs: 'center', sm: 'auto' },
-                        fontSize: { xs: '0.85rem', sm: '0.9rem' },
-                        padding: { xs: '6px 16px', sm: '8px 22px' }
-                    }}
-                >
-                    הבא
-                </Button>
-            </Box>
+    sx={{
+        position: 'absolute',
+        bottom: { xs: '0.5%', sm: '20%' },
+        display: 'flex',
+        flexDirection: { xs: 'column-reverse', sm: 'row' },
+        alignItems: 'end',
+        gap: 1,
+        pb: { xs: 8, sm: 0 },
+        mt: { xs: 0, sm: 0 },
+        width: { xs: '20%', sm: '100%' },
+        maxWidth: 600,
+        justifyContent: 'flex-end',
+        px: { xs: 2, sm: 0 },
+        right: { xs: '50%', sm: 'auto' }
+    }}
+>
+    <Button
+        variant="contained"
+        onClick={handleSubmit}
+        sx={{
+            width: { xs: '120px', sm: 'fit-content' },
+            alignSelf: { xs: 'center', sm: 'auto' },
+            fontSize: { xs: '0.85rem', sm: '0.9rem' },
+            padding: { xs: '6px 16px', sm: '8px 22px' }
+        }}
+    >
+        הבא
+    </Button>
+</Box>
+
+
+
+
         </Box>
 
     );

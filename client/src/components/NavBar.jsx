@@ -11,20 +11,16 @@ import { useState } from 'react';
 
 export default function NavBar() {
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
 
-  const handleProductsNavigation = () => {
+  const handleProductsNavigation = (event) => {
     if (!isLoggedIn) {
+      event.preventDefault(); 
       alert("עליך להתחבר כדי לצפות במוצרים");
     } else {
       navigate("/products");
     }
-  };
-
-  const handleMouseEnter = (event) => {
-    setAnchorEl(event.currentTarget);
   };
 
   const buttonStyles = {
@@ -48,14 +44,13 @@ export default function NavBar() {
         <AccountMenu color={theme.palette.primary.main} />
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.4, sm: 3, md: 3 } }}>
-          <Button sx={buttonStyles}>
+          <Button sx={buttonStyles} component={Link} to="/contactUs">
             צור קשר
           </Button>
           <Button sx={buttonStyles} component={Link} to="/about">
             אודות
           </Button>
-          <Button sx={buttonStyles} component={Link} to="/products" onMouseEnter={handleMouseEnter} onClick={handleProductsNavigation}
-          >
+          <Button sx={buttonStyles} onClick={handleProductsNavigation}>
             מוצרים
           </Button>
           <Button sx={buttonStyles} component={Link} to="/">

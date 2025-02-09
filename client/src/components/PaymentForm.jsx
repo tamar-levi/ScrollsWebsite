@@ -190,61 +190,76 @@ export default function PaymentForm({ onNext, onBack, onFormSubmit, paymentData,
             sx={[
               {
                 position: 'absolute',
-                bottom: '10%',
+                bottom: { xs: '-2.5%', sm: '10%' },
                 display: 'flex',
-                flexDirection: { xs: 'column-reverse', sm: 'row' },
-                alignItems: 'end',
-                gap: 1,
+                flexDirection: { xs: 'row', sm: 'row' },
+                alignItems: 'center',
+                justifyContent: { xs: 'space-between', sm: 'space-between' },
+                gap: 2,
                 pb: { xs: 12, sm: 0 },
                 mt: { xs: 0, sm: 0 },
-                width: '100%',
+                width: { xs: '60%', sm: '100%' }, 
                 maxWidth: 600,
-                justifyContent: 'space-between'
+                marginLeft: { xs: 'auto', sm: 0 }, 
+                marginRight: { xs: '20px', sm: 0 },  
               },
             ]}>
             <Button
               onClick={onBack}
               variant="text"
-              sx={{ display: { xs: 'none', sm: 'flex' } }}
+              sx={{
+                display: { xs: 'flex', sm: 'flex' },  
+                width: { xs: '48%', sm: 'auto' }  
+              }}
             >
               הקודם
             </Button>
             <Button
               variant="contained"
               onClick={handlePayment}
-              sx={{ width: { xs: '100%', sm: 'fit-content' } }}
+              sx={{
+                width: { xs: '48%', sm: 'fit-content' } 
+              }}
             >
               הבא
             </Button>
           </Box>
+
         </PaymentContainer>) :
         <Box
           sx={[
             {
               position: 'absolute',
-              bottom: '10%',
+              bottom: { xs: '-2.5%', sm: '10%' },
               display: 'flex',
-              flexDirection: { xs: 'column-reverse', sm: 'row' },
-              alignItems: 'end',
-              gap: 1,
+              flexDirection: { xs: 'row', sm: 'row' },
+              alignItems: 'center',
+              justifyContent: { xs: 'space-between', sm: 'space-between' },
+              gap: 2,
               pb: { xs: 12, sm: 0 },
               mt: { xs: 0, sm: 0 },
-              width: '100%',
+              width: { xs: '60%', sm: '100%' }, 
               maxWidth: 600,
-              justifyContent: 'space-between'
+              marginLeft: { xs: 'auto', sm: 0 }, 
+              marginRight: { xs: '20px', sm: 0 },  
             },
           ]}>
           <Button
             onClick={onBack}
             variant="text"
-            sx={{ display: { xs: 'none', sm: 'flex' } }}
+            sx={{
+              display: { xs: 'flex', sm: 'flex' },  
+              width: { xs: '48%', sm: 'auto' }  
+            }}
           >
             הקודם
           </Button>
           <Button
             variant="contained"
             onClick={() => onNext()}
-            sx={{ width: { xs: '100%', sm: 'fit-content' } }}
+            sx={{
+              width: { xs: '48%', sm: 'fit-content' } 
+            }}
           >
             הבא
           </Button>

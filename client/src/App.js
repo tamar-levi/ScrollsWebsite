@@ -11,6 +11,7 @@ import UserProducts from './components/UserProducts';
 import UserAccount from './components/UserAccount';
 import EditUser from './components/EditUser';
 import PdfProductsList from './components/PdfProductsList';
+import ContactUs from './components/ContactUs';
 import { Box } from '@mui/material';
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/myProducts" element={<UserProducts />} /> 
             <Route path="/account" element={<UserAccount />} />
             <Route path="/editUser" element={<EditUser />} />
+            <Route path="/contactUs" element={<ContactUs  />} />
           </Routes>
         </Box>
       </Box>

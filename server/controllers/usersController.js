@@ -156,7 +156,7 @@ const handleGoogleLogin = async (req, res) => {
 
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        await sendWelcomeEmail(user.email, user.fullName);
+        // await sendWelcomeEmail(user.email, user.fullName);
 
         res.json({
             message: 'Google login successful',
