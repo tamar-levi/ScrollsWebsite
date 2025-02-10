@@ -152,12 +152,12 @@ const handleGoogleLogin = async (req, res) => {
                 isSeller: false,
                 password: require('crypto').randomBytes(16).toString('hex')
             });
+            await sendWelcomeEmail(user.email, user.fullName);
         }
 
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        // await sendWelcomeEmail(user.email, user.fullName);
-
+    
         res.json({
             message: 'Google login successful',
             token,

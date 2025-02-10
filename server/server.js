@@ -7,6 +7,7 @@ const userRouter = require('./routes/users');
 const productRouter = require('./routes/products');
 const emailRouter = require('./routes/email');
 require('./services/subscribeToCatalogRequests');
+const paymentRouter = require('./routes/paymentRoutes');
 
 const corsOptions = {
   origin: process.env.REACT_URL,
@@ -31,6 +32,7 @@ connectDB();
 app.use('/usersApi', userRouter); 
 app.use('/productsApi', productRouter); 
 app.use('/emailApi', emailRouter);
+app.use('/paymentApi', paymentRouter);
 
 const PORT = 5000;
 app.listen(PORT, () => {

@@ -12,8 +12,7 @@ import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import AddProduct from './AddProduct';
 import Info from './Info';
-import PaymentForm from './PaymentForm';
-import Review from './Review';
+import PaymentPage from './PaymentPage';
 import InfoMobile from './InfoMobile';
 import { Link } from 'react-router-dom';
 
@@ -22,7 +21,6 @@ const steps = ['פרטי המוצר', 'תשלום', 'סיום'];
 export default function Checkout() {
     const [activeStep, setActiveStep] = useState(0);
     const [productData, setProductData] = useState(null);
-    const [paymentData, setPaymentData] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const getStepContent = (step) => {
@@ -30,20 +28,18 @@ export default function Checkout() {
             case 0:
                 return <AddProduct onNext={handleNext} onFormSubmit={handleProductData} productData={productData} />;
             case 1:
-                return <PaymentForm onNext={handleNext} onBack={handleBack} onFormSubmit={handlePaymentData} paymentData={paymentData} productData={productData} />
-            case 2:
-                return <Review onNext={handleNext} onBack={handleBack} productData={productData} paymentData={paymentData} />;
+                return <PaymentPage onNext={handleNext} onBack={handleBack} productData={productData} />
             default:
                 throw new Error('Unknown step');
         }
     }
 
-    const handleNext = () => {
-        if (activeStep === 2) {
-            handleFinalSubmit();
+    const handleNext = async () => {
+        if (activeStep === 1) {
+            await addProduct(productData);
         }
         else {
-            if (activeStep <= 2) { setActiveStep((prev) => prev + 1); }
+            if (activeStep <= 1) { setActiveStep((prev) => prev + 1); }
         }
     };
 
@@ -54,19 +50,6 @@ export default function Checkout() {
     const handleProductData = (data) => {
         setProductData(data);
         console.log(data);
-    };
-
-    const handlePaymentData = (paymentData) => {
-        setPaymentData(paymentData);
-        console.log(paymentData);
-    }
-
-    const handleFinalSubmit = async () => {
-        await addProduct(productData);
-    };
-
-    const processPayment = async (paymentDetails) => {
-        console.log("The payment details are:", paymentDetails);
     };
 
     const addProduct = async () => {
@@ -115,8 +98,6 @@ export default function Checkout() {
                         sm: 8,
                     },
                     direction: 'rtl',
-                    // height: '100vh',
-                    // overflow: 'hidden',
                 }}
             >
                 <Grid
@@ -288,14 +269,10 @@ export default function Checkout() {
                                 </Step>
                             ))}
                         </Stepper>
-                        {activeStep === steps.length ? (
-                            <Stack spacing={2} useFlexGap>
+                        {activeStep === steps.length - 1 ? (
+                            <Stack spacing={2} useFlexGap >
                                 <Typography variant="h2" sx={{ mt: 4 }}>📜</Typography>
-                                <Typography variant="h5">המוצר שלך התווסף בהצלחה!</Typography>
-                                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                                    לינק לשיתוף המוצר
-                                    <strong> #140396</strong>
-                                </Typography>
+                                <Typography variant="h5">המוצר שלך התווסף בהצלחה</Typography>
                                 <Button
                                     component={Link}
                                     to="/products"

@@ -7,17 +7,19 @@ import Box from '@mui/material/Box';
 import AccountMenu from './AccountMenu';
 import { useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function NavBar() {
   const theme = useTheme();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.currentUser);
+  const isLoggedIn = Boolean(user);
 
   const handleProductsNavigation = (event) => {
     if (!isLoggedIn) {
       event.preventDefault(); 
       alert("עליך להתחבר כדי לצפות במוצרים");
+      navigate("/");
     } else {
       navigate("/products");
     }
@@ -41,7 +43,7 @@ export default function NavBar() {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
       <Toolbar>
-        <AccountMenu color={theme.palette.primary.main} />
+        <AccountMenu color={theme.palette.primary.main} isLoggedIn={isLoggedIn} />
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.4, sm: 3, md: 3 } }}>
           <Button sx={buttonStyles} component={Link} to="/contactUs">
