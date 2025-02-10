@@ -4,24 +4,24 @@ import { Button, Typography, Box, Alert } from '@mui/material';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import { ArrowForward, ArrowBack } from '@mui/icons-material';
 
-const PaymentPage = ({ onNext, onBack, productData = { price: 100 } }) => {
+const PaymentPage = ({ onNext, onBack, productData}) => {
     const [height, setHeight] = useState(500);
     const [paymentStatus, setPaymentStatus] = useState(null);
-    
+
     const currentUser = useSelector((state) => state.user.currentUser);
 
     const [paymentData, setPaymentData] = useState({
         Mosad: '7014113',
         ApiValid: '5tezOx+JDY',
         Zeout: '',
-        FirstName: currentUser?.FirstName || '',
-        LastName: currentUser?.LastName || '',
+        FirstName: currentUser?.fullName || '',
+        LastName: '',
         Street: '',
         City: currentUser?.city || '',
         Phone: currentUser?.phoneNumber || '',
         Mail: currentUser?.email || '',
         PaymentType: 'Ragil',  
-        Amount: productData?.price >= 1000 ? productData.price : '',
+        Amount: '', 
         Tashlumim: '1',
         Currency: '1',
         Groupe: '',
@@ -31,6 +31,25 @@ const PaymentPage = ({ onNext, onBack, productData = { price: 100 } }) => {
         CallBack: 'http://localhost:5000/paymentApi/payment-callback',
         CallBackMailError: 'scrollsSite@gmail.com',
     });
+
+    const calculatePaymentAmount = (price) => {
+        if (price > 1000 && price < 1500) {
+            return 10; 
+        } else if (price >= 1500 && price < 2000) {
+            return 15;
+        } else if (price >= 2000) {
+            return 20; 
+        }
+        return 0; 
+    };
+
+    useEffect(() => {
+        const paymentAmount = calculatePaymentAmount(productData?.price);
+        setPaymentData((prevData) => ({
+            ...prevData,
+            Amount: paymentAmount,
+        }));
+    }, [productData?.price]);
 
     useEffect(() => {
         const handleMessage = (event) => {
@@ -57,8 +76,7 @@ const PaymentPage = ({ onNext, onBack, productData = { price: 100 } }) => {
     };
 
     const handleNextStep = () => {
-
-        if (paymentStatus === 'success' || productData?.price < 1000) {
+        if (productData?.price < 1000 || paymentStatus === 'success') {
             onNext();  
         }
     };
@@ -84,10 +102,12 @@ const PaymentPage = ({ onNext, onBack, productData = { price: 100 } }) => {
                 {productData?.price < 1000 ? (
                     "מודעות עד 1000 ש״ח ללא עלות"
                 ) : productData?.price <= 1500 ? (
-                    "עלות: 15 ש״ח"
+                    "עלות: 10 ש״ח"
                 ) : productData?.price <= 2000 ? (
+                    "עלות: 15 ש״ח"
+                ) : (
                     "עלות: 20 ש״ח"
-                ) : null}
+                )}
                 <CurrencyExchangeIcon sx={{ marginRight: '16px' }} />
             </Typography>
 
@@ -115,7 +135,7 @@ const PaymentPage = ({ onNext, onBack, productData = { price: 100 } }) => {
                     variant="contained"
                     onClick={handleNextStep}
                     endIcon={<ArrowBack sx={{ marginRight: '10px' }} />}
-                    disabled={productData?.price >= 1000 && paymentStatus !== 'success'}
+                    disabled={paymentStatus !== 'success' && productData?.price >= 1000}
                 >
                     סיום
                 </Button>
