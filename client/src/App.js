@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateUser from './components/CreateUser';
 import ProductList from './components/ProductList';
-import PaymentForm from './components/PaymentForm';
 import NavBar from './components/NavBar';
 import HomePage from './components/HomePage';
 import About from './components/About';
@@ -60,7 +59,6 @@ function App() {
             <Route path="/products" element={<ProductList />} />
             <Route path="/add-product" element={<Checkout />} />
             <Route path="/create-user" element={<CreateUser />} />
-            <Route path="/payment" element={<PaymentForm />} />
             <Route path="/about" element={<About />} />
             <Route path="/myProducts" element={<UserProducts />} />
             <Route path="/account" element={<UserAccount />} />
