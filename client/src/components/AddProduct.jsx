@@ -192,7 +192,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                         value={formData.price}
                         onChange={handleChange}
                         fullWidth
-                        required
+                        
                         InputLabelProps={{
                             style: { color: 'black' },
                             shrink: true,

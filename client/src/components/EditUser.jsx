@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteUser, deleteUserProducts, updateUser } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Avatar } from '@mui/material';
+import { Box, TextField, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import axios from 'axios';
 
 export default function EditUser() {
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [fullName, setFullName] = useState(user?.fullName || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -62,7 +64,6 @@ export default function EditUser() {
     }
   };
 
-
   const handleDelete = async () => {
     if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? המוצרים שלך ימחקו גם כן.')) {
       console.log('User canceled deletion');
@@ -96,59 +97,74 @@ export default function EditUser() {
   };
 
   return (
-    <Box sx={{ width: '400px', margin: 'auto', textAlign: 'center', padding: '20px', boxShadow: 3, borderRadius: 2 }}>
-      <Avatar sx={{ width: 60, height: 60, margin: 'auto', bgcolor: 'primary.main' }}>
-        {user?.fullName ? user.fullName.charAt(0) : 'א'}
-      </Avatar>
-      <Typography variant="h6" sx={{ mt: 2 }}>עריכת חשבון</Typography>
-      <TextField
-        fullWidth
-        label="שם מלא"
-        value={fullName}
-        onChange={(e) => { console.log('Full Name changed:', e.target.value); setFullName(e.target.value); }}
-        sx={{ mt: 2 }}
-      />
-      <TextField
-        fullWidth
-        label="אימייל"
-        value={email}
-        onChange={(e) => { console.log('Email changed:', e.target.value); setEmail(e.target.value); }}
-        sx={{ mt: 2 }}
-      />
-      <TextField
-        fullWidth
-        label="כתובת"
-        value={city}
-        onChange={(e) => { console.log('City changed:', e.target.value); setCity(e.target.value); }}
-        sx={{ mt: 2 }}
-      />
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '90vh', // ירד ב-10% מהגובה של המסך כדי להעלות את הריבוע
+        padding: '10px',
+      }}
+    >
+      <Box
+        sx={{
+          width: isMobile ? '90%' : '400px',
+          textAlign: 'center',
+          boxShadow: 3,
+          borderRadius: 2,
+          backgroundColor: '#f9f9f9',
+          padding: '20px',
+        }}
+      >
+        <Avatar sx={{ width: 60, height: 60, margin: 'auto', bgcolor: 'primary.main' }}>
+          {user?.fullName ? user.fullName.charAt(0) : 'א'}
+        </Avatar>
+        <Typography variant="h6" sx={{ mt: 2 }}>עריכת חשבון</Typography>
+        <TextField
+          fullWidth
+          label="שם מלא"
+          value={fullName}
+          onChange={(e) => { setFullName(e.target.value); }}
+          sx={{ mt: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="אימייל"
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); }}
+          sx={{ mt: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="כתובת"
+          value={city}
+          onChange={(e) => { setCity(e.target.value); }}
+          sx={{ mt: 2 }}
+        />
 
-      {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-        <Button variant="outlined" onClick={handleGoBack}>חזרה</Button>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+          <Button variant="outlined" onClick={handleGoBack}>חזרה</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
+            disabled={loading}
+          >
+            {loading ? 'שומר...' : 'שמירה'}
+          </Button>
+        </Box>
+
         <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSave}
-          disabled={loading}
+          variant="outlined"
+          color="error"
+          onClick={handleDelete}
+          sx={{ mt: 2 }}
         >
-          {loading ? 'שומר...' : 'שמירה'}
+          מחיקת משתמש
         </Button>
       </Box>
-
-      <Button
-        variant="outlined"
-        color="error"
-        onClick={(e) => {
-          e.preventDefault();
-          console.log('Button clicked');
-          return false;
-        }}
-        sx={{ mt: 2 }}
-      >
-        מחיקת משתמש
-      </Button>
     </Box>
   );
 }

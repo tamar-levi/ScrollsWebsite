@@ -1,10 +1,15 @@
 import * as React from 'react';
-import { Box, Typography, Grid, Paper, IconButton } from '@mui/material';
-import { Book, LibraryBooks, History } from '@mui/icons-material';
+import { Box, Typography, Grid, Paper } from '@mui/material';
 
 export default function About() {
+  const text1 = `בלוח המגילות תמצאו מגוון רחב של מגילות אסתר לפי כל המנהגים, 
+  ובטווח מחירים רחב. אנו מחברים אתכם ישירות לסופרי הסת"ם, כך שתוכלו להתרשם 
+  באופן אישי וללא פערי תיווך.`;
+  const text2 = `אנו מספקים פלטפורמה אמינה המאפשרת קנייה בטוחה היישר מהסופר, 
+  תוך שמירה על סטנדרטים מחמירים של איכות והידור.`;
+
   return (
-    <Box sx={{ padding: '40px', backgroundColor: '#f9f9f9' }}>
+    <Box sx={{ padding: '40px', backgroundColor: '#f9f9f9', direction: 'rtl' }}>
       <Typography
         variant="h3"
         align="center"
@@ -15,126 +20,55 @@ export default function About() {
           color: '#3f3f3f',
         }}
       >
-        אודות האתר
+        לוח המגילות
       </Typography>
 
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{
-              padding: 3,
-              backgroundColor: '#ffffff',
-              boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.1)',
-              textAlign: 'center',
-              borderRadius: '8px',
-            }}
-          >
-            <IconButton sx={{ fontSize: '40px', color: '#3f51b5' }}>
-              <Book />
-            </IconButton>
-            <Typography
-              variant="h6"
-              sx={{
-                fontFamily: 'Rubik, sans-serif',
-                fontWeight: 600,
-                color: '#3f3f3f',
-                marginTop: 2,
-                marginBottom: 1,
-              }}
-            >
-              מוצרי מגילות וכתבים
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontFamily: 'Rubik, sans-serif',
-                color: '#555',
-                textAlign: 'center',
-              }}
-            >
-              אנו מציעים מגוון רחב של מגילות, כתבים וספרי תורה איכותיים המיוצרים בעבודת יד, תוך שמירה על המסורת היהודית וערכיה.
-            </Typography>
-          </Paper>
-        </Grid>
+      <Typography
+        variant="h5"
+        align="center"
+        sx={{
+          fontFamily: 'Rubik, sans-serif',
+          fontWeight: 500,
+          marginBottom: 4,
+          color: '#555',
+          maxWidth: '800px',
+          margin: '0 auto',
+          lineHeight: 1.8,
+        }}
+      >
+        מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם.
+      </Typography>
 
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{
-              padding: 3,
-              backgroundColor: '#ffffff',
-              boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.1)',
-              textAlign: 'center',
-              borderRadius: '8px',
-            }}
-          >
-            <IconButton sx={{ fontSize: '40px', color: '#3f51b5' }}>
-              <LibraryBooks />
-            </IconButton>
-            <Typography
-              variant="h6"
+      <Grid container spacing={4} justifyContent="center">
+        {["קנייה ישירה מהסופר", "אמינות ושקיפות"].map((title, index) => (
+          <Grid item xs={12} md={5} key={index}>
+            <Paper
+              elevation={3}
               sx={{
-                fontFamily: 'Rubik, sans-serif',
-                fontWeight: 600,
-                color: '#3f3f3f',
-                marginTop: 2,
-                marginBottom: 1,
+                padding: 4,
+                backgroundColor: '#ffffff',
+                border: '2px solid rgba(0, 123, 255, 0.5)', // תכלת בהיר ושקוף
+                boxShadow: '0px 8px 20px rgba(0, 123, 255, 0.3)', // הצללה עדינה
+                borderRadius: '8px',
+                textAlign: 'right',
+                minHeight: '180px',
               }}
             >
-              הצטרפות למכירה
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontFamily: 'Rubik, sans-serif',
-                color: '#555',
-                textAlign: 'center',
-              }}
-            >
-              אנו מספקים פלטפורמה פשוטה ויעילה לכל מי שמעוניין להציע את מוצריו למכירה, תוך שמירה על שקיפות והוגנות.
-            </Typography>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={3}
-            sx={{
-              padding: 3,
-              backgroundColor: '#ffffff',
-              boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.1)',
-              textAlign: 'center',
-              borderRadius: '8px',
-            }}
-          >
-            <IconButton sx={{ fontSize: '40px', color: '#3f51b5' }}>
-              <History />
-            </IconButton>
-            <Typography
-              variant="h6"
-              sx={{
-                fontFamily: 'Rubik, sans-serif',
-                fontWeight: 600,
-                color: '#3f3f3f',
-                marginTop: 2,
-                marginBottom: 1,
-              }}
-            >
-              מסורת יהודית וערכים
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontFamily: 'Rubik, sans-serif',
-                color: '#555',
-                textAlign: 'center',
-              }}
-            >
-              אנו שואפים לחזק את המסורת היהודית ולקדם את הערכים שלה, תוך שמירה על איכות, מקצועיות, והיסטוריה יהודית עשירה.
-            </Typography>
-          </Paper>
-        </Grid>
+              <Typography
+                variant="h6"
+                sx={{ fontFamily: 'Rubik, sans-serif', fontWeight: 600, color: '#3f3f3f', marginBottom: 2 }}
+              >
+                {title}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ fontFamily: 'Rubik, sans-serif', color: '#555', lineHeight: 1.6 }}
+              >
+                {index === 0 ? text1 : text2}
+              </Typography>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
 
       <Box sx={{ marginTop: 5, textAlign: 'center' }}>
@@ -148,7 +82,22 @@ export default function About() {
             lineHeight: 1.8,
           }}
         >
-          האתר שלנו לא רק מציע מוצרים, אלא גם יוצר קהילה של אנשים שמחוברים לאותה תרבות וערכים. אנו מאמינים שדרך המסורת וההיסטוריה שלנו נוכל ליצור חוויית קנייה ומכירה שתהיה מבוססת על כבוד הדדי וקהילתיות. בין אם אתם מחפשים מגילה מיוחדת, ספר תורה חדש או פשוט מעוניינים לשתף את מה שאתם אוהבים, הגעתם למקום הנכון.
+          הלוח מפנה אותך ישירות לסופר, כך שתוכל לשמוע את כל הפרטים על המגילה – רמת ההידור, בחירת הקלף והדיו, ותהליך ההגהה והתיקון.
+        </Typography>
+      </Box>
+
+      <Box sx={{ marginTop: 5, textAlign: 'center' }}>
+        <Typography
+          variant="h6"
+          sx={{ fontFamily: 'Rubik, sans-serif', fontWeight: 600, color: '#3f3f3f', marginBottom: 1 }}
+        >
+          זקוקים לעזרה?
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ fontFamily: 'Rubik, sans-serif', color: '#555' }}
+        >
+          ניתן לפנות אלינו בטלפון: 052-7672693 או במייל: ScrollsSite@gmail.com
         </Typography>
       </Box>
     </Box>
