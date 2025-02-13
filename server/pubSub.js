@@ -4,11 +4,11 @@ const fs = require('fs');
 const nodemailer = require('nodemailer');
 const OAuth2 = google.auth.OAuth2;
 require('dotenv').config();
-const { sendEmailWithPDF } = require('./emailService');
-
+const { sendEmailWithPDF } = require('./services/emailService');
+const {createProductsPDF} = require('./services/pdfService');
 const pubSubClient = new PubSub();
 const clientId = process.env.GOOGLE_CLIENT_ID_EMAILS;
-const clientSecret = process.env.GOOGLE_CLIENT_SECERT;
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 const emailSender = "ScrollsSite@gmail.com";
 const topicName = 'projects/scrollssite/topics/email-catalog-request';
@@ -24,6 +24,12 @@ oauth2Client.setCredentials({
     refresh_token: refreshToken
 });
 
+const SCOPES = [
+    'https://www.googleapis.com/auth/gmail.send',        
+    'https://www.googleapis.com/auth/gmail.readonly',    
+    'https://www.googleapis.com/auth/gmail.modify'       
+];
+
 oauth2Client.on('tokens', (tokens) => {
     if (tokens.refresh_token) {
         console.log("🔄 Received new Refresh Token:", tokens.refresh_token);
@@ -38,7 +44,8 @@ async function checkAccessToken() {
         if (!token) throw new Error("The received Access Token is empty!");
         console.log("✅ Access Token successfully received:", token);
     } catch (error) {
-        console.error("❌ Error receiving Access Token:", error.message || error);
+        console.error("❌ Error receiving Access Token:", error.message );
+        console.error("Full error:", error.response?.data || error);
         process.exit(1);
     }
 }
@@ -58,7 +65,6 @@ async function validateGmailAuth() {
 
 validateGmailAuth();
 
-// Function to listen for incoming messages
 const listenForMessages = () => {
     const subscription = pubSubClient.subscription(subscriptionName);
     console.log('👂 Starting to listen for messages on Subscription:', subscriptionName);
@@ -107,8 +113,7 @@ const listenForMessages = () => {
     });
 };
 
-// Reinitialize the listener every 30 seconds
 setInterval(() => {
     console.log("🔄 Checking for new messages...");
     listenForMessages();
-}, 30000); // 30 seconds
+}, 30000); 

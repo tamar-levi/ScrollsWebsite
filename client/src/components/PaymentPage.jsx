@@ -33,10 +33,10 @@ const PaymentPage = ({ onNext, onBack, productData }) => {
     }), [currentUser, productData]);
 
     function calculatePaymentAmount(price) {
-        if (price > 1000 && price < 1500) return 5;
-        if (price >= 1500 && price < 2000) return 15;
-        if (price >= 2000) return 20;
-        return 0;
+        if (price <= 6000) return 30 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
+        if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
+        return 40;  
     }
 
     useEffect(() => {

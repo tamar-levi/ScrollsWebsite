@@ -1,24 +1,26 @@
-const Product = require('../models/productModel'); 
+const Product = require('../models/productModel');
 require('dotenv').config();
 const mongoose = require('mongoose');
 
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find(); 
+        const products = await Product.find().populate('userId'); // חזרת את הפונקציה בצורה אסינכרונית
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
+
         if (!referer || !referer.includes(allowedPort)) {
             products.forEach(product => {
-                product.primaryImage = product.primaryImage.slice(0, 50); 
-                product.additionalImages = product.additionalImages.map(img => img.slice(0, 50)); 
+                product.primaryImage = product.primaryImage.slice(0, 50);
+                product.additionalImages = product.additionalImages.map(img => img.slice(0, 50));
             });
         }
+
         res.json(products);
     } catch (err) {
         console.error('Error fetching products', err);
-        res.status(500).send('Database error');
+        res.status(500).json({ error: 'Database error' }); // כאן מחזירים JSON עם הודעת שגיאה
     }
 };
 
@@ -26,7 +28,7 @@ const addProduct = async (req, res) => {
     try {
         const userId = req.user.id;
         const { scriptType, scrollType, price, note, isPremiumAd } = req.body;
-        
+
         if (!req.files || !req.files.primaryImage) {
             return res.status(400).json({ message: 'Primary image is required' });
         }
@@ -56,7 +58,7 @@ const addProduct = async (req, res) => {
 
 const getAllProductsByUser = async (req, res) => {
     try {
-        const userId = req.user.id; 
+        const userId = req.user.id;
         const products = await Product.find({ userId });
         res.json(products);
     } catch (err) {
@@ -108,9 +110,9 @@ const updateProductsDetails = async (req, res) => {
 
 
 const deleteProduct = async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     try {
-        const deletedProduct = await Product.findByIdAndDelete(id); 
+        const deletedProduct = await Product.findByIdAndDelete(id);
         if (!deletedProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -123,7 +125,7 @@ const deleteProduct = async (req, res) => {
 };
 
 const addProductFromForm = async (req, res) => {
-    const { scriptType, scrollType, price, note, isPremiumAd, primaryImage, additionalImages, sellerName, phoneNumber, email } = req.body;  
+    const { scriptType, scrollType, price, note, isPremiumAd, primaryImage, additionalImages, sellerName, phoneNumber, email } = req.body;
 
     try {
 
@@ -151,7 +153,7 @@ const addProductFromForm = async (req, res) => {
             additionalImages: additionalImages || [],
             note,
             isPremiumAd,
-            userId: user._id 
+            userId: user._id
         });
 
         await newProduct.save();
@@ -163,4 +165,4 @@ const addProductFromForm = async (req, res) => {
 };
 
 
-module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm};
+module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm };

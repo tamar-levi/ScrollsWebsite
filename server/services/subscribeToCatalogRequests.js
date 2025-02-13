@@ -1,80 +1,53 @@
 const { google } = require('googleapis');
-const fs = require('fs');
-const dotenv = require('dotenv');
 const { sendEmailWithPDF } = require('./emailService');
+const { createProductsPDF } = require('./pdfService');
 
-dotenv.config();
+const gmail = google.gmail('v1');
 
-const clientId = process.env.GOOGLE_CLIENT_ID_EMAILS;
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+// Function to listen for new emails
+async function listenForCatalogEmails(auth) {
+    const gmailClient = google.gmail({ version: 'v1', auth });
 
-const oauth2Client = new google.auth.OAuth2(
-    clientId,
-    clientSecret,
-    'https://developers.google.com/oauthplayground'
-);
-
-oauth2Client.setCredentials({ refresh_token: refreshToken });
-
-const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
-
-async function checkEmails() {
     try {
-        console.log("📬 Checking for catalog requests...");
-
-        // מחפש מיילים עם "catalog" בנושא
-        const res = await gmail.users.messages.list({
+        const response = await gmailClient.users.messages.list({
             userId: 'me',
-            q: 'subject:catalog is:unread'
+            q: 'subject:קטלוג', 
         });
 
-        if (!res.data.messages || res.data.messages.length === 0) {
-            console.log("📭 No new catalog requests found.");
+        const messages = response.data.messages || [];
+        if (messages.length === 0) {
+            console.log('No catalog emails found.');
             return;
         }
 
-        for (const message of res.data.messages) {
-            const msg = await gmail.users.messages.get({
-                userId: 'me',
-                id: message.id
-            });
-
-            const headers = msg.data.payload.headers;
-            const fromHeader = headers.find(header => header.name === 'From');
-            const email = fromHeader ? fromHeader.value.match(/<(.*)>/)[1] : null;
-
-            if (!email) {
-                console.warn("⚠️ Could not extract sender email, skipping...");
-                continue;
-            }
-
-            console.log(`📩 Catalog request from: ${email}`);
-
-            // יצירת PDF ושליחתו
-            const pdfPath = await createProductsPDF();
-            if (!pdfPath || !fs.existsSync(pdfPath)) {
-                throw new Error("❌ PDF file not created properly!");
-            }
-
-            const pdfData = fs.readFileSync(pdfPath, 'base64');
-            await sendEmailWithPDF(email, pdfData);
-
-            console.log("📧 Catalog email sent successfully!");
-
-            // סימון המייל כנקרא
-            await gmail.users.messages.modify({
-                userId: 'me',
-                id: message.id,
-                resource: {
-                    removeLabelIds: ['UNREAD']
-                }
-            });
+        for (const message of messages) {
+            await processMessage(gmailClient, message.id);
         }
     } catch (error) {
-        console.error("❌ Error retrieving emails:", error.message || error);
+        console.error('Error fetching messages:', error);
     }
 }
 
-// בדיקת מיילים כל 30 שניות
-setInterval(checkEmails, 30000);
+async function processMessage(gmailClient, messageId) {
+    try {
+        const message = await gmailClient.users.messages.get({
+            userId: 'me',
+            id: messageId,
+        });
+
+        const subject = message.data.payload.headers.find(header => header.name === 'Subject').value;
+        console.log(`Processing message with subject: ${subject}`);
+
+        const pdfBuffer = await createProductsPDF();
+        await sendEmailWithPDF(pdfBuffer, subject);
+    } catch (error) {
+        console.error(`Error processing message ID ${messageId}:`, error);
+    }
+}
+
+async function main() {
+    const auth = await authorize(); // Assume authorize() is a function that handles OAuth2 authentication
+    await listenForCatalogEmails(auth);
+}
+
+main().catch(console.error);
