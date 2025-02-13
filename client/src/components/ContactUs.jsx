@@ -35,17 +35,17 @@ const ContactUs = () => {
         }}
       >
         <CardContent>
-          <Typography 
-            variant={isMobile ? "h5" : isTablet ? "h4" : "h3"} 
-            fontWeight="bold" 
+          <Typography
+            variant={isMobile ? "h5" : isTablet ? "h4" : "h3"}
+            fontWeight="bold"
             gutterBottom
             sx={{ color: '#333', textShadow: '2px 2px 5px rgba(0,0,0,0.2)' }}
           >
             📜 צור קשר
           </Typography>
-          <Typography 
-            variant="h6" 
-            color="textSecondary" 
+          <Typography
+            variant="h6"
+            color="textSecondary"
             sx={{ mb: 3, fontSize: isMobile ? '0.9rem' : isTablet ? '1rem' : '1.2rem', fontWeight: '500' }}
           >
             לכל מקרה ובעיה, אנחנו פה איתך! ניתן לפנות אלינו במייל או בטלפון
@@ -53,7 +53,7 @@ const ContactUs = () => {
           <Box display="flex" justifyContent="center" alignItems="center" gap={1} sx={{ mb: 2, flexDirection: isMobile ? 'column' : 'row' }}>
             <Mail size={isMobile ? 20 : 24} color="#1976d2" />
             <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2', fontSize: isMobile ? '1rem' : '1.2rem' }}>
-              ScrollsSite@gmail.com
+                ScrollsSite@gmail.com
             </Typography>
           </Box>
           <Box display="flex" justifyContent="center" alignItems="center" gap={1} sx={{ flexDirection: isMobile ? 'column' : 'row' }}>

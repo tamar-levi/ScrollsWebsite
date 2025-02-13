@@ -6,8 +6,8 @@ const connectDB = require('./db');
 const userRouter = require('./routes/users');
 const productRouter = require('./routes/products');
 const emailRouter = require('./routes/email');
-require('./services/subscribeToCatalogRequests');
 const paymentRouter = require('./routes/paymentRoutes');
+// require('./services/subscribeToCatalogRequests');
 
 const corsOptions = {
   origin: process.env.REACT_URL,

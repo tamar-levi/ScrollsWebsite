@@ -1,9 +1,11 @@
 <html>
+
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-      body {
-            font-family: Arial, sans-serif;
+        body {
+            font-family: 'Heebo', Arial, sans-serif;
             direction: rtl;
             text-align: right;
             background-color: #f8f8f8;
@@ -22,24 +24,38 @@
             margin-bottom: 20px;
         }
 
+        .details {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
         .card {
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 10px;
             margin-bottom: 20px;
             margin-top: 20px;
             display: flex;
             align-items: center;
             page-break-inside: avoid;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .card:first-of-type {
+            padding-top: 20px;
         }
 
         .card img {
             width: 33%;
-            height: auto;
+            height: 260px;
             border-radius: 8px;
             margin-left: 20px;
             object-fit: contain;
+            flex-shrink: 0;
         }
 
         .card h2 {
@@ -52,12 +68,17 @@
             font-size: 14px;
         }
 
-        .page {
+        .card:nth-child(3n+1) {
+            page-break-before: auto;
+            padding-top: 20px;
+        }
+
+        .card:nth-child(3n) {
             page-break-after: always;
         }
 
-        .card:nth-child(4n) {
-            page-break-after: always;
+        .card:last-child {
+            page-break-after: avoid;
         }
 
         .title {
@@ -75,34 +96,43 @@
         }
 
         .user-info i {
-            font-size: 14px;
+            font-size: 12px;
             margin-left: 10px;
+        }
+
+        p {
+            line-height: 1.4;
+            font-size: 12px;
+        }
+
+        .card-content {
+            flex: 1;
+            overflow-y: auto;
+            height: 100%;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h2 class="title">לוח המגילות </h2>
         {{#each products}}
         <div class="card">
             <img src="{{primaryImage}}" alt="{{note}}" style="max-width: 100%; height: auto; object-fit: contain;">
             <div>
-                <h4>פרטי המגילה:</h4>
-                <p>סוג המגילה: {{scriptType}}</p>
-                <p>סוג כתב: {{scrollType}}</p>
-                <p>מחיר: {{price}} ₪</p>
+                <div class="details"><i class="fas fa-scroll"></i> פרטי המגילה:</div>
+                <p><span class="label">סוג המגילה:</span> {{scriptType}}</p>
+                <p><span class="label">סוג כתב:</span> {{scrollType}}</p>
+                <p><span class="label">מחיר:</span> {{price}} ₪</p>
                 <p>{{note}}</p>
-                <div class="user-info">
-                    <h4>פרטי המוכר:</h4>
-                    <p><i class="fas fa-user"></i> {{user.fullName}}</p>
-                    <p><i class="fas fa-envelope"></i> {{user.email}}</p>
-                    <p><i class="fas fa-phone"></i> {{user.phoneNumber}}</p>
-                    <p><i class="fas fa-map-marker-alt"></i> {{user.city}}</p>
-                </div>
+                <div class="details"><i class="fas fa-user"></i> פרטי המוכר:</div>
+                <p><span class="label">שם מלא:</span> {{user.fullName}}</p>
+                <p><span class="label">אימייל:</span> {{user.email}}</p>
+                <p><span class="label">טלפון:</span> {{user.phoneNumber}}</p>
+                <p><span class="label">עיר:</span> {{user.city}}</p>
             </div>
         </div>
         {{/each}}
     </div>
 </body>
+
 </html>

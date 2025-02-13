@@ -20,6 +20,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch('http://localhost:5000/productsApi/getAllProducts');
+        console.log('Response:', response);
         const data = await response.json();
         setProducts(data);
         setFilteredProducts(data);
@@ -41,20 +42,22 @@ const ProductList = () => {
     setSelectedProduct(null);
   };
 
-  const handleFilter = ({ priceRange, fontType, scrollType }) => {
+  const handleFilter = ({ priceRange, fontType, scrollType, city }) => {
+    console.log('Filtering with:', { priceRange, fontType, scrollType, city });
     const filtered = products.filter((product) => {
       const isPriceInRange = product.price >= priceRange[0] && product.price <= priceRange[1];
       const normalizedProductFont = product.scriptType?.replace(/['"]/g, '');
       const normalizedFilterFont = fontType?.replace(/['"]/g, '');
       const isFontTypeMatch = fontType ? normalizedProductFont === normalizedFilterFont : true;
       const isScrollTypeMatch = scrollType ? product.scrollType === scrollType : true;
-      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch;
+      const isCityMatch = city? product.userId.city == city: true;
+      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch;
     });
 
     setFilteredProducts(filtered);
     setNoProducts(filtered.length === 0);
   };
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [filteredProducts]);

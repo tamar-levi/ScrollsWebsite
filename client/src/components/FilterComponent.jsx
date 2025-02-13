@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Slider, Button, RadioGroup, FormControlLabel, Typography, Radio, Box } from '@mui/material';
+import { Slider, Button, RadioGroup, FormControlLabel, Typography, Radio, Box, Select, MenuItem } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,6 +13,29 @@ const FilterComponent = ({ onFilter, products }) => {
     const [scrollType, setScrollType] = useState('');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
+    const [selectedCity, setSelectedCity] = useState('');
+
+    const israeliCities = [
+        'ירושלים',
+        'בני ברק',
+        'אלעד',
+        'ביתר עילית',
+        'מודיעין עילית',
+        'צפת',
+        'בית שמש',
+        'אשדוד',
+        'פתח תקווה',
+        'רחובות',
+        'נתניה',
+        'חיפה',
+        'טבריה',
+        'אשקלון',
+        'רכסים',
+        'כפר חבד',
+        'קרית גת',
+        'עפולה',
+        'קרית ספר'
+    ];
 
     useEffect(() => {
         const handleResize = () => {
@@ -40,25 +63,32 @@ const FilterComponent = ({ onFilter, products }) => {
         setScrollType(event.target.value);
     };
 
+    const handleCityChange = (event) => {
+        setSelectedCity(event.target.value);
+    };
+
     const applyFilters = () => {
         const normalizedFontType = fontType
             .replace(/["']/g, '')
             .replace('הארי', 'האר"י')
             .replace('חבד', 'חב"ד');
-            
         onFilter({
             priceRange,
             fontType: normalizedFontType || null,
             scrollType: scrollType || null,
+            city: selectedCity || null,
         });
         if (isMobile) setIsFilterOpen(false);
     };
 
     const resetFilters = () => {
-        setPriceRange([100, maxPrice]);
+        setPriceRange([0, maxPrice]);
         setFontType('');
         setScrollType('');
-        onFilter({ priceRange: [100, 10000], fontType: null, scrollType: null });
+        setSelectedCity('');
+        onFilter({
+            priceRange: [0, 10000], fontType: null, scrollType: null, selectedCity: null
+        });
         if (isMobile) setIsFilterOpen(false);
     };
 
@@ -137,7 +167,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '8px',
-                            padding: '10px 0'
+                            padding: '5px 0'
                         }}
                     >
                         {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני'].map((type) => (
@@ -163,7 +193,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '8px',
-                            padding: '10px 0'
+                            padding: '5px 0'
                         }}
                     >
                         {['המלך 28 שורות', 'המלך 21 שורות', '11 שורות', '42 שורות', '11 שורות הרב עובדיה'].map((type) => (
@@ -192,6 +222,28 @@ const FilterComponent = ({ onFilter, products }) => {
                             style={{ width: '85%' }}
                         />
                     </div>
+                </div>
+                <div style={{ width: '90%' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                        בחר עיר:
+                    </Typography>
+                    <Select
+                        value={selectedCity}
+                        onChange={handleCityChange}
+                        fullWidth
+                        size="small"
+                        displayEmpty
+                        sx={{ textAlign: 'right', direction: 'rtl' }}
+                    >
+                        <MenuItem value="">
+                            <em>כל הערים</em>
+                        </MenuItem>
+                        {israeliCities.map((city) => (
+                            <MenuItem key={city} value={city}>
+                                {city}
+                            </MenuItem>
+                        ))}
+                    </Select>
                 </div>
 
                 <Box display="flex" justifyContent="center" gap="10px" width="90%" style={{ paddingBottom: '20px' }}>

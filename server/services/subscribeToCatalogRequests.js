@@ -1,56 +1,53 @@
-const { PubSub } = require('@google-cloud/pubsub');
-const fs = require('fs');
-const pubSubClient = new PubSub();
-const { sendEmailWithPDF } = require('./emailService');  
+const { google } = require('googleapis');
+const { sendEmailWithPDF } = require('./emailService');
+const { createProductsPDF } = require('./pdfService');
 
-const subscriptionName = 'email-catalog-subscription'; 
+const gmail = google.gmail('v1');
 
-const listenToCatalogRequests = () => {
-    const subscription = pubSubClient.subscription(subscriptionName);
+// Function to listen for new emails
+async function listenForCatalogEmails(auth) {
+    const gmailClient = google.gmail({ version: 'v1', auth });
 
-    const messageHandler = async (message) => {
-        try {
-            const messageData = JSON.parse(message.data.toString());
+    try {
+        const response = await gmailClient.users.messages.list({
+            userId: 'me',
+            q: 'subject:קטלוג', 
+        });
 
-            console.log("📩 התקבלה הודעה: ", messageData);
-
-            const { email, subject } = messageData;
-
-            if (!email) {
-                console.error("❌ כתובת מייל חסרה בהודעה");
-                message.ack(); 
-                return;
-            }
-
-            if (!subject || !subject.toLowerCase().includes('קטלוג')) {
-                console.log("⚠️ המייל אינו בקשת קטלוג, מתעלם.");
-                message.ack();
-                return;
-            }
-
-            console.log(`📩 קיבלת בקשה חדשה מקטלוג מכתובת: ${email}`);
-
-            // קריאה לקובץ ה-PDF
-            const pdfPath = 'products.pdf';  
-            if (!fs.existsSync(pdfPath)) {
-                console.error("❌ קובץ PDF לא נמצא!");
-                message.ack();
-                return;
-            }
-
-            const pdfData = fs.readFileSync(pdfPath, 'base64');
-
-            await sendEmailWithPDF(email, pdfData);
-            console.log("📧 מייל עם קטלוג נשלח בהצלחה!");
-
-        } catch (error) {
-            console.error("❌ שגיאה בטיפול בהודעה:", error);
+        const messages = response.data.messages || [];
+        if (messages.length === 0) {
+            console.log('No catalog emails found.');
+            return;
         }
 
-        message.ack(); 
-    };
+        for (const message of messages) {
+            await processMessage(gmailClient, message.id);
+        }
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+    }
+}
 
-    subscription.on('message', messageHandler); 
-};
+async function processMessage(gmailClient, messageId) {
+    try {
+        const message = await gmailClient.users.messages.get({
+            userId: 'me',
+            id: messageId,
+        });
 
-listenToCatalogRequests();
+        const subject = message.data.payload.headers.find(header => header.name === 'Subject').value;
+        console.log(`Processing message with subject: ${subject}`);
+
+        const pdfBuffer = await createProductsPDF();
+        await sendEmailWithPDF(pdfBuffer, subject);
+    } catch (error) {
+        console.error(`Error processing message ID ${messageId}:`, error);
+    }
+}
+
+async function main() {
+    const auth = await authorize(); // Assume authorize() is a function that handles OAuth2 authentication
+    await listenForCatalogEmails(auth);
+}
+
+main().catch(console.error);

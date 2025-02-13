@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
 require('dotenv').config();
 const clientId = process.env.GOOGLE_CLIENT_ID_EMAILS;
-const clientSecret = process.env.GOOGLE_CLIENT_SECERT;
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 const sendWelcomeEmail = async (email, fullName) => {
     const oauth2Client = new OAuth2(
