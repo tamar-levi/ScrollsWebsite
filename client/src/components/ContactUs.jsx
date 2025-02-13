@@ -7,11 +7,6 @@ const ContactUs = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  // מוודא שהרקע האפור יחול על כל הדף
-  useEffect(() => {
-    document.body.style.backgroundColor = '#f5f5f5';
-  }, []);
-
   return (
     <Box
       sx={{

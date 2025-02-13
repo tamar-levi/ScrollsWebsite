@@ -15,7 +15,7 @@ import Info from './Info';
 import PaymentPage from './PaymentPage';
 import InfoMobile from './InfoMobile';
 import { Link } from 'react-router-dom';
-
+import NedarimPayment from './NedarimPayment';
 const steps = ['פרטי המוצר', 'תשלום', 'סיום'];
 
 export default function Checkout() {
@@ -28,7 +28,7 @@ export default function Checkout() {
             case 0:
                 return <AddProduct onNext={handleNext} onFormSubmit={handleProductData} productData={productData} />;
             case 1:
-                return <PaymentPage onNext={handleNext} onBack={handleBack} productData={productData} />
+                return <NedarimPayment onNext={handleNext} onBack={handleBack} productData={productData} />
             default:
                 throw new Error('Unknown step');
         }

@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './redux/userSlice';
 import PaymentPage from './components/PaymentPage';
-
+import NedarimPayment from './components/NedarimPayment';
 function App() {
   const dispatch = useDispatch();
 

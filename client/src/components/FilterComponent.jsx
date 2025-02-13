@@ -152,12 +152,12 @@ const FilterComponent = ({ onFilter, products }) => {
                     </Button>
                 )}
 
-                <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '1rem', marginTop: isMobile ? '20px' : '0' }}>
+                <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '1rem', marginTop: isMobile ? '20px' : '-20px' }}>
                     סינון מוצרים
                 </Typography>
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem',marginTop: '-10px' }}>
                         בחר סוג כתב:
                     </Typography>
                     <RadioGroup
@@ -166,16 +166,16 @@ const FilterComponent = ({ onFilter, products }) => {
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '8px',
+                            gap: '6px',
                             padding: '5px 0'
                         }}
                     >
-                        {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני'].map((type) => (
+                        {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני','אחר'].map((type) => (
                             <FormControlLabel
                                 key={type}
                                 value={type}
-                                control={<Radio size="small" style={{ padding: '2px' }} />}
-                                label={<span style={{ fontSize: '0.85rem' }}>{type}</span>}
+                                control={<Radio size="small" style={{ padding: '1.5px' }} />}
+                                label={<span style={{ fontSize: '0.8rem' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
@@ -192,16 +192,16 @@ const FilterComponent = ({ onFilter, products }) => {
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '8px',
+                            gap: '6px',
                             padding: '5px 0'
                         }}
                     >
-                        {['המלך 28 שורות', 'המלך 21 שורות', '11 שורות', '42 שורות', '11 שורות הרב עובדיה'].map((type) => (
+                        {['המלך 28 שורות', 'המלך 21 שורות', '11 שורות', '42 שורות', "11 שורות גליון ס''ת", 'אחר'].map((type) => (
                             <FormControlLabel
                                 key={type}
                                 value={type}
-                                control={<Radio size="small" style={{ padding: '2px' }} />}
-                                label={<span style={{ fontSize: '0.85rem' }}>{type}</span>}
+                                control={<Radio size="small" style={{ padding: '1.5px' }} />}
+                                label={<span style={{ fontSize: '0.8rem' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
@@ -209,7 +209,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
                         טווח מחירים:
                     </Typography>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -224,7 +224,7 @@ const FilterComponent = ({ onFilter, products }) => {
                     </div>
                 </div>
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem' , marginTop: '-10px' }}>
                         בחר עיר:
                     </Typography>
                     <Select

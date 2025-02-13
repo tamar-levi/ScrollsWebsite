@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, IconButton, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 const CreateUser = ({ open, onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const passwordRef = useRef(null);
   const [formData, setFormData] = useState({
     fullName: '',
     displayName: '',
@@ -27,6 +28,12 @@ const CreateUser = ({ open, onClose }) => {
     isSeller: false,
   });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+  useEffect(() => {
+    if (passwordRef.current) {
+      passwordRef.current.focus();
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -68,7 +75,6 @@ const CreateUser = ({ open, onClose }) => {
             יצירת משתמש חדש
           </Typography>
         </DialogTitle>
-
         <DialogContent>
           <Box component="form" onSubmit={handleCreateUserSubmit} sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -79,20 +85,20 @@ const CreateUser = ({ open, onClose }) => {
                 onChange={handleChange}
                 required
                 fullWidth
-                InputProps={{ startAdornment: <PersonIcon sx={{ mr: 1, fontSize: '20px' }}/> }}
+                InputProps={{ startAdornment: <PersonIcon sx={{ mr: 1, fontSize: '20px' }} /> }}
               />
-              <TextField
+             <TextField
                 name="displayName"
-                label="שם תצוגה"
+                label="שם משתמש (אופציונלי)"
                 value={formData.displayName}
                 onChange={handleChange}
-                required
                 fullWidth
-                InputProps={{ startAdornment: <BadgeIcon sx={{ mr: 1, fontSize: '20px' }} />
-              }}
+                InputProps={{
+                  required: false,
+                  startAdornment: <BadgeIcon sx={{ mr: 1, fontSize: '20px' }} />
+                }}
               />
             </Box>
-
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 name="phoneNumber"
@@ -111,7 +117,7 @@ const CreateUser = ({ open, onClose }) => {
                 onChange={handleChange}
                 fullWidth
                 InputProps={{ startAdornment: <ContactPhoneIcon sx={{ mr: 1, fontSize: '20px' }} /> }}
-                />
+              />
             </Box>
 
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -144,18 +150,16 @@ const CreateUser = ({ open, onClose }) => {
               onChange={handleChange}
               required
               fullWidth
-              InputProps={{ startAdornment: <LockIcon sx={{ mr: 1, fontSize: '20px' }} /> }}
+              autoComplete="new-password"
+              inputRef={passwordRef}
+              InputProps={{ startAdornment: <LockIcon sx={{ mr: 1, fontSize: "20px" }} /> }}
             />
           </Box>
         </DialogContent>
 
         <DialogActions sx={{ justifyContent: 'flex-start', p: 2 }}>
-          <Button onClick={onClose} variant="outlined">
-            ביטול
-          </Button>
-          <Button onClick={handleCreateUserSubmit} variant="contained" color="primary">
-            צור משתמש
-          </Button>
+          <Button onClick={onClose} variant="outlined">ביטול</Button>
+          <Button onClick={handleCreateUserSubmit} variant="contained" color="primary">צור משתמש</Button>
         </DialogActions>
       </Dialog>
 
