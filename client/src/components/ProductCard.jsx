@@ -33,6 +33,8 @@ const ProductCard = ({ product, onOpenModal }) => {
         flexDirection: 'column',
         mx: 'auto',
         direction: 'rtl',
+        border: product.isPremiumAd ? '2px solid transparent' : 'none',
+        boxShadow: product.isPremiumAd ? '0 0 15px 3px rgba(30, 144, 255, 0.8)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}
     >
       <Box
@@ -68,7 +70,10 @@ const ProductCard = ({ product, onOpenModal }) => {
         </Typography>
         <Typography sx={typographyStyle}>
           <SellOutlinedIcon sx={iconStyle} />
-          <strong>מחיר:</strong> {product.price} ₪
+          <strong>מחיר:</strong>
+          <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            {product.price} ₪
+          </Box>
         </Typography>
         <Button
           onClick={() => onOpenModal(product)}

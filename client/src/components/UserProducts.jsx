@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditableProductCard from './EditableProductCard';
 import EditProductModal from './EditProductModal';
+import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 const UserProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // For mobile screens
 
     useEffect(() => {
         const fetchUserProducts = async () => {
@@ -50,32 +54,36 @@ const UserProducts = () => {
     const handleDelete = (productId) => {
         setProducts(prevProducts => prevProducts.filter(p => p._id !== productId));
     };
+
     return (
         <>
-            <div style={{
+            <Box sx={{
                 padding: '20px',
                 maxWidth: '1200px',
-                margin: '0 auto'
+                margin: '0 auto',
             }}>
-                <h2 style={{
-                    textAlign: 'center',
-                    marginBottom: '30px'
-                }}>המוצרים שלי</h2>
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
-                    gap: '30px',
-                    padding: '20px'
-                }}>
+                <Typography
+                    variant="h4"
+                    align="center"
+                    sx={{
+                        marginBottom: '30px',
+                        fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }, // Adjust font size based on screen size
+                    }}
+                >
+                    המוצרים שלי
+                </Typography>
+                <Grid container spacing={3}>
                     {products.map((product) => (
-                        <EditableProductCard
-                            product={product}
-                            onDelete={handleDelete}
-                            onOpenEditModal={handleOpenEditModal}
-                        />
+                        <Grid item xs={12} sm={6} md={4} key={product._id}>
+                            <EditableProductCard
+                                product={product}
+                                onDelete={handleDelete}
+                                onOpenEditModal={handleOpenEditModal}
+                            />
+                        </Grid>
                     ))}
-                </div>
-            </div>
+                </Grid>
+            </Box>
             {isEditModalOpen && selectedProduct && (
                 <EditProductModal
                     product={selectedProduct}
