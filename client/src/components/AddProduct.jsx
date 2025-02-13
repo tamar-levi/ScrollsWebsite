@@ -85,7 +85,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.primaryImage || !formData.scriptType || !formData.scrollType || !formData.price) {
+        if (!formData.primaryImage || !formData.scriptType || !formData.scrollType ) {
             setShowAlert(true);
             return;
         }

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Typography, Snackbar } from "@mui/material";
 import { Payment as PaymentIcon, CheckCircle as CheckCircleIcon, ArrowForward as ArrowForward } from "@mui/icons-material";
+import { useSelector } from 'react-redux';
 
-const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
+const NedarimPayment = ({ productData, onBack, onNext }) => {
     const iframeRef = useRef(null);
     const [transactionResult, setTransactionResult] = useState(null);
-    const [openSnackbar, setOpenSnackbar] = useState(true);
-
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const currentUser = useSelector((state) => state.user?.currentUser) || {};
     useEffect(() => {
         const handleMessage = (event) => {
             console.log("Received event:", event.data);
@@ -17,10 +18,14 @@ const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
                     iframeRef.current.style.height = `${parseInt(event.data.Value) + 15}px`;
                     break;
                 case "TransactionResponse":
+                    console.log("Transaction Response:", event.data.Value);
                     setTransactionResult(event.data.Value);
-                    if (event.data.Value === 'success') {
+                    console.log("OK", event.data.Value?.Status === 'OK');
+                    if (event.data.Value?.Status === 'OK') {
                         setOpenSnackbar(true);
-                        onNext();
+                        setTimeout(() => {
+                            onNext();
+                        }, 5000); 
                     }
                     break;
                 default:
@@ -43,12 +48,12 @@ const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
                     Zeout: '',
                     PaymentType: "Ragil",
                     Currency: "1",
-                    FirstName: "John",
-                    LastName: "Doe",
-                    Street: "Example St.",
-                    City: "Example City",
-                    Phone: '',
-                    Mail: "example@example.com",
+                    FirstName: currentUser.fullName || '',
+                    LastName: '',
+                    Street: '',
+                    City: currentUser.city || '',
+                    Phone: currentUser.phoneNumber || '',
+                    Mail: currentUser.email || '',
                     Amount: calculatePaymentAmount(productData?.price),
                     Tashlumim: "1",
                     Comment: "בדיקת תשלום",
@@ -56,6 +61,7 @@ const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
                     Groupe: '',
                     Param1: '',
                     Param2: '',
+                    CallBack: '',
                     CallBackMailError: 'scrollsSite@gmail.com',
                 },
             },
@@ -64,14 +70,14 @@ const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
     };
 
     function calculatePaymentAmount(price) {
-        if (price <= 6000) return 30 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 6000) return 1.2 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
     }
 
     return (
-        <div style={{ marginTop: "100px" }}>
+        <div style={{ marginTop: "10px" }}>
             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl" }}>
                 סכום לתשלום: {calculatePaymentAmount(productData.price)} ₪
             </Typography>
@@ -84,26 +90,24 @@ const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
                     border: "none",
                 }}
             />
-            <div style={{ display: 'flex', gap: '10px', marginTop: '-130px' , justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '-180px', justifyContent: 'space-between' }}>
+                <Button
+                    onClick={onBack}
+                    startIcon={<ArrowForward style={{ marginLeft: '8px' }} />}
+                    variant="outlined"
+                    sx={{ marginTop: '16px', marginRight: '16px' }}
+                >
+                    חזור
+                </Button>
                 <Button
                     onClick={sendPaymentRequest}
-                    startIcon={<PaymentIcon />}
+                    endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
                     variant="contained"
-                    color="info"
                     sx={{ marginTop: '16px' }}
                 >
                     בצע תשלום
                 </Button>
-                <Button
-                    onClick={onBack}
-                    endIcon={<ArrowForward />}
-                    variant="outlined"
-                    sx={{ marginTop: '16px' }}
-                >
-                    חזור
-                </Button>
             </div>
-
             <Snackbar
                 open={openSnackbar}
                 onClose={() => setOpenSnackbar(false)}
@@ -117,7 +121,9 @@ const NedarimPayment = ({ productData = { price: 50 }, onBack, onNext }) => {
                 sx={{ direction: 'rtl' }}
             />
 
-            {transactionResult && <pre>{JSON.stringify(transactionResult, null, 2)}</pre>}
+            {transactionResult && transactionResult.Status !== "OK" && (
+                <pre>{JSON.stringify(transactionResult, null, 2)}</pre>
+            )}
         </div>
     );
 };

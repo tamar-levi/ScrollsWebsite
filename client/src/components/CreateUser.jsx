@@ -40,7 +40,7 @@ const CreateUser = ({ open, onClose }) => {
   };
 
   const handleCreateUserSubmit = async (e) => {
-    if (!formData.fullName || !formData.password || !formData.email || !formData.city || !formData.phoneNumber || !formData.displayName) {
+    if (!formData.fullName || !formData.password || !formData.email || !formData.city || !formData.phoneNumber) {
       setSnackbar({ open: true, message: 'נא למלא את כל השדות', severity: 'error' });
       return;
     }

@@ -12,7 +12,6 @@ import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import AddProduct from './AddProduct';
 import Info from './Info';
-import PaymentPage from './PaymentPage';
 import InfoMobile from './InfoMobile';
 import { Link } from 'react-router-dom';
 import NedarimPayment from './NedarimPayment';

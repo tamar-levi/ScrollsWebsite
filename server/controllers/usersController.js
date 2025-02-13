@@ -46,7 +46,7 @@ const addUser = async (req, res) => {
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        await sendWelcomeEmail(email, fullName);
+        // await sendWelcomeEmail(email, fullName);
 
         res.json({
             message: 'User created successfully',
@@ -152,7 +152,7 @@ const handleGoogleLogin = async (req, res) => {
                 isSeller: false,
                 password: require('crypto').randomBytes(16).toString('hex')
             });
-            await sendWelcomeEmail(user.email, user.fullName);
+            // await sendWelcomeEmail(user.email, user.fullName);
         }
 
         const payload = { id: user._id, email: user.email };
