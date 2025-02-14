@@ -5,6 +5,7 @@ const Product = require("../models/productModel");
 const User = require('../models/userModel');
 const mongoose = require('mongoose')
 require('dotenv').config();
+const { sendEmailWithPDF } = require('./emailService');
 
 const connectDB = async () => {
     try {
@@ -48,6 +49,10 @@ const generateHTML = (products) => {
     return template({ products });
 };
 
+const fs = require('fs');
+const axios = require('axios');
+const path = require('path');
+
 const generatePDF = async (html) => {
     try {
         const response = await axios.post("https://api.pdfshift.io/v3/convert/pdf", {
@@ -56,19 +61,24 @@ const generatePDF = async (html) => {
             username: 'api', password: "sk_450e7b3880c32cd1ab6adaebc635aa66ead0ad9e",
             responseType: "arraybuffer",
         });
-        fs.writeFileSync("products.pdf", response.data);
+
+        const filePath = path.join(__dirname, 'products.pdf');
+        fs.writeFileSync(filePath, response.data);
         console.log("📄 PDF נוצר בהצלחה!");
+        return filePath;
     } catch (err) {
         console.error("❌ שגיאה ביצירת PDF", err);
+        throw err;
     }
 };
 
-const createProductsPDF = async () => {
+const createProductsPDF = async (email) => {
     await connectDB();
     const products = await getAllProducts();
     const html = generateHTML(products);
-    await generatePDF(html);
-    mongoose.connection.close();
+    const pdf = await generatePDF(html);
+    console.log('📤 Sending email with PDF...');
+    await sendEmailWithPDF(emailToSend, pdf);
 };
 
-createProductsPDF();
+module.exports = { createProductsPDF };

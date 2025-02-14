@@ -3,3 +3,5 @@ node_modules/
 dist/
 .DS_Store
 service-account-file.json
+token.json
+credentials.json

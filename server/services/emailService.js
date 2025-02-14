@@ -1,10 +1,15 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
+const path = require('path');
 require('dotenv').config();
+const fs = require('fs');
+
 const clientId = process.env.GOOGLE_CLIENT_ID_EMAILS;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
+const CREDENTIALS_PATH = path.join(__dirname, 'c:/Users/User/Documents/Scrolls website/server/credentials.json');
 const sendWelcomeEmail = async (email, fullName) => {
     const oauth2Client = new OAuth2(
         clientId,
@@ -99,13 +104,17 @@ const sendWelcomeEmail = async (email, fullName) => {
         console.error('Error sending welcome email:', error);
     }
 };
+function loadCredentials() {
+    if (!fs.existsSync(CREDENTIALS_PATH)) {
+        throw new Error('Missing credentials.json file. Please download it from Google Cloud Console.');
+    }
+    return JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
+}
 
-const sendEmailWithPDF = async (email, pdfData) => {
-    const oauth2Client = new OAuth2(
-        process.env.GOOGLE_CLIENT_ID_EMAILS,
-        process.env.GOOGLE_CLIENT_SECRET,
-        'https://developers.google.com/oauthplayground'
-    );
+const sendEmailWithPDF = async (email, pdfFilePath) => {
+    const credentials = loadCredentials();
+    const { client_secret, client_id, redirect_uris } = credentials.web;
+    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
     oauth2Client.setCredentials({
         refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
@@ -117,7 +126,7 @@ const sendEmailWithPDF = async (email, pdfData) => {
         service: 'gmail',
         auth: {
             type: 'OAuth2',
-            user: 'your-email@gmail.com',
+            user: 'scrollssite@gmail.com',
             clientId: process.env.GOOGLE_CLIENT_ID_EMAILS,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
@@ -133,8 +142,7 @@ const sendEmailWithPDF = async (email, pdfData) => {
         attachments: [
             {
                 filename: 'catalog.pdf',
-                content: pdfData,
-                encoding: 'base64',
+                path: pdfFilePath,  
             },
         ],
     };
@@ -146,5 +154,6 @@ const sendEmailWithPDF = async (email, pdfData) => {
         console.error('Error sending email with PDF:', error);
     }
 };
+
 
 module.exports = { sendWelcomeEmail, sendEmailWithPDF };
