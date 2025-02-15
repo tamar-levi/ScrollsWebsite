@@ -1,109 +1,14 @@
-const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
-const OAuth2 = google.auth.OAuth2;
-const path = require('path');
-require('dotenv').config();
 const fs = require('fs');
+const path = require('path');
+const { google } = require('googleapis');
+const readline = require('readline-sync');
 
-const clientId = process.env.GOOGLE_CLIENT_ID_EMAILS;
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
-const CREDENTIALS_PATH = path.join(__dirname, 'c:/Users/User/Documents/Scrolls website/server/credentials.json');
-const sendWelcomeEmail = async (email, fullName) => {
-    const oauth2Client = new OAuth2(
-        clientId,
-        clientSecret,
-        'https://developers.google.com/oauthplayground'
-    );
+// הגדרת הסקופ לשליחה
+const SCOPES_SEND = ['https://www.googleapis.com/auth/gmail.send'];
+const CREDENTIALS_PATH = 'c:/Users/User/Documents/Scrolls website/server/credentials.json';
+const TOKEN_PATH = 'c:/Users/User/Documents/Scrolls website/server/token.json';
 
-    oauth2Client.setCredentials({
-        refresh_token: refreshToken
-    });
-
-    const accessToken = await oauth2Client.getAccessToken();
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            type: 'OAuth2',
-            user: 'ScrollsSite@gmail.com',
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            accessToken: accessToken
-        }
-    });
-
-    const mailOptions = {
-        from: 'ScrollsSite@gmail.com',
-        to: email,
-        subject: 'Welcome to Our Platform!',
-        html: `
-        <html>
-        <head>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;
-                    background-color: #f0f0f0;
-                    margin: 0;
-                    padding: 0;
-                }
-                .container {
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background-color: #fff;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    padding: 20px;
-                    text-align: center;
-                }
-                h1 {
-                    color: #3498db;
-                    font-size: 36px;
-                    margin-bottom: 20px;
-                }
-                p {
-                    font-size: 18px;
-                    color: #555;
-                    line-height: 1.6;
-                }
-                .button {
-                    display: inline-block;
-                    background-color: #3498db;
-                    color: #fff;
-                    padding: 12px 30px;
-                    text-decoration: none;
-                    border-radius: 5px;
-                    font-size: 18px;
-                    margin-top: 20px;
-                }
-                .footer {
-                    font-size: 12px;
-                    color: #777;
-                    margin-top: 30px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>Welcome, ${fullName}!</h1>
-                <p>We're excited to have you on board. Thank you for joining our platform. We're here to help you grow and succeed.</p>
-                <a href="https://your-platform.com" class="button">Get Started</a>
-                <p class="footer">If you didn't sign up, please ignore this email.</p>
-            </div>
-        </body>
-        </html>
-        `,
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log('Welcome email sent successfully!');
-    } catch (error) {
-        console.error('Error sending welcome email:', error);
-    }
-};
+// פונקציה להורדת ה-Credentials
 function loadCredentials() {
     if (!fs.existsSync(CREDENTIALS_PATH)) {
         throw new Error('Missing credentials.json file. Please download it from Google Cloud Console.');
@@ -111,49 +16,102 @@ function loadCredentials() {
     return JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
 }
 
-const sendEmailWithPDF = async (email, pdfFilePath) => {
+// פונקציה לאימות גישה ל-Gmail
+async function authorize(scopes) {
     const credentials = loadCredentials();
     const { client_secret, client_id, redirect_uris } = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
-    oauth2Client.setCredentials({
-        refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-    });
-
-    const accessToken = await oauth2Client.getAccessToken();
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            type: 'OAuth2',
-            user: 'scrollssite@gmail.com',
-            clientId: process.env.GOOGLE_CLIENT_ID_EMAILS,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-            accessToken: accessToken.token,
-        },
-    });
-
-    const mailOptions = {
-        from: 'scrollsSite@gmail.com',
-        to: email,
-        subject: 'הקטלוג שלך',
-        text: 'שלום! מצורף הקטלוג שביקשת.',
-        attachments: [
-            {
-                filename: 'catalog.pdf',
-                path: pdfFilePath,  
-            },
-        ],
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log('Email sent with PDF attachment!');
-    } catch (error) {
-        console.error('Error sending email with PDF:', error);
+    if (fs.existsSync(TOKEN_PATH)) {
+        const token = JSON.parse(fs.readFileSync(TOKEN_PATH));
+        oAuth2Client.setCredentials(token);
+        return oAuth2Client;
+    } else {
+        return getNewToken(oAuth2Client, scopes);
     }
+}
+
+// יצירת טוקן חדש אם אין טוקן קיים
+async function getNewToken(oAuth2Client, scopes) {
+    const authUrl = oAuth2Client.generateAuthUrl({
+        access_type: 'offline', // חשוב לאפשר "offline" כדי לקבל את ה-refresh token
+        scope: scopes
+    });
+    console.log('Authorize this app by visiting this URL:', authUrl);
+
+    const code = readline.question('Enter the code from the page: ');
+    try {
+        const { tokens } = await oAuth2Client.getToken(code);
+        oAuth2Client.setCredentials(tokens);
+        fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+        console.log('Token saved to', TOKEN_PATH);
+        return oAuth2Client;
+    } catch (err) {
+        throw new Error('Error retrieving access token: ' + err);
+    }
+}
+
+// יצירת הודעת raw עם קובץ מצורף
+function createRawMessage(to, subject, attachmentPath) {
+    const boundary = "__boundary__";
+    
+    const attachment = fs.readFileSync(attachmentPath).toString('base64');
+    
+    const encodedSubject = Buffer.from(subject, 'utf-8').toString('base64');
+    const encodedFileName = Buffer.from("קטלוג מגילות.pdf", 'utf-8').toString('base64');
+
+    let message = [
+        `From: "scrollssite@gmail.com"`,
+        `To: ${to}`,
+        `Subject: =?UTF-8?B?${encodedSubject}?=`,
+        `MIME-Version: 1.0`,
+        `Content-Type: multipart/mixed; boundary="${boundary}"`,
+        "",
+        `--${boundary}`,
+        `Content-Type: text/plain; charset=UTF-8`,
+        "",
+        `--${boundary}`,
+        `Content-Type: application/pdf; name="=?UTF-8?B?${encodedFileName}?="`,
+        `Content-Disposition: attachment; filename="=?UTF-8?B?${encodedFileName}?="`,
+        `Content-Transfer-Encoding: base64`,
+        "",
+        attachment,
+        `--${boundary}--`
+    ].join("\r\n");
+
+    return new Buffer.from(message).toString('base64');
+}
+
+// שליחת המייל באמצעות Gmail API
+async function sendEmail(auth, email, attachmentPath) {
+    const rawMessage = createRawMessage(email, 'קטלוג מוצרים לוח המגילות', attachmentPath);
+
+    const gmail = google.gmail({ version: 'v1', auth });
+    const res = await gmail.users.messages.send({
+        userId: 'me',
+        requestBody: {
+            raw: rawMessage
+        }
+    });
+    console.log('✅ Email sent successfully:', res.data);
+}
+
+// פונקציה שמחזירה את ה-OAuth2Client
+async function getAuth() {
+    const auth = await authorize(SCOPES_SEND);
+    if (!(auth instanceof google.auth.OAuth2)) {
+        throw new Error('The auth object is not an instance of OAuth2Client.');
+    }
+    return auth;
+}
+
+// דוגמה לשליחה
+async function sendEmailExample() {
+    const auth = await getAuth(); 
+    const attachmentPath = 'c:/Users/User/Documents/Scrolls website/server/products.pdf'; 
+    await sendEmail(auth, 'Rachel0583202634@gmail.com', attachmentPath);
+}
+
+module.exports = {
+    getAuth, sendEmail
 };
-
-
-module.exports = { sendWelcomeEmail, sendEmailWithPDF };

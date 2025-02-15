@@ -5,8 +5,8 @@ const Product = require("../models/productModel");
 const User = require('../models/userModel');
 const mongoose = require('mongoose')
 require('dotenv').config();
-const { sendEmailWithPDF } = require('./emailService');
-
+const { sendEmail, getAuth } = require('./emailService');
+const path = require('path');
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.CONECTION_URL, {
@@ -49,9 +49,7 @@ const generateHTML = (products) => {
     return template({ products });
 };
 
-const fs = require('fs');
-const axios = require('axios');
-const path = require('path');
+
 
 const generatePDF = async (html) => {
     try {
@@ -78,7 +76,10 @@ const createProductsPDF = async (email) => {
     const html = generateHTML(products);
     const pdf = await generatePDF(html);
     console.log('📤 Sending email with PDF...');
-    await sendEmailWithPDF(emailToSend, pdf);
+    const auth = await getAuth();
+    await sendEmail(auth, email, pdf);
 };
 
-module.exports = { createProductsPDF };
+module.exports = {
+    createProductsPDF
+};

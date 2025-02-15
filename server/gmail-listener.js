@@ -5,7 +5,7 @@ const readline = require('readline-sync');
 const { simpleParser } = require('mailparser');
 const { createProductsPDF } = require('./services/pdfService');
 
-const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.send'];
 const CREDENTIALS_PATH = path.join(__dirname, 'credentials.json');
 const TOKEN_PATH = path.join(__dirname, 'token.json');
 
@@ -89,17 +89,28 @@ async function getMessageDetails(gmail, messageId) {
 
         if (subject && subject.toLowerCase().includes('קטלוג')) {
             console.log('🔔 Catalog email detected! Generating PDF...');
-            const pdf = await createProductsPDF(from);
+            await createProductsPDF(from);
         }
+
+        // Mark the message as read
+        await gmail.users.messages.modify({
+            userId: 'me',
+            id: messageId,
+            resource: {
+                removeLabelIds: ['UNREAD'],
+            },
+        });
+        console.log('✅ Marked message as read');
     } catch (error) {
         console.error('Error getting message details:', error);
     }
 }
 
+
 async function startListening() {
     const auth = await authorize();
     console.log('✅ Listening for new emails...');
-    setInterval(() => listMessages(auth), 30 * 1000);
+    setInterval(() => listMessages(auth), 120 * 1000);
 }
 
 startListening();
