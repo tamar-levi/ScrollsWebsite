@@ -34,30 +34,55 @@ const getCurrentUser = async (req, res) => {
 };
 
 const addUser = async (req, res) => {
-    const { fullName, displayName, phoneNumber, email, city, isSeller, password } = req.body;
+    const { fullName, displayName, phoneNumber, additionalPhone, email, city, isSeller, password } = req.body;
     const emailLowerCase = email.toLowerCase();
-    console.log(addUser);
 
     try {
+        // וולידציה למייל
+        const existingUser = await User.findOne({ email: emailLowerCase });
+        if (existingUser) {
+            return res.status(400).json({ message: 'כתובת הדואר האלקטרוני כבר קיימת במערכת' });
+        }
+
+        // וולידציה לטלפון
+        const existingPhone = await User.findOne({ phoneNumber });
+        if (existingPhone) {
+            return res.status(400).json({ message: 'מספר הטלפון כבר קיים במערכת' });
+        }
+
+        // וולידציה לסיסמה
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: 'הסיסמה לא עומדת בדרישות' });
+        }
+
         const newUser = new User({
-            fullName, displayName, phoneNumber, email: emailLowerCase, city, isSeller, password
+            fullName,
+            displayName,
+            phoneNumber,
+            additionalPhone,
+            email: emailLowerCase,
+            city,
+            isSeller,
+            password
         });
-        console.log(newUser);
         await newUser.save();
+
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        await sendWelcomeEmail(email, fullName);
+        // await sendWelcomeEmail(email, fullName);//
 
         res.json({
-            message: 'User created successfully',
+            message: 'המשתמש נוצר בהצלחה',
             token: token,
             user: newUser
         });
     } catch (err) {
-        console.error('Error creating user', err);
-        res.status(500).send('Database error');
+        console.error('שגיאה ביצירת המשתמש:', err);
+        res.status(500).json({ message: 'שגיאת מסד נתונים' });
     }
 };
+
 
 const updateUserDetails = async (req, res) => {
     try {
@@ -88,7 +113,7 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
     console.log(loginUser);
     try {
-        const user = await User.findOne({ displayName: username });
+        const user = await User.findOne({ fullName: username });
         if (!user) {
             return res.status(400).send('Invalid credentials');
         }
