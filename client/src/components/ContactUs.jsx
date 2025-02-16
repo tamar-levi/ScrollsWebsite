@@ -10,19 +10,19 @@ const ContactUs = () => {
   return (
     <Box
       sx={{
-        minHeight: '100vh', // מבטיח שה-Box יכסה את כל גובה המסך
+        minHeight: '100vh', 
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'flex-start', // alignItems ל-'flex-start' כדי להעלות את התוכן למעלה
+        alignItems: 'flex-start', 
         padding: 2,
-        marginTop: isMobile ? '60px' : '120px', // מרווח קטן יותר מהחלק העליון
+        marginTop: isMobile ? '60px' : '120px', 
       }}
     >
       <Card
         sx={{
-          width: isMobile ? '95%' : isTablet ? '85%' : '70%', // רוחב משתנה של הכרטיס
-          maxWidth: 1000, // רוחב מקסימלי
-          padding: isMobile ? 3 : 5, // padding גמיש
+          width: isMobile ? '95%' : isTablet ? '85%' : '70%', 
+          maxWidth: 1000,
+          padding: isMobile ? 3 : 5,
           textAlign: 'center',
           borderRadius: 4,
           boxShadow: 5,

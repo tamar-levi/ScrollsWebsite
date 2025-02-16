@@ -1,78 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-const checkTokenExpiration = () => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    try {
-      const tokenData = JSON.parse(atob(token.split('.')[1]));
-      const expirationTime = tokenData.exp * 1000;
-
-      if (Date.now() >= expirationTime) {
-        clearUserData();
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error('Token parsing error:', error);
-      clearUserData();
-      return false;
-    }
-  }
-  return false;
-};
+import axios from 'axios';
 
 const clearUserData = () => {
-  localStorage.removeItem('user');
-  localStorage.removeItem('token');
-  localStorage.removeItem('persist:root');
+  sessionStorage.removeItem('user');
+  sessionStorage.removeItem('persist:root');
   if (window.location.pathname !== '/') {
     window.location.href = '/';
   }
 };
 
-let initialUser = null;
-try {
-  if (checkTokenExpiration()) {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      initialUser = JSON.parse(storedUser);
-    }
-  }
-  else {
-    clearUserData();
-  }
-} catch (error) {
-  console.error('Error initializing user data:', error);
-  clearUserData();
-}
-
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    currentUser: initialUser,
+    currentUser: null,
     products: [],
     loading: false,
     error: null
   },
   reducers: {
     setUser: (state, action) => {
-      if (checkTokenExpiration()) {
-        state.currentUser = action.payload;
-        localStorage.setItem('user', JSON.stringify(action.payload));
-      } else {
-        state.currentUser = null;
-        state.error = 'פג תוקף החיבור, אנא התחבר/י מחדש';
-      }
+      state.currentUser = action.payload;
     },
 
     updateUser: (state, action) => {
-      if (checkTokenExpiration()) {
-        state.currentUser = { ...state.currentUser, ...action.payload };
-        localStorage.setItem('user', JSON.stringify(state.currentUser));
-      } else {
-        state.currentUser = null;
-        state.error = 'פג תוקף החיבור, אנא התחבר/י מחדש';
-      }
+      state.currentUser = { ...state.currentUser, ...action.payload };
     },
 
     deleteUser: (state) => {
@@ -119,3 +70,21 @@ export const {
 } = userSlice.actions;
 
 export default userSlice.reducer;
+
+export const fetchUserData = () => async (dispatch) => {
+  try {
+    const response = await axios.get('http://localhost:5000/usersApi/getCurrentUser', {
+      withCredentials: true, 
+    });
+    dispatch(setUser(response.data));  
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      alert('פג תוקף הסשן, התחבר מחדש');
+      dispatch(setError('פג תוקף הסשן, התחבר מחדש')); 
+    } else {
+      console.error('Error fetching user data:', error);
+      dispatch(setError('לא הצלחנו למצוא את המשתמש'));
+    }
+  }
+};
+

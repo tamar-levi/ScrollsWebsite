@@ -13,34 +13,14 @@ import ContactUs from './components/ContactUs';
 import { Box } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { logout } from './redux/userSlice';
-import PaymentPage from './components/PaymentPage';
-import NedarimPayment from './components/NedarimPayment';
+import { logout, fetchUserData } from './redux/userSlice';
+
 function App() {
   const dispatch = useDispatch();
-
   useEffect(() => {
-    const tokenCheckInterval = setInterval(() => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const tokenData = JSON.parse(atob(token.split('.')[1]));
-          const expirationTime = tokenData.exp * 1000;
-
-          if (Date.now() >= expirationTime) {
-            dispatch(logout());
-            alert('פג תוקף החיבור, אנא התחבר/י מחדש');
-            window.location.href = '/';
-          }
-        } catch (error) {
-          console.error('Token validation error:', error);
-          dispatch(logout());
-        }
-      }
-    }, 1000);
-
-    return () => clearInterval(tokenCheckInterval);
+    dispatch(fetchUserData())
   }, [dispatch]);
+
   return (
     <Router>
       <Box sx={{ width: '100%', height: '100vh' }}>

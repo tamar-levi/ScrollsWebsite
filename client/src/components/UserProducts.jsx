@@ -15,16 +15,9 @@ const UserProducts = () => {
 
     useEffect(() => {
         const fetchUserProducts = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('No token found in localStorage');
-                return;
-            }
             try {
                 const response = await axios.get('http://localhost:5000/productsApi/getAllProductsByUser', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                    withCredentials: true,
                 });
                 setProducts(response.data);
                 setLoading(false);

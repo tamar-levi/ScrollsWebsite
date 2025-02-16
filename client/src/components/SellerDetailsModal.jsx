@@ -42,9 +42,11 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
 
     const fetchSellerDetails = useCallback(async () => {
         if (!sellerId) return;
-        
         try {
-            const response = await fetch(`http://localhost:5000/usersApi/getUserById/${sellerId}`);
+            const response = await fetch(`http://localhost:5000/usersApi/getUserById/${sellerId}`, {
+                method: 'GET',
+                credentials: 'include' 
+            });
             if (!response.ok) throw new Error('Failed to fetch seller details');
             const data = await response.json();
             setSeller(data);

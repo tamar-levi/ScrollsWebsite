@@ -48,8 +48,6 @@ const CreateUser = ({ open, onClose }) => {
     try {
       console.log('Sending data:', formData);
       const response = await axios.post('http://localhost:5000/usersApi/addUser', formData);
-      const token = response.data.token;
-      localStorage.setItem('token', token);
       dispatch(setUser(response.data.user));
       setSnackbar({ open: true, message: 'משתמש נוצר בהצלחה!', severity: 'success' });
       onClose();
@@ -87,7 +85,7 @@ const CreateUser = ({ open, onClose }) => {
                 fullWidth
                 InputProps={{ startAdornment: <PersonIcon sx={{ mr: 1, fontSize: '20px' }} /> }}
               />
-             <TextField
+              <TextField
                 name="displayName"
                 label="שם משתמש (אופציונלי)"
                 value={formData.displayName}

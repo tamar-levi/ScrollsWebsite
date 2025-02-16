@@ -19,7 +19,10 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/productsApi/getAllProducts');
+        const response = await fetch('http://localhost:5000/productsApi/getAllProducts', {
+          method: 'GET',
+          credentials: 'include',
+        });
         console.log('Response:', response);
         const data = await response.json();
         setProducts(data);
@@ -30,7 +33,6 @@ const ProductList = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -50,7 +52,7 @@ const ProductList = () => {
       const normalizedFilterFont = fontType?.replace(/['"]/g, '');
       const isFontTypeMatch = fontType ? normalizedProductFont === normalizedFilterFont : true;
       const isScrollTypeMatch = scrollType ? product.scrollType === scrollType : true;
-      const isCityMatch = city? product.userId.city == city: true;
+      const isCityMatch = city ? product.userId.city == city : true;
       return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch;
     });
 

@@ -26,9 +26,9 @@ const EditProductModal = ({ open, onClose, product }) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(editedProduct)
+        body: JSON.stringify(editedProduct),
+        credentials: 'include'
       });
   
       const responseData = await response.json();
@@ -46,6 +46,7 @@ const EditProductModal = ({ open, onClose, product }) => {
       alert(`שגיאה בעדכון המוצר`);
     }
   };
+
   
 
   return (

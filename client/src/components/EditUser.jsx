@@ -36,10 +36,7 @@ export default function EditUser() {
     try {
       console.log('Sending data:', userData);
       const response = await axios.put('http://localhost:5000/usersApi/updateUserDetails', userData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        withCredentials: true
       });
 
       console.log('Response received:', response.data);
@@ -70,14 +67,9 @@ export default function EditUser() {
       return;
     }
 
-    const token = localStorage.getItem('token');
-    console.log('Token before delete request--------------------------:', token);
-
     try {
       await axios.delete('http://localhost:5000/usersApi/deleteUser', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        withCredentials: true
       });
       console.log('User deleted successfully');
       dispatch(deleteUserProducts());
@@ -90,6 +82,7 @@ export default function EditUser() {
       alert('שגיאה במחיקת המשתמש, נסה שנית');
     }
   };
+
 
   const handleGoBack = () => {
     console.log('Navigating back to account page');

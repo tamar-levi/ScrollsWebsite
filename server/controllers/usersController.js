@@ -8,7 +8,6 @@ const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const Product = require('../models/productModel');
 
-
 const getAllUsers = async (req, res) => {
     try {
         const users = await User.find();
@@ -45,13 +44,17 @@ const addUser = async (req, res) => {
         console.log(newUser);
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
-        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 2592000000,
+            sameSite: 'None'
+        });
         const auth = await getAuth();
         await sendWelcomeEmail(auth, email);
-
         res.json({
             message: 'User created successfully',
-            token: token,
             user: newUser
         });
     } catch (err) {
@@ -84,7 +87,6 @@ const updateUserDetails = async (req, res) => {
     }
 };
 
-
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
     console.log(loginUser);
@@ -93,18 +95,20 @@ const loginUser = async (req, res) => {
         if (!user) {
             return res.status(400).send('Invalid credentials');
         }
-
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).send('Invalid credentials');
         }
-
         const payload = { id: user._id, email: user.email };
-        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-
+        const token = jwt.sign(payload, secretKey, { expiresIn: '30d' }); 
+        res.cookie('token', token, {
+            httpOnly: true, 
+            secure: false,  
+            maxAge: 2592000000, 
+            sameSite: 'None' 
+        });
         res.json({
             message: 'Login successful',
-            token: token,
             user: user
         });
     } catch (err) {
@@ -132,16 +136,13 @@ const deleteUser = async (req, res) => {
 
 const handleGoogleLogin = async (req, res) => {
     const { googleToken } = req.body;
-
     try {
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
             headers: {
                 Authorization: `Bearer ${googleToken}`
             }
         });
-
         const googleUserInfo = await response.json();
-
         let user = await User.findOne({ email: googleUserInfo.email });
         if (!user) {
             user = await User.create({
@@ -156,13 +157,16 @@ const handleGoogleLogin = async (req, res) => {
             const auth = await getAuth();
             await sendWelcomeEmail(auth, user.email);
         }
-
         const payload = { id: user._id, email: user.email };
-        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-
+        const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
+        res.cookie('token', token, {
+            httpOnly: true, 
+            secure: false,   
+            maxAge: 2592000000,
+            sameSite: 'None'  
+        });
         res.json({
             message: 'Google login successful',
-            token,
             user: user
         });
     } catch (err) {
@@ -187,7 +191,6 @@ const getUserById = async (req, res) => {
     }
 }
 
-
 const addUserFromForm = async (req, res) => {
     const { sellerName, phoneNumber, email } = req.body;
 
@@ -203,9 +206,7 @@ const addUserFromForm = async (req, res) => {
             isSeller: true,
             password: require('crypto').randomBytes(16).toString('hex')
         });
-
         await newUser.save();
-
         res.status(201).json({ message: 'User created successfully', userId: newUser._id });
 
     } catch (err) {

@@ -54,7 +54,6 @@ export default function Checkout() {
     const addProduct = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
-
         try {
             const formData = new FormData();
             formData.append('scriptType', productData.scriptType);
@@ -66,15 +65,12 @@ export default function Checkout() {
             productData.additionalImages.forEach((image) => {
                 formData.append('additionalImages', image);
             });
-
             const response = await fetch('http://localhost:5000/productsApi/addProduct', {
                 method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                },
-                body: formData
+                headers: {},
+                body: formData,
+                credentials: 'include',
             });
-
             if (response.ok) {
                 console.log('Product added successfully');
                 setActiveStep((prev) => prev + 1);
@@ -85,6 +81,7 @@ export default function Checkout() {
             setIsSubmitting(false);
         }
     };
+
 
     return (
         <>

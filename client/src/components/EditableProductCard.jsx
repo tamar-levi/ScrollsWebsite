@@ -19,13 +19,11 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
     setOpenDialog(false);
   };
 
-const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async () => {
     try {
       const response = await fetch(`http://localhost:5000/productsApi/deleteProduct/${product._id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -38,7 +36,7 @@ const handleConfirmDelete = async () => {
       console.error('Error deleting product:', error);
       alert(`שגיאה במחיקת המוצר`);
     }
-};
+  };
 
   const typographyStyle = {
     fontSize: '0.9rem',
@@ -56,17 +54,17 @@ const handleConfirmDelete = async () => {
   return (
     <>
       <Card className="product-card" style={{ width: '300px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
-      <img
-    className="product-image"
-    src={`data:image/jpeg;base64,${product.primaryImage}`}
-    alt={product.scriptType}
-    style={{
-      width: '100%',
-      height: '200px', 
-      objectFit: 'cover', 
-      objectPosition: 'center' 
-    }}
-  />
+        <img
+          className="product-image"
+          src={`data:image/jpeg;base64,${product.primaryImage}`}
+          alt={product.scriptType}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            objectPosition: 'center'
+          }}
+        />
         <CardContent className="product-card-content" style={{ padding: '20px', direction: 'rtl' }}>
           <Typography style={typographyStyle}>
             <ArticleOutlinedIcon sx={iconStyle} />
@@ -85,28 +83,28 @@ const handleConfirmDelete = async () => {
             <strong>מחיר:</strong> {product.price} ₪
           </Typography>
           <Box display="flex" gap={2}>
-  <Button
-    className="edit-button"
-    onClick={() => onOpenEditModal(product)}
-    variant="outlined"
-    color="primary"
-    endIcon={<EditIcon />}
-    sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
-  >
-    עריכת מוצר
-  </Button>
+            <Button
+              className="edit-button"
+              onClick={() => onOpenEditModal(product)}
+              variant="outlined"
+              color="primary"
+              endIcon={<EditIcon />}
+              sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
+            >
+              עריכת מוצר
+            </Button>
 
-  <Button
-    className="delete-button"
-    onClick={handleDeleteClick}
-    variant="outlined"
-    color="error"
-    endIcon={<DeleteIcon />}
-    sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
-  >
-    מחיקה
-  </Button>
-</Box>
+            <Button
+              className="delete-button"
+              onClick={handleDeleteClick}
+              variant="outlined"
+              color="error"
+              endIcon={<DeleteIcon />}
+              sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
+            >
+              מחיקה
+            </Button>
+          </Box>
 
         </CardContent>
       </Card>

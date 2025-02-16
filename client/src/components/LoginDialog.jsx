@@ -44,16 +44,12 @@ const LoginDialog = ({ open, onClose }) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
-
         try {
             const response = await axios.post('http://localhost:5000/usersApi/loginUser', {
                 username,
                 password,
             });
-
-            localStorage.setItem('token', response.data.token);
             dispatch(setUser(response.data.user));
-
             const successMessage = document.createElement('div');
             successMessage.innerHTML = '✓ התחברת בהצלחה';
             successMessage.style.cssText = `
@@ -76,7 +72,6 @@ const LoginDialog = ({ open, onClose }) => {
 
         } catch (error) {
             console.log('Login Error:', error.response);
-
             if (error.response?.status === 401) {
                 if (error.response?.data?.includes('User not found')) {
                     setShowCreateUser(true);
@@ -91,6 +86,7 @@ const LoginDialog = ({ open, onClose }) => {
             setIsLoading(false);
         }
     };
+
 
     const handleClose = () => {
         setUsername('');

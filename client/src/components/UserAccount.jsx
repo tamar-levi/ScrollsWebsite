@@ -19,14 +19,9 @@ export default function UserAccount() {
       return;
     }
 
-    const token = localStorage.getItem('token');
-    console.log('Token before delete request--------------------------:', token);
-
     try {
       await axios.delete('http://localhost:5000/usersApi/deleteUser', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        withCredentials: true,
       });
       console.log('User deleted successfully');
       dispatch(deleteUserProducts());
@@ -40,25 +35,26 @@ export default function UserAccount() {
     }
   };
 
+
   return (
     <Box
       sx={{
-        minHeight: '100vh', // To fill the entire screen vertically
+        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'flex-start', // Align to the top
+        alignItems: 'flex-start',
         padding: '20px',
       }}
     >
       <Box
         sx={{
-          width: isMobile ? '90%' : '400px', // Adjust width for mobile
+          width: isMobile ? '90%' : '400px',
           textAlign: 'center',
           boxShadow: 3,
           borderRadius: 2,
           backgroundColor: '#f9f9f9',
           padding: '20px',
-          marginTop: '120px', // Increased margin to move the card further down
+          marginTop: '120px',
         }}
       >
         <Avatar
@@ -81,13 +77,13 @@ export default function UserAccount() {
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
           {user?.city || 'כתובת לא זמינה'}
         </Typography>
-        
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, flexDirection: isMobile ? 'column' : 'row' }}>
           <Button
             variant="contained"
             component={Link}
             to="/editUser"
-            sx={{ width: isMobile ? '100%' : '48%', mb: isMobile ? 2 : 0 }} // Full width on mobile
+            sx={{ width: isMobile ? '100%' : '48%', mb: isMobile ? 2 : 0 }}
           >
             עריכת פרטים
           </Button>
@@ -95,7 +91,7 @@ export default function UserAccount() {
             variant="outlined"
             color="error"
             onClick={handleDelete}
-            sx={{ width: isMobile ? '100%' : '48%' }} // Full width on mobile
+            sx={{ width: isMobile ? '100%' : '48%' }}
           >
             מחיקת משתמש
           </Button>
