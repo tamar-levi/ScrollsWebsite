@@ -13,6 +13,8 @@ const GoogleAuth = ({ onSuccess }) => {
             try {
                 const serverResponse = await axios.post('http://localhost:5000/usersApi/google-login', {
                     googleToken: response.access_token
+                }, {
+                    withCredentials: true,
                 });
                 dispatch(setUser(serverResponse.data.user));
                 navigate('/products');

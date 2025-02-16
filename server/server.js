@@ -7,7 +7,7 @@ const userRouter = require('./routes/users');
 const productRouter = require('./routes/products');
 const emailRouter = require('./routes/email');
 const paymentRouter = require('./routes/paymentRoutes');
-require('./gmail-listener');
+// require('./gmail-listener');
 
 const cookieParser = require('cookie-parser'); 
 
@@ -27,6 +27,7 @@ app.use(cookieParser());
 app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://googleapis.com https://apis.google.com; script-src-elem 'self' https://apis.google.com; object-src 'none';");
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
 

@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import LoginDialog from './LoginDialog';
+import backgroundImage from '../assets/backgroundImage.png';
 
 const HomePage = () => {
+  const styles = {
+    body: {
+      overflow: "hidden",
+      margin: 0,
+      padding: 0
+    }
+  };
+
   const [openLogin, setOpenLogin] = useState(false);
 
   const handleOpenLogin = () => {
@@ -16,17 +25,24 @@ const HomePage = () => {
     <div
       className="relative"
       style={{
+        // backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-        height: "100vh",
+        backgroundPosition: "bottom",
+        height: "calc(100vh - 64px)",
         width: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
         textAlign: "center",
-        overflow: "hidden",
+        position: "fixed",
+        bottom: 0,
+        right: 0,
+        left: 0,
+        margin: 0,
+        padding: 0,
+        position: "fixed",
+
       }}
     >
       <div
@@ -40,24 +56,6 @@ const HomePage = () => {
           alignItems: "center",
         }}
       >
-        <h1
-          style={{
-            fontSize: "6rem",
-            fontWeight: "bold",
-            marginBottom: "20px",
-          }}
-        >
-          לוח המגילות
-        </h1>
-        <p
-          style={{
-            fontSize: "3rem",
-            color: "#4A4A4A",
-            marginBottom: "30px",
-          }}
-        >
-          תאור כללי
-        </p>
         <Button
           variant="outlined"
           onClick={handleOpenLogin}

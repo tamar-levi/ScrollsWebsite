@@ -6,14 +6,12 @@ import {
     TextField,
     Button,
     Box,
-    DialogActions,
     Divider,
     Typography,
     Link,
     useTheme,
     useMediaQuery,
     CircularProgress,
-    Fade,
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -48,6 +46,8 @@ const LoginDialog = ({ open, onClose }) => {
             const response = await axios.post('http://localhost:5000/usersApi/loginUser', {
                 username,
                 password,
+            }, {
+                withCredentials: true, 
             });
             dispatch(setUser(response.data.user));
             const successMessage = document.createElement('div');

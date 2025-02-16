@@ -47,7 +47,9 @@ const CreateUser = ({ open, onClose }) => {
     e.preventDefault();
     try {
       console.log('Sending data:', formData);
-      const response = await axios.post('http://localhost:5000/usersApi/addUser', formData);
+      const response = await axios.post('http://localhost:5000/usersApi/addUser', formData, {
+        withCredentials: true,
+      });
       dispatch(setUser(response.data.user));
       setSnackbar({ open: true, message: 'משתמש נוצר בהצלחה!', severity: 'success' });
       onClose();

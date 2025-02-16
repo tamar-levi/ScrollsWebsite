@@ -72,6 +72,8 @@ export const {
 export default userSlice.reducer;
 
 export const fetchUserData = () => async (dispatch) => {
+  console.log('Sending request...');
+  console.log("document.cookie.token", document.cookie.token);
   try {
     const response = await axios.get('http://localhost:5000/usersApi/getCurrentUser', {
       withCredentials: true, 

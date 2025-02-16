@@ -159,6 +159,7 @@ const handleGoogleLogin = async (req, res) => {
         }
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
+        console.log("token", token);
         res.cookie('token', token, {
             httpOnly: true, 
             secure: false,   
