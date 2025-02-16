@@ -75,8 +75,14 @@ const addUser = async (req, res) => {
             maxAge: 2592000000,
             sameSite: 'None'
         });
-        const auth = await getAuth();
-        await sendWelcomeEmail(auth, email);
+
+        try {
+            const auth = await getAuth();
+            await sendWelcomeEmail(auth, email);
+        } catch (emailError) {
+            console.error('שגיאה בשליחת מייל ברוכים הבאים:', emailError);
+        }
+
         res.json({
             message: 'User created successfully',
             user: newUser
@@ -86,7 +92,6 @@ const addUser = async (req, res) => {
         res.status(500).json({ message: 'שגיאת מסד נתונים' });
     }
 };
-
 
 const updateUserDetails = async (req, res) => {
     try {
