@@ -3,7 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 const bcrypt = require('bcryptjs');
-const { sendWelcomeEmail } = require('../services/emailService');
+const { sendWelcomeEmail, getAuth } = require('../services/emailService');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const Product = require('../models/productModel');
@@ -46,7 +46,8 @@ const addUser = async (req, res) => {
         await newUser.save();
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-        // await sendWelcomeEmail(email, fullName);
+        const auth = await getAuth();
+        await sendWelcomeEmail(auth, email);
 
         res.json({
             message: 'User created successfully',
@@ -152,12 +153,13 @@ const handleGoogleLogin = async (req, res) => {
                 isSeller: false,
                 password: require('crypto').randomBytes(16).toString('hex')
             });
-            // await sendWelcomeEmail(user.email, user.fullName);
+            const auth = await getAuth();
+            await sendWelcomeEmail(auth, user.email);
         }
 
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-    
+
         res.json({
             message: 'Google login successful',
             token,
@@ -187,19 +189,19 @@ const getUserById = async (req, res) => {
 
 
 const addUserFromForm = async (req, res) => {
-    const { sellerName, phoneNumber, email } = req.body; 
+    const { sellerName, phoneNumber, email } = req.body;
 
-    const emailLowerCase = email.toLowerCase();  
+    const emailLowerCase = email.toLowerCase();
 
     try {
         const newUser = new User({
-            fullName: sellerName,  
-            displayName: sellerName,  
+            fullName: sellerName,
+            displayName: sellerName,
             phoneNumber,
             email: emailLowerCase,
-            city: 'לא צוין',  
-            isSeller: true,  
-            password: require('crypto').randomBytes(16).toString('hex')  
+            city: 'לא צוין',
+            isSeller: true,
+            password: require('crypto').randomBytes(16).toString('hex')
         });
 
         await newUser.save();
@@ -212,4 +214,4 @@ const addUserFromForm = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm   };
+module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm };
