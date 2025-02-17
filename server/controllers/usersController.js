@@ -194,7 +194,7 @@ const handleGoogleLogin = async (req, res) => {
             httpOnly: true, 
             secure: false,   
             maxAge: 2592000000,
-            sameSite: 'Lax',
+            sameSite: 'None',
         });
         res.json({
             message: 'Google login successful',

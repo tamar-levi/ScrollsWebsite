@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
+
 const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
 
