@@ -3,6 +3,7 @@ import axios from 'axios';
 import EditableProductCard from './EditableProductCard';
 import EditProductModal from './EditProductModal';
 import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Mail, Phone, X, Scroll } from 'lucide-react';
 
 const UserProducts = () => {
     const [products, setProducts] = useState([]);
@@ -55,19 +56,40 @@ const UserProducts = () => {
                 maxWidth: '1200px',
                 margin: '0 auto',
             }}>
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" gap={1} sx={{ mb: 3, mt: 2 }}>
+                    <Scroll size={35} color="#1976d2" />
+                    <Typography fontWeight="bold" sx={{ color: '#333', fontSize: '1.5rem' }}>
+                        המגילות שלי
+                    </Typography>
+                </Box>
                 <Typography
-                    variant="h4"
-                    align="center"
+                    variant="body1"
+                    color="textSecondary"
+                    sx={{ mb: 5, fontWeight: '500', textAlign: 'center' }}
+                >
+                    .לא ינתן החזר על מחיקת מודעה <br />
+                    .ניתן לערוך את פרטי המגילה, את המחיר ניתן לשנות עד תקרת הסכום של עלות פרסום המודעה
+                </Typography>
+                <Box
                     sx={{
-                        marginBottom: '30px',
-                        fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }, // Adjust font size based on screen size
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gap: 5,
+                        maxWidth: '100%',
+                        width: '100%',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        justifyContent: 'start',
+                        '@media (max-width: 1200px)': {
+                            gridTemplateColumns: 'repeat(2, 1fr)',
+                        },
+                        '@media (max-width: 600px)': {
+                            gridTemplateColumns: '1fr',
+                        },
                     }}
                 >
-                    המוצרים שלי
-                </Typography>
-                <Grid container spacing={3}>
                     {products.map((product) => (
-                        <Grid item xs={12} sm={6} md={4} key={product._id}>
+                        <Grid key={product._id} sx={{ marginBottom: 2 }}>
                             <EditableProductCard
                                 product={product}
                                 onDelete={handleDelete}
@@ -75,7 +97,7 @@ const UserProducts = () => {
                             />
                         </Grid>
                     ))}
-                </Grid>
+                </Box>
             </Box>
             {isEditModalOpen && selectedProduct && (
                 <EditProductModal

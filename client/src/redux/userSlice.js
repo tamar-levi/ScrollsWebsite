@@ -42,6 +42,7 @@ const userSlice = createSlice({
       state.products = [];
       state.error = null;
       clearUserData();
+
     },
 
     setError: (state, action) => {
@@ -70,6 +71,16 @@ export const {
 } = userSlice.actions;
 
 export default userSlice.reducer;
+
+export const logoutUser = () => async (dispatch) => {
+  try {
+    await axios.post('http://localhost:5000/usersApi/logout', {}, { withCredentials: true });
+    dispatch(logout());
+  } catch (error) {
+    console.error('Logout error:', error);
+    dispatch(logout());
+  }
+};
 
 export const fetchUserData = () => async (dispatch) => {
   console.log('Sending request...');

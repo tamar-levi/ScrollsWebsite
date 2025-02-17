@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 const products = [
   {
     name: 'מודעות עד 6000 ש"ח',
-    desc: 'החל מ-1000 ש"ח',
     price: '₪30',
   },
   {
@@ -17,7 +16,6 @@ const products = [
   },
   {
     name: 'מודעות מעל 12000 ש"ח',
-    desc: 'החל מ-12000 ש"ח',
     price: '₪40',
   },
   {

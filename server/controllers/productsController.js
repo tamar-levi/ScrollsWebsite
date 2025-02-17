@@ -2,10 +2,9 @@ const Product = require('../models/productModel');
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('userId'); // חזרת את הפונקציה בצורה אסינכרונית
+        const products = await Product.find().populate('userId'); 
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
@@ -20,7 +19,7 @@ const getAllProducts = async (req, res) => {
         res.json(products);
     } catch (err) {
         console.error('Error fetching products', err);
-        res.status(500).json({ error: 'Database error' }); // כאן מחזירים JSON עם הודעת שגיאה
+        res.status(500).json({ error: 'Database error' }); 
     }
 };
 
@@ -54,7 +53,6 @@ const addProduct = async (req, res) => {
         res.status(500).send('Database error');
     }
 };
-
 
 const getAllProductsByUser = async (req, res) => {
     try {
@@ -107,7 +105,6 @@ const updateProductsDetails = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
-
 
 const deleteProduct = async (req, res) => {
     const { id } = req.params;
@@ -163,6 +160,5 @@ const addProductFromForm = async (req, res) => {
         res.status(500).send('Database error');
     }
 };
-
 
 module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm };

@@ -12,11 +12,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../redux/userSlice';
+import { logoutUser } from '../redux/userSlice';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const user = useSelector((state) => state.user.currentUser);
+  const firstLetter = user?.fullName ? user.fullName.charAt(0) : 'א';
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,76 +33,92 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
 
-  const firstLetter = user?.fullName ? user.fullName.charAt(0) : 'א';
-
   const handleLogout = () => {
-    alert('התנתקותך בוצעה בהצלחה');
-    dispatch(logout());
+    setOpenSnackbar(true);
+    dispatch(logoutUser());
     navigate('/');
   };
 
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-      <Tooltip title={user?.fullName || 'אורח'}>
-        <IconButton onClick={handleClick}>
-          <Avatar sx={{ bgcolor: 'primary.main' }}>{firstLetter}</Avatar>
-        </IconButton>
-      </Tooltip>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: {
-            width: '300px',
-            padding: '16px',
-            '& .MuiMenuItem-root': {
-              direction: 'rtl',
-              fontFamily: 'Rubik, sans-serif'
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+        <Tooltip title={user?.fullName || 'אורח'}>
+          <IconButton onClick={handleClick}>
+            <Avatar sx={{ bgcolor: 'primary.main' }}>{firstLetter}</Avatar>
+          </IconButton>
+        </Tooltip>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            sx: {
+              width: '300px',
+              padding: '16px',
+              '& .MuiMenuItem-root': {
+                direction: 'rtl',
+                fontFamily: 'Rubik, sans-serif'
+              }
             }
-          }
-        }}
-      >
-        <Box sx={{ mb: 2, textAlign: 'center' }}>
-          <Avatar sx={{ width: 60, height: 60, margin: '0 auto', bgcolor: 'primary.main' }}>
-            {firstLetter}
-          </Avatar>
-          <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>
-            {user?.fullName || 'אורח'}
-          </Typography>
-          {user?.email && (
-            <Typography variant="body2" color="text.secondary">
-              {user.email}
+          }}
+        >
+          <Box sx={{ mb: 2, textAlign: 'center' }}>
+            <Avatar sx={{ width: 60, height: 60, margin: '0 auto', bgcolor: 'primary.main' }}>
+              {firstLetter}
+            </Avatar>
+            <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>
+              {user?.fullName || 'אורח'}
             </Typography>
+            {user?.email && (
+              <Typography variant="body2" color="text.secondary">
+                {user.email}
+              </Typography>
+            )}
+          </Box>
+
+          {user && (
+            <>
+              <MenuItem component={Link} to="/account" onClick={handleClose} dir="rtl">
+                <ListItemIcon sx={{ marginLeft: 1 }}>
+                  <AccountCircleIcon />
+                </ListItemIcon>
+                החשבון שלי
+              </MenuItem>
+
+              <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
+                <ListItemIcon sx={{ marginLeft: 1 }}>
+                  <InventoryIcon />
+                </ListItemIcon>
+                המוצרים שלי
+              </MenuItem>
+
+              <MenuItem onClick={handleLogout} dir="rtl">
+                <ListItemIcon sx={{ marginLeft: 1 }}>
+                  <LogoutIcon />
+                </ListItemIcon>
+                התנתק
+              </MenuItem>
+            </>
           )}
-        </Box>
-
-        {user && (
-          <>
-            <MenuItem component={Link} to="/account" onClick={handleClose} dir="rtl">
-              <ListItemIcon sx={{ marginLeft: 1 }}>
-                <AccountCircleIcon />
-              </ListItemIcon>
-              החשבון שלי
-            </MenuItem>
-
-            <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
-              <ListItemIcon sx={{ marginLeft: 1 }}>
-                <InventoryIcon />
-              </ListItemIcon>
-              המוצרים שלי
-            </MenuItem>
-
-            <MenuItem onClick={handleLogout} dir="rtl">
-              <ListItemIcon sx={{ marginLeft: 1 }}>
-                <LogoutIcon />
-              </ListItemIcon>
-              התנתק
-            </MenuItem>
-          </>
-        )}
-      </Menu>
-    </Box>
+        </Menu>
+      </Box>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          התנתקותך בוצעה בהצלחה
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

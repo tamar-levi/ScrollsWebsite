@@ -1,65 +1,74 @@
-import React, { useEffect } from 'react';
-import { Box, Card, CardContent, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { Mail, Phone } from 'lucide-react';
+import React from 'react';
+import { Modal, Box, Card, CardContent, Typography, useMediaQuery, useTheme, IconButton } from '@mui/material';
+import { Mail, Phone, X, MessageCircle } from 'lucide-react';
 
-const ContactUs = () => {
+const ContactUs = ({ open, onClose }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   return (
-    <Box
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="contact-us-modal"
       sx={{
-        minHeight: '100vh', 
         display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'flex-start', 
-        padding: 2,
-        marginTop: isMobile ? '60px' : '120px', 
       }}
     >
       <Card
         sx={{
-          width: isMobile ? '95%' : isTablet ? '85%' : '70%', 
-          maxWidth: 1000,
-          padding: isMobile ? 3 : 5,
+          width: isMobile ? '95%' : isTablet ? '85%' : '70%',
+          maxWidth: 500,
+          padding: isMobile ? 3 : 4,
           textAlign: 'center',
-          borderRadius: 4,
-          boxShadow: 5,
+          borderRadius: 3,
+          boxShadow: 3,
           backgroundColor: 'white',
+          position: 'relative',
         }}
       >
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+          }}
+        >
+          <X size={24} />
+        </IconButton>
         <CardContent>
+          <Box display="flex" justifyContent="center" alignItems="center" gap={1} sx={{ mb: 2 }}>
+            <MessageCircle size={28} color="#1976d2" />
+            <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" sx={{ color: '#333' }}>
+              צור קשר
+            </Typography>
+          </Box>
           <Typography
-            variant={isMobile ? "h5" : isTablet ? "h4" : "h3"}
-            fontWeight="bold"
-            gutterBottom
-            sx={{ color: '#333', textShadow: '2px 2px 5px rgba(0,0,0,0.2)' }}
-          >
-            📜 צור קשר
-          </Typography>
-          <Typography
-            variant="h6"
+            variant="body1"
             color="textSecondary"
-            sx={{ mb: 3, fontSize: isMobile ? '0.9rem' : isTablet ? '1rem' : '1.2rem', fontWeight: '500' }}
+            sx={{ mb: 3, fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '500' }}
           >
             לכל מקרה ובעיה, אנחנו פה איתך! ניתן לפנות אלינו במייל או בטלפון
           </Typography>
           <Box display="flex" justifyContent="center" alignItems="center" gap={1} sx={{ mb: 2, flexDirection: isMobile ? 'column' : 'row' }}>
-            <Mail size={isMobile ? 20 : 24} color="#1976d2" />
-            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2', fontSize: isMobile ? '1rem' : '1.2rem' }}>
-                ScrollsSite@gmail.com
+            <Mail size={20} color="#1976d2" />
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+              ScrollsSite@gmail.com
             </Typography>
           </Box>
           <Box display="flex" justifyContent="center" alignItems="center" gap={1} sx={{ flexDirection: isMobile ? 'column' : 'row' }}>
-            <Phone size={isMobile ? 20 : 24} color="#1976d2" />
-            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2', fontSize: isMobile ? '1rem' : '1.2rem' }}>
-            052-7672693
+            <Phone size={20} color="#1976d2" />
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+              052-7672693
             </Typography>
           </Box>
         </CardContent>
       </Card>
-    </Box>
+    </Modal>
   );
 };
 

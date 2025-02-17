@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storageSession from 'redux-persist/lib/storage/session';  // משתמשים ב-sessionStorage
+import storageSession from 'redux-persist/lib/storage/session'; 
 import userReducer from './userSlice';
 
 const persistConfig = {

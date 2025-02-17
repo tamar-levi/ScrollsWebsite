@@ -194,7 +194,7 @@ const handleGoogleLogin = async (req, res) => {
             httpOnly: true, 
             secure: false,   
             maxAge: 2592000000,
-            sameSite: 'None'  
+            sameSite: 'Lax',
         });
         res.json({
             message: 'Google login successful',
@@ -246,4 +246,8 @@ const addUserFromForm = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm };
+const logout = (req, res) => {
+    res.status(200).json({ message: 'Logged out successfully' });
+};
+
+module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm, logout };

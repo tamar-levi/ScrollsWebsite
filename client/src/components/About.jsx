@@ -17,9 +17,7 @@ export default function About() {
         direction: 'rtl'
       }}
     >
-      {/* <Container sx={{ width: '100%', padding: '0 40px' }}> */}
       <Container maxWidth="lg">
-        {/* כותרת ראשית */}
         <Typography
           variant="h3"
           align="center"
@@ -36,7 +34,6 @@ export default function About() {
           לוח המגילות
         </Typography>
 
-        {/* תיאור כללי */}
         <Typography
           variant="h5"
           align="center"
@@ -53,7 +50,6 @@ export default function About() {
           מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם
         </Typography>
 
-        {/* תיאור ראשוני */}
         <Typography
           variant="body1"
           sx={{
@@ -150,7 +146,6 @@ export default function About() {
           אנחנו עושים הכל על מנת שהשימוש בלוח יהיה קל, זמין ונוח. אם בכל זאת נתקלתם בבעיה או סתם שאלה, תוכלו לפנות אלינו בטלפון: 052-7672693 או במייל: ScrollsSite@gmail.com
         </Typography>
 
-        {/* עיצוב המידע הנוסף */}
         <Box sx={{ backgroundColor: '#ffffff', padding: '40px 20px', borderRadius: '8px', marginTop: '50px' }}>
           <Typography
             variant="h6"

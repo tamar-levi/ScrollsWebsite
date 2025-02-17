@@ -8,23 +8,16 @@ import AccountMenu from './AccountMenu';
 import { useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import { useState } from 'react';
+import ContactUs from './ContactUs';
 export default function NavBar() {
   const theme = useTheme();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.currentUser);
+  const [openContact, setOpenContact] = useState(false);
   const isLoggedIn = Boolean(user);
 
-  const handleProductsNavigation = (event) => {
-    if (!isLoggedIn) {
-      event.preventDefault(); 
-      alert("עליך להתחבר כדי לצפות במוצרים");
-      navigate("/");
-    } else {
-      navigate("/products");
-    }
-  };
-
+ 
   const buttonStyles = {
     color: theme.palette.primary.main,
     fontFamily: 'Rubik, sans-serif',
@@ -41,18 +34,19 @@ export default function NavBar() {
   };
 
   return (
+    <>
     <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
       <Toolbar>
         <AccountMenu color={theme.palette.primary.main} isLoggedIn={isLoggedIn} />
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.4, sm: 3, md: 3 } }}>
-          <Button sx={buttonStyles} component={Link} to="/contactUs">
+          <Button sx={buttonStyles} onClick={() => setOpenContact(true)}>
             צור קשר
           </Button>
           <Button sx={buttonStyles} component={Link} to="/about">
             אודות
           </Button>
-          <Button sx={buttonStyles} onClick={handleProductsNavigation}>
+          <Button sx={buttonStyles} component={Link} to="/products">
             מוצרים
           </Button>
           <Button sx={buttonStyles} component={Link} to="/">
@@ -80,5 +74,7 @@ export default function NavBar() {
         </Box>
       </Toolbar>
     </AppBar>
+    <ContactUs open={openContact} onClose={() => setOpenContact(false)} />
+</>
   );
 }

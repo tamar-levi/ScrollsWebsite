@@ -3,7 +3,6 @@ require('dotenv').config();
 const secretKey = process.env.JWT_SECRET_KEY;
 
 const authenticateToken = (req, res, next) => {
-    // console.log('Received request:', req);
     const token = req.cookies['token']; 
     console.log('Token received:', token); 
 

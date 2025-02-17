@@ -6,13 +6,15 @@ import {
   DialogActions,
   Button,
   TextField,
-  Box
+  Box,
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 const PRICE_LIMITS = [
-  { max: 1000, min: 0, price: 0 },
-  { max: 1500, min: 1000, price: 10 },
-  { max: 2000, min: 1500, price: 20 }
+  { max: 6000, min: 0, price: 30 },
+  { max: 12000, min: 6000, price: 35 },
+  { max: Infinity, min: 12000, price: 40 }
 ];
 
 const getPriceLimits = (initialPrice) => {
@@ -27,6 +29,8 @@ const getPriceLimits = (initialPrice) => {
 const EditProductModal = ({ open, onClose, product }) => {
   const [editedProduct, setEditedProduct] = useState(product);
   const [priceLimits, setPriceLimits] = useState({ max: Infinity, min: 0 });
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     if (product.price) {
@@ -36,8 +40,9 @@ const EditProductModal = ({ open, onClose, product }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "price" && (value > priceLimits.max || value < priceLimits.min)) {
-      alert(`המחיר חייב להיות בין ${priceLimits.min} ל-${priceLimits.max} ש"ח.`);
+    if (name === "price" && (value > priceLimits.max)) {
+      setAlertMessage(`המחיר חורג מתקרת הסכום של פרסום המודעה: ${priceLimits.max} ש\"ח.`);
+      setAlertOpen(true);
       return;
     }
     setEditedProduct(prev => ({
@@ -69,11 +74,11 @@ const EditProductModal = ({ open, onClose, product }) => {
   
     } catch (error) {
       console.error('Error updating product:', error);
-      alert(`שגיאה בעדכון המוצר`);
+      setAlertMessage("שגיאה בעדכון המוצר");
+      setAlertOpen(true);
     }
   };
 
-  
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>עריכת מוצר</DialogTitle>
@@ -119,6 +124,13 @@ const EditProductModal = ({ open, onClose, product }) => {
           שמור שינויים
         </Button>
       </DialogActions>
+
+      {/* Snackbar להצגת הודעות */}
+      <Snackbar open={alertOpen} autoHideDuration={3000} onClose={() => setAlertOpen(false)}>
+        <Alert severity="error" onClose={() => setAlertOpen(false)}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };
