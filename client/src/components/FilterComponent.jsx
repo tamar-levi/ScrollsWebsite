@@ -182,7 +182,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 )}
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem', marginTop: '-10px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-15px' }}>
                         בחר סוג כתב:
                     </Typography>
                     <RadioGroup
@@ -199,7 +199,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             <FormControlLabel
                                 key={type}
                                 value={type}
-                                control={<Radio size="small" style={{ padding: '1.5px' }} />}
+                                control={<Radio size="small" style={{ padding: '1.3px' }} />}
                                 label={<span style={{ fontSize: '0.8rem' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
@@ -208,7 +208,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px' }}>
                         בחר סוג מגילה:
                     </Typography>
                     <RadioGroup
@@ -225,7 +225,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             <FormControlLabel
                                 key={type}
                                 value={type}
-                                control={<Radio size="small" style={{ padding: '1.5px' }} />}
+                                control={<Radio size="small" style={{ padding: '1.3px' }} />}
                                 label={<span style={{ fontSize: '0.8rem' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
@@ -234,7 +234,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px' }}>
                         טווח מחירים:
                     </Typography>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -249,9 +249,6 @@ const FilterComponent = ({ onFilter, products }) => {
                     </div>
                 </div>
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem', marginTop: '-10px', marginBottom: '10px' }}>
-                        בחר עיר:
-                    </Typography>
                     <Select
                         value={selectedCity}
                         onChange={handleCityChange}
@@ -271,16 +268,13 @@ const FilterComponent = ({ onFilter, products }) => {
                     </Select>
                 </div>
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem', marginTop: '-10px', marginBottom: '10px' }}>
-                        בחר סופר:
-                    </Typography>
                     <Select
                         value={selectedSeller}
                         onChange={handleSellerChange}
                         fullWidth
                         size="small"
                         displayEmpty
-                        sx={{ textAlign: 'right', direction: 'rtl' }}
+                        sx={{ textAlign: 'right', direction: 'rtl', marginTop: '-10px' }}
                     >
                         <MenuItem value="">
                             <em>כל הסופרים</em>
@@ -292,7 +286,6 @@ const FilterComponent = ({ onFilter, products }) => {
                         ))}
                     </Select>
                 </div>
-
                 <Box display="flex" justifyContent="center" gap="10px" width="90%" style={{ paddingBottom: '20px' }}>
                     <Button
                         variant="contained"
