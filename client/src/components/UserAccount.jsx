@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Typography, Avatar, useMediaQuery, useTheme, Snackbar, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { deleteUser, deleteUserProducts } from '../redux/userSlice';
 import axios from 'axios';
@@ -12,6 +12,8 @@ export default function UserAccount() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
 
   const handleDelete = async () => {
     if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? כל המוצרים שלך ימחקו גם כן.')) {
@@ -28,13 +30,13 @@ export default function UserAccount() {
       dispatch(deleteUser());
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-      navigate('/');
+      setAlert({ open: true, message: 'המשתמש נמחק בהצלחה', severity: 'success' });
+      setTimeout(() => navigate('/'), 2000);
     } catch (err) {
       console.error('Error deleting user:', err);
-      alert('שגיאה במחיקת המשתמש, נסה שנית');
+      setAlert({ open: true, message: 'שגיאה במחיקת המשתמש, נסה שנית', severity: 'error' });
     }
   };
-
 
   return (
     <Box
@@ -97,6 +99,13 @@ export default function UserAccount() {
           </Button>
         </Box>
       </Box>
+      
+      {/* Snackbar for alerts */}
+      <Snackbar open={alert.open} autoHideDuration={3000} onClose={() => setAlert({ ...alert, open: false })}>
+        <Alert onClose={() => setAlert({ ...alert, open: false })} severity={alert.severity} sx={{ width: '100%' }}>
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
