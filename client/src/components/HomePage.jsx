@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import LoginDialog from './LoginDialog';
-import backgroundImage from '../assets/backgroundImage.png';
+import backgroundImage from '../assets/Background.jpg';
 
 const HomePage = () => {
-  const styles = {
-    body: {
-      overflow: "hidden",
-      margin: 0,
-      padding: 0
-    }
-  };
-
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, []);
+  
   const [openLogin, setOpenLogin] = useState(false);
-
   const handleOpenLogin = () => {
     setOpenLogin(true);
   };
@@ -21,14 +19,15 @@ const HomePage = () => {
   const handleCloseLogin = () => {
     setOpenLogin(false);
   };
+
   return (
     <div
       className="relative"
       style={{
-        // backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "bottom",
-        height: "calc(100vh - 64px)",
+        height: "100vh",
         width: "100%",
         display: "flex",
         flexDirection: "column",
@@ -41,29 +40,42 @@ const HomePage = () => {
         left: 0,
         margin: 0,
         padding: 0,
-        position: "fixed",
-
       }}
     >
       <div
-        className="bg-white/70 rounded-2xl p-8 shadow-xl z-10"
         style={{
-          padding: "40px",
-          marginTop: "10vh",
+          position: "absolute",
+          right: "max(10px, 10%)", 
+          bottom: "25%",
+          fontFamily: "'Rubik', sans-serif",
+          color: "#212121",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
           alignItems: "center",
+          textAlign: 'right',
+          maxWidth: "100%",
+          whiteSpace: "nowrap",
         }}
       >
+        <div>
+          <div style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", fontWeight: "bold" }}>לוח</div>
+          <div style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: "600" }}>המגילות</div>
+          <div style={{ fontSize: "clamp(2rem, 4vw, 4rem)", fontWeight: "500" }}>והסת"ם</div>
+        </div>
         <Button
-          variant="outlined"
+          variant="contained"
           onClick={handleOpenLogin}
           sx={{
-            fontSize: "1.2rem",
-            padding: "12px 30px",
-            borderRadius: "12px",
-            alignSelf: "center",
+            color: "#fff",
+            padding: "12px 25px",
+            borderRadius: "5px",
+            marginTop: "25px",
+            marginRight: "-25%",
+            width: "max-content",
+            fontFamily: "'Rubik', sans-serif",
+            fontSize: "1rem", 
+            lineHeight: "normal",
+            minHeight: "unset",
           }}
         >
           התחברות

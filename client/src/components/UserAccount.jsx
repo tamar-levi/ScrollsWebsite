@@ -1,12 +1,18 @@
-import React from 'react';
+import React ,{useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Typography, Avatar, useMediaQuery, useTheme, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { deleteUser, deleteUserProducts } from '../redux/userSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function UserAccount() {
+export default function UserAccount({ openDialog, onDialogOpen, onDialogClose }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, []);
   const user = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -14,11 +20,6 @@ export default function UserAccount() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDelete = async () => {
-    if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? כל המוצרים שלך ימחקו גם כן.')) {
-      console.log('User canceled deletion');
-      return;
-    }
-
     try {
       await axios.delete('http://localhost:5000/usersApi/deleteUser', {
         withCredentials: true,
@@ -26,15 +27,12 @@ export default function UserAccount() {
       console.log('User deleted successfully');
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
       navigate('/');
     } catch (err) {
       console.error('Error deleting user:', err);
       alert('שגיאה במחיקת המשתמש, נסה שנית');
     }
   };
-
 
   return (
     <Box
@@ -90,13 +88,36 @@ export default function UserAccount() {
           <Button
             variant="outlined"
             color="error"
-            onClick={handleDelete}
+            onClick={onDialogOpen}
             sx={{ width: isMobile ? '100%' : '48%' }}
           >
             מחיקת משתמש
           </Button>
         </Box>
       </Box>
+
+      <Dialog open={openDialog} onClose={onDialogClose}>
+        <DialogTitle>האם אתה בטוח שברצונך למחוק את המשתמש?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            כל המוצרים שלך ימחקו גם כן. האם אתה בטוח שאתה רוצה להמשיך?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onDialogClose} color="primary">
+            ביטול
+          </Button>
+          <Button
+            onClick={() => {
+              onDialogClose();
+              handleDelete();
+            }}
+            color="error"
+          >
+            מחיקת משתמש
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

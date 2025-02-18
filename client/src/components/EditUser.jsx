@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteUser, deleteUserProducts, updateUser } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,12 @@ import { Box, TextField, Button, Typography, Avatar, useMediaQuery, useTheme } f
 import axios from 'axios';
 
 export default function EditUser() {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, []);
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();

@@ -33,18 +33,29 @@ const EditProductModal = ({ open, onClose, product }) => {
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
-    if (product.price) {
+    if (product.price !== undefined && product.price !== "") {
       setPriceLimits(getPriceLimits(product.price));
+    } else {
+      setPriceLimits({ max: Infinity, min: 0 });
     }
   }, [product.price]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "price" && (value > priceLimits.max)) {
+    if (name === "price" && value === "") {
+      setEditedProduct(prev => ({
+        ...prev,
+        [name]: priceLimits.max
+      }));
+      return;
+    }
+
+    if (name === "price" && value > priceLimits.max) {
       setAlertMessage(`המחיר חורג מתקרת הסכום של פרסום המודעה: ${priceLimits.max} ש\"ח.`);
       setAlertOpen(true);
       return;
     }
+
     setEditedProduct(prev => ({
       ...prev,
       [name]: value
@@ -61,17 +72,15 @@ const EditProductModal = ({ open, onClose, product }) => {
         body: JSON.stringify(editedProduct),
         credentials: 'include'
       });
-  
       const responseData = await response.json();
-  
       if (!response.ok) {
         throw new Error(responseData.message || 'Failed to update product');
       }
-  
+
       console.log('Product updated successfully:', responseData);
       window.location.reload();
       onClose();
-  
+
     } catch (error) {
       console.error('Error updating product:', error);
       setAlertMessage("שגיאה בעדכון המוצר");
@@ -110,7 +119,7 @@ const EditProductModal = ({ open, onClose, product }) => {
           <TextField
             name="price"
             label="מחיר"
-            value={editedProduct.price}
+            value={editedProduct.price || ''}
             onChange={handleChange}
             fullWidth
             type="number"
@@ -124,8 +133,6 @@ const EditProductModal = ({ open, onClose, product }) => {
           שמור שינויים
         </Button>
       </DialogActions>
-
-      {/* Snackbar להצגת הודעות */}
       <Snackbar open={alertOpen} autoHideDuration={3000} onClose={() => setAlertOpen(false)}>
         <Alert severity="error" onClose={() => setAlertOpen(false)}>
           {alertMessage}

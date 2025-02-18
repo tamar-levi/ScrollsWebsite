@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
 const readline = require('readline-sync');
-
 const SCOPES_SEND = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify'];
 const CREDENTIALS_PATH = path.join(__dirname, '..', 'credentials.json');
 const TOKEN_PATH = path.join(__dirname, '..', 'token.json');
@@ -111,9 +110,70 @@ async function sendEmail(auth, email, attachmentPath) {
     console.log('✅ Email sent successfully:', res.data);
 }
 
+async function sendReceiptEmail(auth, to, receiptUrl) {
+    const subject = 'קבלה עבור תשלום';
+    const imagePath = path.join(__dirname, '..', 'images', 'logo.png');
+    const imageBuffer = fs.readFileSync(imagePath);
+    const imageBase64 = imageBuffer.toString('base64');
+    const contentId = 'logo-image';
+    const htmlBody = `
+    <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right; padding: 20px; background-color: #ffffff; border-radius: 8px; border: 1px solid #ddd;">
+        <img src="cid:${contentId}" alt="Scrolls Logo" width="100" style="margin-bottom: 8px; display: block;">
+        <h2 style="color #555; font-size: 24px;">התשלום שלך התקבל בהצלחה</h2>
+        <p style="color: #555; font-size: 16px;">הקבלה שלך זמינה להורדה בלינק הבא:</p>
+        <p style="text-align: right;"> <!-- מוזח לימין -->
+            <a href="${receiptUrl}" target="_blank" style="display: inline-block; padding: 12px 24px; background-color: #555; color: white; text-decoration: none; border-radius: 4px; font-size: 16px; font-weight: bold;">
+                הורד את הקבלה כאן
+            </a>
+        </p>
+        <p style="color: #555; font-size: 16px;">אם יש לך שאלות נוספות, ניתן ליצור קשר:</p>
+        <p style="color: #333; font-size: 14px;">
+            📞 טלפון: 03-1234567<br><br>
+            ✉️ מייל: scrollssite@gmail.com
+        </p>
+        <p style="color: #888; font-size: 12px; text-align: center;">
+            הודעה זו נשלחה באופן אוטומטי, אין צורך להשיב אליה.
+        </p>
+    </div>`;
+
+    const rawMessage = [
+        `From: "scrollssite@gmail.com"`,
+        `To: ${to}`,
+        `Subject: =?UTF-8?B?${Buffer.from(subject, 'utf-8').toString('base64')}?=`,
+        `MIME-Version: 1.0`,
+        `Content-Type: multipart/related; boundary="boundary_1"`,
+        ``,
+        `--boundary_1`,
+        `Content-Type: text/html; charset="UTF-8"`,
+        ``,
+        htmlBody,
+        ``,
+        `--boundary_1`,
+        `Content-Type: image/png; name="logo.png"`,
+        `Content-Transfer-Encoding: base64`,
+        `Content-ID: <${contentId}>`,
+        ``,
+        imageBase64,
+        `--boundary_1--`
+    ].join("\r\n");
+
+    const gmail = google.gmail({ version: 'v1', auth });
+    try {
+        const res = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: Buffer.from(rawMessage).toString('base64')
+            }
+        });
+        console.log('✅ קבלה נשלחה בהצלחה:', res.data);
+    } catch (err) {
+        console.error('❌ שגיאה בשליחת הקבלה:', err);
+    }
+}
+
 async function sendWelcomeEmail(auth, email) {
     const subject = 'ברוך הבא ללוח המגילות 📜';
-    const imagePath = 'c:/Users/User/Documents/Scrolls website/server/images/logo.png';
+    const imagePath = path.join(__dirname, '..', 'images', 'logo.png');
     const imageBuffer = fs.readFileSync(imagePath);
     const imageBase64 = imageBuffer.toString('base64');
     const contentId = 'logo-image';
@@ -184,11 +244,9 @@ async function getAuth() {
 
 async function sendEmailExample() {
     const auth = await getAuth();
-    const attachmentPath = 'c:/Users/User/Documents/Scrolls website/server/products.pdf';
-    await sendEmail(auth, 'Rachel0583202634@gmail.com', attachmentPath);
-    await sendWelcomeEmail(auth, 'HAD4059@gmail.com');
+    await sendReceiptEmail(auth, 'HAD4059@gmail.com', 'loclhost:3000');
 }
 
 module.exports = {
-    getAuth, sendEmail, sendWelcomeEmail
+    getAuth, sendEmail, sendWelcomeEmail, sendReceiptEmail
 };

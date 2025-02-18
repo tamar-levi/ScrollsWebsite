@@ -48,7 +48,7 @@ export default function AccountMenu() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
         <Tooltip title={user?.fullName || 'אורח'}>
           <IconButton onClick={handleClick}>
             <Avatar sx={{ bgcolor: 'primary.main' }}>{firstLetter}</Avatar>
@@ -91,14 +91,12 @@ export default function AccountMenu() {
                 </ListItemIcon>
                 החשבון שלי
               </MenuItem>
-
               <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
                 <ListItemIcon sx={{ marginLeft: 1 }}>
                   <InventoryIcon />
                 </ListItemIcon>
-                המוצרים שלי
+                המגילות שלי
               </MenuItem>
-
               <MenuItem onClick={handleLogout} dir="rtl">
                 <ListItemIcon sx={{ marginLeft: 1 }}>
                   <LogoutIcon />

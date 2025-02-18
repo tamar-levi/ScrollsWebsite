@@ -12,7 +12,7 @@ const UserProducts = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
 
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // For mobile screens
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); 
 
     useEffect(() => {
         const fetchUserProducts = async () => {

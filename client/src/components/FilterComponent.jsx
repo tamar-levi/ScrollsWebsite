@@ -136,6 +136,8 @@ const FilterComponent = ({ onFilter, products }) => {
                     zIndex: 1000,
                     transition: 'right 0.3s ease-in-out',
                     overflowY: 'auto',
+                    fontFamily: 'Roboto, sans-serif',
+
                 }}
             >
                 {isMobile && (
@@ -152,12 +154,8 @@ const FilterComponent = ({ onFilter, products }) => {
                     </Button>
                 )}
 
-                <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '1rem', marginTop: isMobile ? '20px' : '-20px' }}>
-                    סינון מוצרים
-                </Typography>
-
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem',marginTop: '-10px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem',marginTop: '-10px' }}>
                         בחר סוג כתב:
                     </Typography>
                     <RadioGroup
@@ -183,7 +181,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
                         בחר סוג מגילה:
                     </Typography>
                     <RadioGroup
@@ -209,10 +207,10 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
                         טווח מחירים:
                     </Typography>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center'}}>
                         <Slider
                             value={priceRange}
                             onChange={handlePriceChange}
@@ -224,7 +222,7 @@ const FilterComponent = ({ onFilter, products }) => {
                     </div>
                 </div>
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem' , marginTop: '-10px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem' , marginTop: '-10px', marginBottom: '10px' }}>
                         בחר עיר:
                     </Typography>
                     <Select

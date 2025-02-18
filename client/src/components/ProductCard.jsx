@@ -33,8 +33,7 @@ const ProductCard = ({ product, onOpenModal }) => {
         flexDirection: 'column',
         mx: 'auto',
         direction: 'rtl',
-        border: product.isPremiumAd ? '2px solid transparent' : 'none',
-        boxShadow: product.isPremiumAd ? '0 0 15px 3px rgba(30, 144, 255, 0.8)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
+        boxShadow: product.isPremiumAd ? '0 0 3px 1px #1976d2' : '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}
     >
       <Box

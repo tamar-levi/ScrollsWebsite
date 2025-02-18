@@ -42,14 +42,11 @@ const getAllProducts = async () => {
     }
 };
 
-
 const generateHTML = (products) => {
     const templateSource = fs.readFileSync("templates/productTemplate.hbs", "utf8");
     const template = Handlebars.compile(templateSource);
     return template({ products });
 };
-
-
 
 const generatePDF = async (html) => {
     try {

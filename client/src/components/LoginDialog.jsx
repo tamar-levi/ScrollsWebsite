@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -47,7 +47,7 @@ const LoginDialog = ({ open, onClose }) => {
                 username,
                 password,
             }, {
-                withCredentials: true, 
+                withCredentials: true,
             });
             dispatch(setUser(response.data.user));
             const successMessage = document.createElement('div');
@@ -86,7 +86,6 @@ const LoginDialog = ({ open, onClose }) => {
             setIsLoading(false);
         }
     };
-
 
     const handleClose = () => {
         setUsername('');
@@ -225,7 +224,7 @@ const LoginDialog = ({ open, onClose }) => {
                         <Link
                             component="button"
                             variant="body2"
-                            onClick={() => setShowCreateUser(true)}
+                            onClick={() =>  setShowCreateUser(true)}
                             sx={{ cursor: 'pointer' }}
                         >
                             הירשם עכשיו
