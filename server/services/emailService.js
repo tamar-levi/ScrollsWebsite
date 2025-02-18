@@ -3,24 +3,20 @@ const path = require('path');
 const { google } = require('googleapis');
 const readline = require('readline-sync');
 const SCOPES_SEND = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify'];
-const CREDENTIALS_PATH = path.join(__dirname, '..', 'credentials.json');
-const TOKEN_PATH = path.join(__dirname, '..', 'token.json');
-
-function loadCredentials() {
-    if (!fs.existsSync(CREDENTIALS_PATH)) {
-        throw new Error('Missing credentials.json file. Please download it from Google Cloud Console.');
-    }
-    return JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
-}
+require('dotenv').config();
 
 async function authorize(scopes) {
-    const credentials = loadCredentials();
+    const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
     const { client_secret, client_id, redirect_uris } = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-
-    if (fs.existsSync(TOKEN_PATH)) {
-        const token = JSON.parse(fs.readFileSync(TOKEN_PATH));
+    const token = {
+        access_token: process.env.ACCESS_TOKEN,
+        refresh_token: process.env.REFRESH_TOKEN,
+        expiry_date: process.env.EXPIRY_DATE
+    };
+    if (token.access_token) {
         oAuth2Client.setCredentials(token);
+
         if (isTokenExpired(token)) {
             console.log('Refreshing access token...');
             await refreshToken(oAuth2Client, token);
@@ -44,9 +40,10 @@ async function refreshToken(oAuth2Client, token) {
             refresh_token: token.refresh_token,
             expiry_date: response.tokens.expiry_date
         };
-        fs.writeFileSync(TOKEN_PATH, JSON.stringify(newToken));
-        oAuth2Client.setCredentials(newToken);
+        process.env.ACCESS_TOKEN = newToken.access_token;
+        process.env.EXPIRY_DATE = newToken.expiry_date;
         console.log('Token refreshed successfully!');
+        oAuth2Client.setCredentials(newToken);
     } catch (err) {
         console.error('Error refreshing token:', err);
     }
@@ -63,8 +60,9 @@ async function getNewToken(oAuth2Client, scopes) {
     try {
         const { tokens } = await oAuth2Client.getToken(code);
         oAuth2Client.setCredentials(tokens);
-        fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
-        console.log('Token saved to', TOKEN_PATH);
+        process.env.ACCESS_TOKEN = tokens.access_token;
+        process.env.EXPIRY_DATE = tokens.expiry_date;
+        console.log('Token saved successfully!');
         return oAuth2Client;
     } catch (err) {
         throw new Error('Error retrieving access token: ' + err);
@@ -127,13 +125,14 @@ async function sendReceiptEmail(auth, to, receiptUrl) {
                 הורד את הקבלה כאן
             </a>
         </p>
-        <p style="color: #555; font-size: 16px;">אם יש לך שאלות נוספות, ניתן ליצור קשר:</p>
+        <p style="color: #555; font-size: 16px;">אם יש לך שאלות נוסxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>
         <p style="color: #333; font-size: 14px;">
             📞 טלפון: 03-1234567<br><br>
             ✉️ מייל: scrollssite@gmail.com
         </p>
          <p style="font-size: 16px; margin: 16px 0;">
-                    בקרו באתר שלנו: 
+            בקרו באתר שלנו: 
+             <br>
             <a href="https://www.scrollssite.com/products" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
         </p>
         <p style="color: #888; font-size: 12px; text-align: center;">
@@ -190,15 +189,16 @@ async function sendWelcomeEmail(auth, email) {
                   <img src="cid:${contentId}" alt="Scrolls Logo" width="100" style="margin-bottom: 8px;">
                   <h2 style="color: #4E3629;">ברוך הבא ללוח המגילות</h2>
                   <p style="color: #555; font-size: 16px; line-height: 1.6;">
-                      .לוח המגילות הוא מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם&nbsp;<br>
+                      לוח המגילות הוא מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם&nbsp;<br>
                       הלוח נועד לפרסם בתפוצה רחבה מאד מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה לרוכשים ולסופרים&nbsp;<br>
                       הלוח מפנה אותך באופן ישיר אל הסופר, בכך תוכל להתרשם מהסופר באופן אישי ולשמוע את כל הפרטים על המגילה שלו, על רמת ההידור וההקפדה החל מבחירת הקלף הדיו והכתיבה עצמה, וכלה בהגהה ותיקון&nbsp;<br><br>
                       אנחנו עושים הכל על מנת שהשימוש בלוח יהיה קל, זמין ונוח. אם בכל זאת נתקלתם בבעיה או סתם שאלה, תוכלו לפנות אלינו במספר 0527672693 או במייל<br><br>
                       <strong style="color: #555; font-size: 16px;">ScrollsSite@gmail.com</strong>
                   </p>
                   <p style="font-size: 16px; margin: 16px 0;">
-                    בקרו באתר שלנו: 
-                    <a href="https://www.scrollssite.com" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
+                   בקרו באתר שלנו: 
+                     <br>
+                     <a href="https://www.scrollssite.com" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
                   </p>
                   <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
                   <p style="color: #888; font-size: 12px;">
@@ -207,9 +207,7 @@ async function sendWelcomeEmail(auth, email) {
               </td>
           </tr>
       </table>
-    </div>
-  `;
-  
+    </div>`;
 
     const rawMessage = [
         `From: "scrollssite@gmail.com"`,
@@ -222,6 +220,7 @@ async function sendWelcomeEmail(auth, email) {
         `Content-Type: text/html; charset="UTF-8"`,
         ``,
         htmlBody,
+        ``,
         `--boundary_1`,
         `Content-Type: image/png; name="logo.png"`,
         `Content-Transfer-Encoding: base64`,
@@ -232,29 +231,17 @@ async function sendWelcomeEmail(auth, email) {
     ].join("\r\n");
 
     const gmail = google.gmail({ version: 'v1', auth });
-    const res = await gmail.users.messages.send({
-        userId: 'me',
-        requestBody: {
-            raw: Buffer.from(rawMessage).toString('base64')
-        }
-    });
-
-    console.log('✅ Welcome email sent successfully:', res.data);
-}
-
-async function getAuth() {
-    const auth = await authorize(SCOPES_SEND);  
-    if (!(auth instanceof google.auth.OAuth2)) {
-        throw new Error('The auth object is not an instance of OAuth2Client.');
+    try {
+        const res = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: Buffer.from(rawMessage).toString('base64')
+            }
+        });
+        console.log('✅ דוא"ל ברוך הבא נשלח בהצלחה:', res.data);
+    } catch (err) {
+        console.error('❌ שגיאה בשליחת דוא"ל ברוך הבא:', err);
     }
-    return auth; 
 }
 
-async function sendEmailExample() {
-    const auth = await getAuth();
-    await sendReceiptEmail(auth, 'HAD4059@gmail.com', 'loclhost:3000');
-}
-
-module.exports = {
-    getAuth, sendEmail, sendWelcomeEmail, sendReceiptEmail
-};
+module.exports = { sendEmail, sendReceiptEmail, sendWelcomeEmail, authorize };

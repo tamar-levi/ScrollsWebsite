@@ -5,7 +5,7 @@ const secretKey = process.env.JWT_SECRET_KEY;
 const bcrypt = require('bcryptjs');
 const { sendWelcomeEmail, getAuth } = require('../services/emailService');
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID_TAMAR);
 const Product = require('../models/productModel');
 
 const getAllUsers = async (req, res) => {
