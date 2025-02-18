@@ -1,6 +1,6 @@
-import React ,{useEffect} from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, Typography, Avatar, useMediaQuery, useTheme, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { deleteUser, deleteUserProducts } from '../redux/userSlice';
 import axios from 'axios';
@@ -10,7 +10,7 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto"; 
+      document.body.style.overflow = "auto";
     };
   }, []);
   const user = useSelector((state) => state.user.currentUser);
@@ -18,6 +18,8 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
 
   const handleDelete = async () => {
     try {
@@ -28,9 +30,10 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
       navigate('/');
+      setAlert({ open: true, message: 'המשתמש נמחק בהצלחה', severity: 'success' });
     } catch (err) {
       console.error('Error deleting user:', err);
-      alert('שגיאה במחיקת המשתמש, נסה שנית');
+      setAlert({ open: true, message: 'שגיאה במחיקת המשתמש, נסה שנית', severity: 'error' });
     }
   };
 
@@ -95,29 +98,6 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
           </Button>
         </Box>
       </Box>
-
-      <Dialog open={openDialog} onClose={onDialogClose}>
-        <DialogTitle>האם אתה בטוח שברצונך למחוק את המשתמש?</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            כל המוצרים שלך ימחקו גם כן. האם אתה בטוח שאתה רוצה להמשיך?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onDialogClose} color="primary">
-            ביטול
-          </Button>
-          <Button
-            onClick={() => {
-              onDialogClose();
-              handleDelete();
-            }}
-            color="error"
-          >
-            מחיקת משתמש
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }
