@@ -121,7 +121,7 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
     console.log(loginUser);
     try {
-        const user = await User.findOne({ fullName: username });
+        const user = await User.findOne({ displayName: username }) || await User.findOne({ fullName: username });
         if (!user) {
             return res.status(400).send('Invalid credentials');
         }
@@ -130,12 +130,12 @@ const loginUser = async (req, res) => {
             return res.status(400).send('Invalid credentials');
         }
         const payload = { id: user._id, email: user.email };
-        const token = jwt.sign(payload, secretKey, { expiresIn: '30d' }); 
+        const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
         res.cookie('token', token, {
-            httpOnly: true, 
-            secure: false,  
-            maxAge: 2592000000, 
-            sameSite: 'None' 
+            httpOnly: true,
+            secure: false,
+            maxAge: 2592000000,
+            sameSite: 'None'
         });
         res.json({
             message: 'Login successful',
@@ -191,8 +191,8 @@ const handleGoogleLogin = async (req, res) => {
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
         console.log("token", token);
         res.cookie('token', token, {
-            httpOnly: true, 
-            secure: false,   
+            httpOnly: true,
+            secure: false,
             maxAge: 2592000000,
             sameSite: 'None',
         });

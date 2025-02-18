@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -71,6 +71,9 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
         </Avatar>
         <Typography variant="h6" sx={{ mt: 2, fontFamily: 'Rubik, sans-serif' }}>
           {user?.fullName || 'שם לא זמין'}
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 2, fontFamily: 'Rubik, sans-serif' }}>
+          {user?.displayName || 'שם תצוגה לא זמין'}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
           {user?.email || 'אימייל לא זמין'}

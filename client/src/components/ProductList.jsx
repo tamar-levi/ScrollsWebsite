@@ -44,8 +44,8 @@ const ProductList = () => {
     setSelectedProduct(null);
   };
 
-  const handleFilter = ({ priceRange, fontType, scrollType, city }) => {
-    console.log('Filtering with:', { priceRange, fontType, scrollType, city });
+  const handleFilter = ({ priceRange, fontType, scrollType, city, seller }) => {
+    console.log('Filtering with:', { priceRange, fontType, scrollType, city, seller });
     const filtered = products.filter((product) => {
       const isPriceInRange = product.price >= priceRange[0] && product.price <= priceRange[1];
       const normalizedProductFont = product.scriptType?.replace(/['"]/g, '');
@@ -53,7 +53,11 @@ const ProductList = () => {
       const isFontTypeMatch = fontType ? normalizedProductFont === normalizedFilterFont : true;
       const isScrollTypeMatch = scrollType ? product.scrollType === scrollType : true;
       const isCityMatch = city ? product.userId.city == city : true;
-      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch;
+      const isSellerMatch = seller
+        ? (product.userId?.displayName?.trim().toLowerCase() == seller.trim().toLowerCase()) ||
+        (product.userId?.fullName?.trim().toLowerCase() == seller.trim().toLowerCase())
+        : true;
+      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch && isSellerMatch;
     });
 
     setFilteredProducts(filtered);
@@ -116,11 +120,13 @@ const ProductList = () => {
               },
             }}
           >
-            {filteredProducts.map((product) => (
-              <Box key={product._id} sx={{ marginBottom: 2 }}>
-                <ProductCard product={product} onOpenModal={handleOpenModal} />
-              </Box>
-            ))}
+            {[...filteredProducts]
+              .sort((a, b) => (b.isPremiumAd ? 1 : 0) - (a.isPremiumAd ? 1 : 0))
+              .map((product) => (
+                <Box key={product._id} sx={{ marginBottom: 2 }}>
+                  <ProductCard product={product} onOpenModal={handleOpenModal} />
+                </Box>
+              ))}
           </Box>
         )}
         {selectedProduct && <ProductModal product={selectedProduct} onClose={handleCloseModal} />}

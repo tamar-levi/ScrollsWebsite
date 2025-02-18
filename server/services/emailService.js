@@ -85,6 +85,7 @@ function createRawMessage(to, subject, attachmentPath) {
         "",
         `--${boundary}`,
         `Content-Type: text/plain; charset=UTF-8`,
+        `לצפייה באתר שלנו: https://www.scrollssite.com`,
         "",
         `--${boundary}`,
         `Content-Type: application/pdf; name="=?UTF-8?B?${encodedFileName}?="`,
@@ -130,6 +131,10 @@ async function sendReceiptEmail(auth, to, receiptUrl) {
         <p style="color: #333; font-size: 14px;">
             📞 טלפון: 03-1234567<br><br>
             ✉️ מייל: scrollssite@gmail.com
+        </p>
+         <p style="font-size: 16px; margin: 16px 0;">
+                    בקרו באתר שלנו: 
+            <a href="https://www.scrollssite.com/products" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
         </p>
         <p style="color: #888; font-size: 12px; text-align: center;">
             הודעה זו נשלחה באופן אוטומטי, אין צורך להשיב אליה.
@@ -179,29 +184,32 @@ async function sendWelcomeEmail(auth, email) {
     const contentId = 'logo-image';
     const htmlBody = `
     <div style="background-color: #f4f4f4; padding: 40px; text-align: center;">
-    <table align="center" width="600" style="background: #ffffff; border-radius: 10px; padding: 30px; font-family: Arial, sans-serif; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-        <tr>
-            <td align="center">
-                <img src="cid:${contentId}" alt="Scrolls Logo" width="100" style="margin-bottom: 8px;">
-                <h2 style="color: #4E3629;">ברוך הבא ללוח המגילות</h2>
-                <p style="color: #555; font-size: 16px; line-height: 1.6;">
-                    .לוח המגילות הוא מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם&nbsp;<br>
-                    הלוח נועד לפרסם בתפוצה רחבה מאד מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה לרוכשים ולסופרים&nbsp;<br>
-                    הלוח מפנה אותך באופן ישיר אל הסופר, בכך תוכל להתרשם מהסופר באופן אישי ולשמוע את כל הפרטים על המגילה שלו, על רמת ההידור וההקפדה החל מבחירת הקלף הדיו והכתיבה עצמה, וכלה בהגהה ותיקון&nbsp;<br><br>
-                    אנחנו עושים הכל על מנת שהשימוש בלוח יהיה קל, זמין ונוח. אם בכל זאת נתקלתם בבעיה או סתם שאלה, תוכלו לפנות אלינו במספר 0527672693 או במייל<br><br>
-                    <strong style="color: #555; font-size: 16px;">ScrollsSite@gmail.com</strong>
-                </p>
-
-                <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
-
-                <p style="color: #888; font-size: 12px;">
-                    הודעה זו נשלחה באופן אוטומטי, אין צורך להשיב אליה.
-                </p>
-            </td>
-        </tr>
-    </table>
+      <table align="center" width="600" style="background: #ffffff; border-radius: 10px; padding: 30px; font-family: Arial, sans-serif; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+          <tr>
+              <td align="center">
+                  <img src="cid:${contentId}" alt="Scrolls Logo" width="100" style="margin-bottom: 8px;">
+                  <h2 style="color: #4E3629;">ברוך הבא ללוח המגילות</h2>
+                  <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                      .לוח המגילות הוא מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם&nbsp;<br>
+                      הלוח נועד לפרסם בתפוצה רחבה מאד מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה לרוכשים ולסופרים&nbsp;<br>
+                      הלוח מפנה אותך באופן ישיר אל הסופר, בכך תוכל להתרשם מהסופר באופן אישי ולשמוע את כל הפרטים על המגילה שלו, על רמת ההידור וההקפדה החל מבחירת הקלף הדיו והכתיבה עצמה, וכלה בהגהה ותיקון&nbsp;<br><br>
+                      אנחנו עושים הכל על מנת שהשימוש בלוח יהיה קל, זמין ונוח. אם בכל זאת נתקלתם בבעיה או סתם שאלה, תוכלו לפנות אלינו במספר 0527672693 או במייל<br><br>
+                      <strong style="color: #555; font-size: 16px;">ScrollsSite@gmail.com</strong>
+                  </p>
+                  <p style="font-size: 16px; margin: 16px 0;">
+                    בקרו באתר שלנו: 
+                    <a href="https://www.scrollssite.com" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
+                  </p>
+                  <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
+                  <p style="color: #888; font-size: 12px;">
+                      הודעה זו נשלחה באופן אוטומטי, אין צורך להשיב אליה.
+                  </p>
+              </td>
+          </tr>
+      </table>
     </div>
-    `;
+  `;
+  
 
     const rawMessage = [
         `From: "scrollssite@gmail.com"`,

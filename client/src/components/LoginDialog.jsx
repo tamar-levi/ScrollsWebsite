@@ -159,7 +159,7 @@ const LoginDialog = ({ open, onClose }) => {
                     }}
                 >
                     <TextField
-                        label="שם משתמש"
+                        label="שם תצוגה / שם מלא"
                         variant="outlined"
                         fullWidth
                         value={username}

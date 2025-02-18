@@ -14,6 +14,8 @@ const FilterComponent = ({ onFilter, products }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
     const [selectedCity, setSelectedCity] = useState('');
+    const [selectedSeller, setSelectedSeller] = useState('');
+    const [sellers, setSellers] = useState([]);
 
     const israeliCities = [
         'ירושלים',
@@ -38,6 +40,17 @@ const FilterComponent = ({ onFilter, products }) => {
     ];
 
     useEffect(() => {
+        const sellerNames = products.reduce((uniqueSellers, product) => {
+            const sellerName = product.userId.displayName || product.userId.fullName;
+            if (!uniqueSellers.includes(sellerName)) {
+                uniqueSellers.push(sellerName);
+            }
+            return uniqueSellers;
+        }, []);
+        setSellers(sellerNames);
+    }, [products]);
+
+    useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth < 900);
             if (window.innerWidth >= 900) {
@@ -49,6 +62,14 @@ const FilterComponent = ({ onFilter, products }) => {
         handleResize();
 
         return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        console.log("products", products)
+        products.forEach(product => {
+            const sellerName = product.userId.displayName || product.userId.fullName;
+            sellers.push(sellerName);
+        });
     }, []);
 
     const handlePriceChange = (event, newValue) => {
@@ -67,6 +88,10 @@ const FilterComponent = ({ onFilter, products }) => {
         setSelectedCity(event.target.value);
     };
 
+    const handleSellerChange = (event) => {
+        setSelectedSeller(event.target.value);
+    };
+
     const applyFilters = () => {
         const normalizedFontType = fontType
             .replace(/["']/g, '')
@@ -77,6 +102,7 @@ const FilterComponent = ({ onFilter, products }) => {
             fontType: normalizedFontType || null,
             scrollType: scrollType || null,
             city: selectedCity || null,
+            seller: selectedSeller || null
         });
         if (isMobile) setIsFilterOpen(false);
     };
@@ -86,8 +112,9 @@ const FilterComponent = ({ onFilter, products }) => {
         setFontType('');
         setScrollType('');
         setSelectedCity('');
+        setSelectedSeller('');
         onFilter({
-            priceRange: [0, 10000], fontType: null, scrollType: null, selectedCity: null
+            priceRange: [0, 10000], fontType: null, scrollType: null, selectedCity: null, selectedSeller: null
         });
         if (isMobile) setIsFilterOpen(false);
     };
@@ -155,7 +182,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 )}
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem',marginTop: '-10px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem', marginTop: '-10px' }}>
                         בחר סוג כתב:
                     </Typography>
                     <RadioGroup
@@ -168,7 +195,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             padding: '5px 0'
                         }}
                     >
-                        {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני','אחר'].map((type) => (
+                        {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני', 'אחר'].map((type) => (
                             <FormControlLabel
                                 key={type}
                                 value={type}
@@ -210,7 +237,7 @@ const FilterComponent = ({ onFilter, products }) => {
                     <Typography style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
                         טווח מחירים:
                     </Typography>
-                    <div style={{ display: 'flex', justifyContent: 'center'}}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Slider
                             value={priceRange}
                             onChange={handlePriceChange}
@@ -222,7 +249,7 @@ const FilterComponent = ({ onFilter, products }) => {
                     </div>
                 </div>
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem' , marginTop: '-10px', marginBottom: '10px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem', marginTop: '-10px', marginBottom: '10px' }}>
                         בחר עיר:
                     </Typography>
                     <Select
@@ -239,6 +266,28 @@ const FilterComponent = ({ onFilter, products }) => {
                         {israeliCities.map((city) => (
                             <MenuItem key={city} value={city}>
                                 {city}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </div>
+                <div style={{ width: '90%' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.95rem', marginTop: '-10px', marginBottom: '10px' }}>
+                        בחר סופר:
+                    </Typography>
+                    <Select
+                        value={selectedSeller}
+                        onChange={handleSellerChange}
+                        fullWidth
+                        size="small"
+                        displayEmpty
+                        sx={{ textAlign: 'right', direction: 'rtl' }}
+                    >
+                        <MenuItem value="">
+                            <em>כל הסופרים</em>
+                        </MenuItem>
+                        {sellers.map((seller) => (
+                            <MenuItem key={seller} value={seller}>
+                                {seller}
                             </MenuItem>
                         ))}
                     </Select>

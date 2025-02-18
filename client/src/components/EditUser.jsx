@@ -11,7 +11,7 @@ export default function EditUser() {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto"; 
+      document.body.style.overflow = "auto";
     };
   }, []);
   const user = useSelector((state) => state.user.currentUser);
@@ -21,6 +21,7 @@ export default function EditUser() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [fullName, setFullName] = useState(user?.fullName || '');
+  const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
   const [city, setCity] = useState(user?.city || '');
   const [loading, setLoading] = useState(false);
@@ -32,31 +33,30 @@ export default function EditUser() {
     setLoading(true);
     console.log('Attempting to save user data');
     const userData = {};
-  
+
     if (fullName !== user.fullName) userData.fullName = fullName;
+    if (displayName !== user.displayName) userData.displayName = displayName;
     if (email.toLowerCase() !== user.email.toLowerCase()) userData.email = email;
     if (city !== user.city) userData.city = city;
-  
+
     if (Object.keys(userData).length === 0) {
       setSnackbar({ open: true, message: 'לא בוצע שינוי בשדות', severity: 'info' });
       console.log('No changes detected');
       setLoading(false);
       return;
     }
-  
+
     try {
       console.log('Sending data:', userData);
       const response = await axios.put('http://localhost:5000/usersApi/updateUserDetails', userData, {
         withCredentials: true
       });
-  
+
       console.log('Response received:', response.data);
       if (response.data) {
         dispatch(updateUser(response.data));
         localStorage.setItem('user', JSON.stringify(response.data));
         setSnackbar({ open: true, message: 'הפרטים עודכנו בהצלחה', severity: 'success' });
-  
-        // הוספת עיכוב של 1.5 שניות לפני הניווט כדי שהמשתמש יראה את ההודעה
         setTimeout(() => {
           navigate('/account');
         }, 1500);
@@ -75,7 +75,7 @@ export default function EditUser() {
       setLoading(false);
     }
   };
-  
+
 
   const handleDelete = async () => {
     if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? המוצרים שלך ימחקו גם כן.')) {
@@ -103,20 +103,17 @@ export default function EditUser() {
     setSnackbar({ ...snackbar, open: false });
   };
 
-
-
   const handleGoBack = () => {
     console.log('Navigating back to account page');
     navigate('/account');
   };
-
   return (
     <Box
       sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '90vh', // ירד ב-10% מהגובה של המסך כדי להעלות את הריבוע
+        height: '90vh',
         padding: '10px',
       }}
     >
@@ -139,6 +136,13 @@ export default function EditUser() {
           label="שם מלא"
           value={fullName}
           onChange={(e) => { setFullName(e.target.value); }}
+          sx={{ mt: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="שם תצוגה"
+          value={displayName}
+          onChange={(e) => { setDisplayName(e.target.value); }}
           sx={{ mt: 2 }}
         />
         <TextField

@@ -90,7 +90,7 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
                 paddingTop: '24px',
                 paddingBottom: '8px'
             }}>
-                <SellerInfo icon={PersonIcon} label="שם" value={seller.fullName} />
+                <SellerInfo icon={PersonIcon} label="שם" value={seller.displayName || seller.fullName} />
                 <SellerInfo icon={EmailIcon} label="אימייל" value={seller.email} />
                 <SellerInfo icon={PhoneIcon} label="טלפון" value={seller.phoneNumber!= '0' ? seller.phoneNumber : 'לא צוין'} />
                 <SellerInfo icon={LocationCityIcon} label="עיר" value={seller.city} />
