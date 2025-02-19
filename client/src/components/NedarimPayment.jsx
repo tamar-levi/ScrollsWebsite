@@ -130,13 +130,19 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         <CircularProgress />
                     </div>
                 )}
-
-                <Snackbar open={openSnackbar} onClose={() => { setOpenSnackbar(false), setShowAddingProductSnackbar(true) }} autoHideDuration={3000} sx={{ direction: 'rtl' }}>
+                <Snackbar
+                    open={openSnackbar}
+                    onClose={() => {
+                        setOpenSnackbar(false);
+                        setShowAddingProductSnackbar(true);
+                    }}
+                    autoHideDuration={3000}
+                    sx={{ direction: 'rtl' }}
+                >
                     <Alert severity="success" sx={{ display: 'flex', alignItems: 'center' }}>
                         תשלום בוצע בהצלחה!
                     </Alert>
                 </Snackbar>
-
                 <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
                     <Alert severity="error" sx={{ display: 'flex', alignItems: 'center' }}>
                         שגיאה בביצוע התשלום. אנא נסה שוב.
