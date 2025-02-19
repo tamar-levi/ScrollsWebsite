@@ -38,7 +38,7 @@ app.use('/productsApi', productRouter);
 app.use('/emailApi', emailRouter);
 app.use('/paymentApi', paymentRouter);
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

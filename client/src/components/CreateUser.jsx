@@ -90,7 +90,7 @@ const CreateUser = ({ open, onClose }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/usersApi/addUser', formData, {
+      const response = await axios.post('https://scrolls-website.onrender.com/usersApi/addUser', formData, {
         withCredentials: true,
       });
       setSnackbar({ open: true, message: 'המשתמש נוצר בהצלחה!', severity: 'success' });

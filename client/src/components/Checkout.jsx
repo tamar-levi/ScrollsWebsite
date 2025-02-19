@@ -65,7 +65,7 @@ export default function Checkout() {
             productData.additionalImages.forEach((image) => {
                 formData.append('additionalImages', image);
             });
-            const response = await fetch('http://localhost:5000/productsApi/addProduct', {
+            const response = await fetch('https://scrolls-website.onrender.com/productsApi/addProduct', {
                 method: 'POST',
                 headers: {},
                 body: formData,

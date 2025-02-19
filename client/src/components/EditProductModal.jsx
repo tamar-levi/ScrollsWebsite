@@ -64,7 +64,7 @@ const EditProductModal = ({ open, onClose, product }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/productsApi/updateProductsDetails/${editedProduct._id}`, {
+      const response = await fetch(`https://scrolls-website.onrender.com/productsApi/updateProductsDetails/${editedProduct._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

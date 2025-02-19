@@ -17,7 +17,7 @@ const UserProducts = () => {
     useEffect(() => {
         const fetchUserProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/productsApi/getAllProductsByUser', {
+                const response = await axios.get('https://scrolls-website.onrender.com/productsApi/getAllProductsByUser', {
                     withCredentials: true,
                 });
                 setProducts(response.data);

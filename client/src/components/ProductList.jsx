@@ -19,7 +19,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/productsApi/getAllProducts', {
+        const response = await fetch('https://scrolls-website.onrender.com/productsApi/getAllProducts', {
           method: 'GET',
           credentials: 'include',
         });

@@ -22,7 +22,7 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/productsApi/deleteProduct/${product._id}`, {
+      const response = await fetch(`https://scrolls-website.onrender.com/productsApi/deleteProduct/${product._id}`, {
         method: 'DELETE',
         credentials: 'include'
       });

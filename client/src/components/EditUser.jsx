@@ -48,7 +48,7 @@ export default function EditUser() {
 
     try {
       console.log('Sending data:', userData);
-      const response = await axios.put('http://localhost:5000/usersApi/updateUserDetails', userData, {
+      const response = await axios.put('https://scrolls-website.onrender.com/usersApi/updateUserDetails', userData, {
         withCredentials: true
       });
 
@@ -84,7 +84,7 @@ export default function EditUser() {
     }
 
     try {
-      await axios.delete('http://localhost:5000/usersApi/deleteUser', {
+      await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
         withCredentials: true
       });
       console.log('User deleted successfully');

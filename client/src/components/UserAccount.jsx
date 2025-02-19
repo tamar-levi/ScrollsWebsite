@@ -23,7 +23,7 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
 
   const handleDelete = async () => {
     try {
-      await axios.delete('http://localhost:5000/usersApi/deleteUser', {
+      await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
         withCredentials: true,
       });
       console.log('User deleted successfully');
