@@ -93,7 +93,16 @@ export const fetchUserData = () => async (dispatch) => {
     dispatch(setUser(response.data));
   } catch (error) {
     if (error.response?.status === 401 && sessionStorage.getItem('user')) {
-      <Alert severity="error" sx={{ direction: 'rtl' }}>
+      <Alert
+        severity="error"
+        sx={{
+          direction: 'rtl',
+          '& .MuiAlert-icon': {
+            marginRight: '16px',
+            marginLeft: '16px'
+          }
+        }}
+      >
         פג תוקף הסשן, התחבר מחדש
       </Alert>
       dispatch(setError('פג תוקף הסשן, התחבר מחדש'));

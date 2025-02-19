@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const { sendReceiptEmail, getAuth } = require('../services/emailService');
+const { sendReceiptEmail, authorize } = require('../services/emailService');
 const MOSAD_NUMBER = process.env.MOSAD_NUMBER;
 const API_PASSWORD = process.env.API_PASSWORD;
 
@@ -30,13 +30,12 @@ const handlePaymentCallback = async (req, res) => {
     try {
         const paymentData = req.body; 
         console.log("🔄 Received callback:", paymentData);
-
         if (paymentData.Status === "success") {
             console.log(`✅ Payment successful! Transaction ID: ${paymentData.TransactionId}`);
             const receiptUrl = await getReceiptUrl(paymentData.TransactionId);
             if (receiptUrl) {
                 console.log(`📄 Receipt URL: ${receiptUrl}`);
-                const auth = await getAuth();
+                const auth = await authorize();
                 await sendReceiptEmail(auth, paymentData.Mail, receiptUrl);
             }
         } else {
