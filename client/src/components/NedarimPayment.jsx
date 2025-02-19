@@ -10,8 +10,9 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
     const [loading, setLoading] = useState(false);
     const [paymentInProgress, setPaymentInProgress] = useState(false);
-    const [disableButton, setDisableButton] = useState(false); 
+    const [disableButton, setDisableButton] = useState(false);
     const currentUser = useSelector((state) => state.user?.currentUser) || {};
+    const [showAddingProductSnackbar, setShowAddingProductSnackbar] = useState(false);
 
     useEffect(() => {
         const handleMessage = (event) => {
@@ -28,11 +29,11 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         setOpenSnackbar(true);
                         setTimeout(() => {
                             onNext();
-                            setDisableButton(false); 
+                            setDisableButton(false);
                         }, 1000);
                     } else {
                         setOpenErrorSnackbar(true);
-                        setDisableButton(false); 
+                        setDisableButton(false);
                     }
                     setLoading(false);
                     setPaymentInProgress(false);
@@ -82,66 +83,78 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     function calculatePaymentAmount(price) {
         if (!price) return 40 + (productData.isPremiumAd ? 20 : 0);
-        if (price <= 6000) return 1.7 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 6000) return 30 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
     }
 
     return (
-        <div style={{ marginTop: "10px" }}>
-            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl" }}>
-                סכום לתשלום: {calculatePaymentAmount(productData.price)} ₪
-            </Typography>
-            <iframe
-                ref={iframeRef}
-                src="https://matara.pro/nedarimplus/iframe?language=he"
-                style={{
-                    width: "100%",
-                    height: "500px",
-                    border: "none",
-                }}
-            />
-            <div style={{ display: 'flex', gap: '10px', marginTop: '-180px', justifyContent: 'space-between' }}>
-                <Button
-                    onClick={onBack}
-                    startIcon={<ArrowForward style={{ marginLeft: '8px' }} />}
-                    variant="outlined"
-                    sx={{ marginTop: '16px', marginRight: '16px' }}
-                    disabled={disableButton}
-                >
-                    חזור
-                </Button>
-                <Button
-                    onClick={sendPaymentRequest}
-                    endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
-                    variant="contained"
-                    sx={{ marginTop: '16px' }}
-                    disabled={disableButton} 
-                >
-                    בצע תשלום
-                </Button>
-            </div>
-
-            {loading && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                    <CircularProgress />
+        <>
+            <div style={{ marginTop: "10px" }}>
+                <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl" }}>
+                    סכום לתשלום: {calculatePaymentAmount(productData.price)} ₪
+                </Typography>
+                <iframe
+                    ref={iframeRef}
+                    src="https://matara.pro/nedarimplus/iframe?language=he"
+                    style={{
+                        width: "100%",
+                        height: "500px",
+                        border: "none",
+                    }}
+                />
+                <div style={{ display: 'flex', gap: '10px', marginTop: '-180px', justifyContent: 'space-between' }}>
+                    <Button
+                        onClick={onBack}
+                        startIcon={<ArrowForward style={{ marginLeft: '8px' }} />}
+                        variant="outlined"
+                        sx={{ marginTop: '16px', marginRight: '16px' }}
+                        disabled={disableButton}
+                    >
+                        חזור
+                    </Button>
+                    <Button
+                        onClick={sendPaymentRequest}
+                        endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
+                        variant="contained"
+                        sx={{ marginTop: '16px' }}
+                        disabled={disableButton}
+                    >
+                        בצע תשלום
+                    </Button>
                 </div>
-            )}
 
-            <Snackbar open={openSnackbar} onClose={() => setOpenSnackbar(false)} autoHideDuration={3000} sx={{ direction: 'rtl' }}>
-                <Alert severity="success" sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CheckCircleIcon style={{ marginLeft: '8px' }} />
-                    תשלום בוצע בהצלחה!
+                {loading && (
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <CircularProgress />
+                    </div>
+                )}
+
+                <Snackbar open={openSnackbar} onClose={() => { setOpenSnackbar(false), setShowAddingProductSnackbar(true) }} autoHideDuration={3000} sx={{ direction: 'rtl' }}>
+                    <Alert severity="success" sx={{ display: 'flex', alignItems: 'center' }}>
+                        תשלום בוצע בהצלחה!
+                    </Alert>
+                </Snackbar>
+
+                <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
+                    <Alert severity="error" sx={{ display: 'flex', alignItems: 'center' }}>
+                        שגיאה בביצוע התשלום. אנא נסה שוב.
+                    </Alert>
+                </Snackbar>
+            </div >
+            <Snackbar
+                open={showAddingProductSnackbar}
+                onClose={() => setShowAddingProductSnackbar(false)}
+                autoHideDuration={3000}
+                sx={{ direction: 'rtl' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
+                    מוסיף את המוצר שלך, אנא המתן...
                 </Alert>
             </Snackbar>
-
-            <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
-                <Alert severity="error" sx={{ display: 'flex', alignItems: 'center' }}>
-                    שגיאה בביצוע התשלום. אנא נסה שוב.
-                </Alert>
-            </Snackbar>
-        </div>
+        </>
     );
 };
 
