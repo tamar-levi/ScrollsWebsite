@@ -82,7 +82,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     function calculatePaymentAmount(price) {
         if (!price) return 40 + (productData.isPremiumAd ? 20 : 0);
-        if (price <= 6000) return 1.6 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 6000) return 1.7 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
