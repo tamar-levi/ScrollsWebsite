@@ -74,7 +74,7 @@ export default userSlice.reducer;
 
 export const logoutUser = () => async (dispatch) => {
   try {
-    await axios.post('http://localhost:5000/usersApi/logout', {}, { withCredentials: true });
+    await axios.post('https://scrolls-website.onrender.com/usersApi/logout', {}, { withCredentials: true });
     dispatch(logout());
   } catch (error) {
     console.error('Logout error:', error);
@@ -86,7 +86,7 @@ export const fetchUserData = () => async (dispatch) => {
   console.log('Sending request...');
   console.log("document.cookie.token", document.cookie.token);
   try {
-    const response = await axios.get('http://localhost:5000/usersApi/getCurrentUser', {
+    const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
       withCredentials: true, 
     });
     dispatch(setUser(response.data));  

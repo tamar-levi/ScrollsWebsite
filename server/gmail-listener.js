@@ -111,7 +111,7 @@ async function getMessageDetails(gmail, messageId) {
 async function startListening() {
     const auth = await authorize();
     console.log('✅ Listening for new emails...');
-    setInterval(() => listMessages(auth), 60 * 1000);
+    setInterval(() => listMessages(auth), 180 * 1000);
 }
 
 startListening();
