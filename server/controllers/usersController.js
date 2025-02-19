@@ -3,7 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 const bcrypt = require('bcryptjs');
-const { sendWelcomeEmail, getAuth } = require('../services/emailService');
+const { sendWelcomeEmail, authorize } = require('../services/emailService');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID_TAMAR);
 const Product = require('../models/productModel');
@@ -77,7 +77,7 @@ const addUser = async (req, res) => {
         });
 
         try {
-            const auth = await getAuth();
+            const auth = await authorize();
             await sendWelcomeEmail(auth, email);
         } catch (emailError) {
             console.error('שגיאה בשליחת מייל ברוכים הבאים:', emailError);
@@ -184,7 +184,7 @@ const handleGoogleLogin = async (req, res) => {
                 isSeller: false,
                 password: require('crypto').randomBytes(16).toString('hex')
             });
-            const auth = await getAuth();
+            const auth = await authorize();
             await sendWelcomeEmail(auth, user.email);
         }
         const payload = { id: user._id, email: user.email };
