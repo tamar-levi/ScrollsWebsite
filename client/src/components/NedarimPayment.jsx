@@ -7,8 +7,9 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const iframeRef = useRef(null);
     const [transactionResult, setTransactionResult] = useState(null);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [loading, setLoading] = useState(false); 
-    const [paymentInProgress, setPaymentInProgress] = useState(false); 
+    const [loading, setLoading] = useState(false);
+    const [paymentInProgress, setPaymentInProgress] = useState(false);
+    const [disableButton, setDisableButton] = useState(false); 
     const currentUser = useSelector((state) => state.user?.currentUser) || {};
 
     useEffect(() => {
@@ -26,10 +27,13 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         setOpenSnackbar(true);
                         setTimeout(() => {
                             onNext();
+                            setDisableButton(false); 
                         }, 1000);
+                    } else {
+                        setDisableButton(false); 
                     }
-                    setLoading(false);  
-                    setPaymentInProgress(false); 
+                    setLoading(false);
+                    setPaymentInProgress(false);
                     break;
                 default:
                     break;
@@ -40,8 +44,10 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     }, [onNext]);
 
     const sendPaymentRequest = () => {
-        setLoading(true); 
-        setPaymentInProgress(true); 
+        setLoading(true);
+        setPaymentInProgress(true);
+        setDisableButton(true);
+
         const iframeWin = iframeRef.current.contentWindow;
         iframeWin.postMessage(
             {
@@ -61,7 +67,6 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     Amount: calculatePaymentAmount(productData?.price),
                     Tashlumim: "1",
                     Comment: "בדיקת תשלום",
-                    Currency: '1',
                     Groupe: '',
                     Param1: '',
                     Param2: '',
@@ -101,6 +106,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     startIcon={<ArrowForward style={{ marginLeft: '8px' }} />}
                     variant="outlined"
                     sx={{ marginTop: '16px', marginRight: '16px' }}
+                    disabled={disableButton}
                 >
                     חזור
                 </Button>
@@ -109,7 +115,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
                     variant="contained"
                     sx={{ marginTop: '16px' }}
-                    disabled={paymentInProgress} 
+                    disabled={disableButton} 
                 >
                     בצע תשלום
                 </Button>
