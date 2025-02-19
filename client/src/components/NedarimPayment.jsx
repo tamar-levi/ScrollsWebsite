@@ -83,7 +83,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     function calculatePaymentAmount(price) {
         if (!price) return 40 + (productData.isPremiumAd ? 20 : 0);
-        if (price <= 6000) return 1.8 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 6000) return 2.7 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
@@ -119,7 +119,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
                         variant="contained"
                         sx={{ marginTop: '16px' }}
-                        disabled={disableButton}
+                        disabled={disableButton || showAddingProductSnackbar}
                     >
                         בצע תשלום
                     </Button>
@@ -152,7 +152,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
             <Snackbar
                 open={showAddingProductSnackbar}
                 onClose={() => setShowAddingProductSnackbar(false)}
-                autoHideDuration={3000}
+                autoHideDuration={8000}
                 sx={{ direction: 'rtl' }}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
