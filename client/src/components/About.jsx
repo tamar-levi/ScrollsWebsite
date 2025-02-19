@@ -12,9 +12,9 @@ export default function About() {
   }, []);
 
   return (
-    <Box sx={{ direction: 'rtl', padding: '20px 0' }}>
+    <Box sx={{ direction: 'rtl', padding: '60px 0' }}>  
       <Container maxWidth="lg">
-        <Box display="flex" justifyContent="center" alignItems="center" mb={1}>
+        <Box display="flex" justifyContent="center" alignItems="center" mb={3}> 
           <ScrollIcon sx={{ fontSize: 40, color: '#1976d2' }} />
         </Box>
         <Typography variant="h4" align="center"
@@ -22,7 +22,7 @@ export default function About() {
             fontFamily: 'Rubik, sans-serif',
             fontWeight: 700,
             color: '#1976d2',
-            marginBottom: 1,
+            marginBottom: 2, 
             fontSize: { xs: '0.8rem', sm: '1.3rem', md: '1.8rem' }
           }}>
           לוח המגילות
@@ -33,19 +33,18 @@ export default function About() {
             fontFamily: 'Rubik, sans-serif',
             fontWeight: 500,
             color: '#000',
-            marginBottom: 1,
+            marginBottom: 3, 
             fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }
           }}>
           מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם
         </Typography>
 
-        {/* Combine similar paragraphs and reduce margins */}
         <Typography variant="body1" align="center"
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.3,
-            marginBottom: 1,
+            lineHeight: 2,  
+            marginBottom: 3,  
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           הלוח נועד לפרסם בתפוצה רחבה מאוד מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה הן למעוניינים לרכוש והן לסופרי הסת"ם המעוניינים למכור.
@@ -56,8 +55,8 @@ export default function About() {
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.3,
-            marginBottom: 1,
+            lineHeight: 2,  
+            marginBottom: 3,  
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           בלוח המגילות מפרסמים טובי הסופרים את היצירות שלהם.
@@ -68,8 +67,8 @@ export default function About() {
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.3,
-            marginBottom: 1,
+            lineHeight: 2,  
+            marginBottom: 3,  
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           ניתן לפנות אלינו בטלפון: 052-7672693 או במייל: ScrollsSite@gmail.com

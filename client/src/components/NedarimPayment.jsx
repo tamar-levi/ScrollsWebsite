@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Typography, Snackbar, CircularProgress } from "@mui/material";
+import { Button, Typography, Snackbar, CircularProgress, Alert } from "@mui/material";
 import { Payment as PaymentIcon, CheckCircle as CheckCircleIcon, ArrowForward as ArrowForward } from "@mui/icons-material";
 import { useSelector } from 'react-redux';
 
@@ -7,6 +7,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const iframeRef = useRef(null);
     const [transactionResult, setTransactionResult] = useState(null);
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
     const [loading, setLoading] = useState(false);
     const [paymentInProgress, setPaymentInProgress] = useState(false);
     const [disableButton, setDisableButton] = useState(false); 
@@ -30,6 +31,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                             setDisableButton(false); 
                         }, 1000);
                     } else {
+                        setOpenErrorSnackbar(true);
                         setDisableButton(false); 
                     }
                     setLoading(false);
@@ -127,22 +129,18 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 </div>
             )}
 
-            <Snackbar
-                open={openSnackbar}
-                onClose={() => setOpenSnackbar(false)}
-                message={
-                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                        <CheckCircleIcon style={{ marginLeft: '8px' }} />
-                        תשלום בוצע בהצלחה!
-                    </span>
-                }
-                autoHideDuration={3000}
-                sx={{ direction: 'rtl' }}
-            />
+            <Snackbar open={openSnackbar} onClose={() => setOpenSnackbar(false)} autoHideDuration={3000} sx={{ direction: 'rtl' }}>
+                <Alert severity="success" sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CheckCircleIcon style={{ marginLeft: '8px' }} />
+                    תשלום בוצע בהצלחה!
+                </Alert>
+            </Snackbar>
 
-            {transactionResult && transactionResult.Status !== "OK" && (
-                <pre>{JSON.stringify(transactionResult, null, 2)}</pre>
-            )}
+            <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
+                <Alert severity="error" sx={{ display: 'flex', alignItems: 'center' }}>
+                    שגיאה בביצוע התשלום. אנא נסה שוב.
+                </Alert>
+            </Snackbar>
         </div>
     );
 };
