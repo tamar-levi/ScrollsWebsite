@@ -30,7 +30,7 @@ const handlePaymentCallback = async (req, res) => {
     try {
         const paymentData = req.body; 
         console.log("🔄 Received callback:", paymentData);
-        if (paymentData.Status === "success") {
+        if (paymentData.Status == "OK") {
             console.log(`✅ Payment successful! Transaction ID: ${paymentData.TransactionId}`);
             const receiptUrl = await getReceiptUrl(paymentData.TransactionId);
             if (receiptUrl) {
