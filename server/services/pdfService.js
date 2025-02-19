@@ -60,10 +60,10 @@ const generatePDF = async (html) => {
 
         const filePath = path.join(__dirname, 'products.pdf');
         fs.writeFileSync(filePath, response.data);
-        console.log("📄 PDF נוצר בהצלחה!");
+        console.log("📄 PDF created successfully!");
         return filePath;
     } catch (err) {
-        console.error("❌ שגיאה ביצירת PDF", err);
+        console.error("❌ Error creating PDF", err);
         throw err;
     }
 };

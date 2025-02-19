@@ -16,14 +16,12 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     useEffect(() => {
         const handleMessage = (event) => {
-            console.log("Received event:", event.data);
             if (!event.data?.Name) return;
             switch (event.data.Name) {
                 case "Height":
                     iframeRef.current.style.height = `${parseInt(event.data.Value) + 15}px`;
                     break;
                 case "TransactionResponse":
-                    console.log("Transaction Response:", event.data.Value);
                     setTransactionResult(event.data.Value);
                     if (event.data.Value?.Status === 'OK') {
                         setOpenSnackbar(true);
@@ -83,7 +81,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     function calculatePaymentAmount(price) {
         if (!price) return 40 + (productData.isPremiumAd ? 20 : 0);
-        if (price <= 6000) return 2.7 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 6000) return 30 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;

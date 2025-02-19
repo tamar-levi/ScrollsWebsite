@@ -65,7 +65,6 @@ const FilterComponent = ({ onFilter, products }) => {
     }, []);
 
     useEffect(() => {
-        console.log("products", products)
         products.forEach(product => {
             const sellerName = product.userId.displayName || product.userId.fullName;
             sellers.push(sellerName);

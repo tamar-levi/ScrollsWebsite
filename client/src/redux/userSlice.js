@@ -84,8 +84,6 @@ export const logoutUser = () => async (dispatch) => {
 };
 
 export const fetchUserData = () => async (dispatch) => {
-  console.log('Sending request...');
-  console.log("document.cookie.token", document.cookie.token);
   try {
     const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
       withCredentials: true,

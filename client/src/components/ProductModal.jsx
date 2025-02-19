@@ -10,7 +10,6 @@ import SellerDetailsModal from './SellerDetailsModal';
 
 const ProductModal = ({ product, onClose }) => {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
-console.log(product);
   const buttonStyle = {
     border: '1px solid #1976d2',
     color: '#1976d2',

@@ -48,7 +48,6 @@ export default function Checkout() {
 
     const handleProductData = (data) => {
         setProductData(data);
-        console.log(data);
     };
 
     const addProduct = async () => {

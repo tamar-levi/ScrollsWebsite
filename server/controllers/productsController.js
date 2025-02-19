@@ -69,11 +69,6 @@ const getAllProductsByUser = async (req, res) => {
 const updateProductsDetails = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
-
-    console.log('Update request received');
-    console.log('ID:', id);
-    console.log('Updates:', updates);
-
     try {
         if (!id) {
             console.error('ID is missing');

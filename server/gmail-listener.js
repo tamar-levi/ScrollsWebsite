@@ -38,12 +38,6 @@ function getNewToken(oAuth2Client) {
         oAuth2Client.getToken(code, (err, token) => {
             if (err) return reject('Error retrieving access token: ' + err);
             oAuth2Client.setCredentials(token);
-
-            console.log('🔑 Save these values as environment variables:');
-            console.log(`ACCESS_TOKEN=${token.access_token}`);
-            console.log(`REFRESH_TOKEN=${token.refresh_token}`);
-            console.log(`EXPIRY_DATE=${token.expiry_date}`);
-
             resolve(oAuth2Client);
         });
     });
@@ -87,7 +81,6 @@ async function getMessageDetails(gmail, messageId) {
 
         console.log(`📩 From: ${from}`);
         console.log(`📌 Subject: ${subject}`);
-        console.log(`📜 Snippet: ${message.snippet}`);
         console.log('---------------------------------------');
 
         if (subject && subject.toLowerCase().includes('קטלוג')) {

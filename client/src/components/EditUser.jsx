@@ -31,7 +31,6 @@ export default function EditUser() {
 
   const handleSave = async () => {
     setLoading(true);
-    console.log('Attempting to save user data');
     const userData = {};
 
     if (fullName !== user.fullName) userData.fullName = fullName;
@@ -41,18 +40,15 @@ export default function EditUser() {
 
     if (Object.keys(userData).length === 0) {
       setSnackbar({ open: true, message: 'לא בוצע שינוי בשדות', severity: 'info' });
-      console.log('No changes detected');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('Sending data:', userData);
       const response = await axios.put('https://scrolls-website.onrender.com/usersApi/updateUserDetails', userData, {
         withCredentials: true
       });
 
-      console.log('Response received:', response.data);
       if (response.data) {
         dispatch(updateUser(response.data));
         localStorage.setItem('user', JSON.stringify(response.data));
@@ -79,7 +75,6 @@ export default function EditUser() {
 
   const handleDelete = async () => {
     if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? המוצרים שלך ימחקו גם כן.')) {
-      console.log('User canceled deletion');
       return;
     }
 
@@ -87,7 +82,6 @@ export default function EditUser() {
       await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
         withCredentials: true
       });
-      console.log('User deleted successfully');
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
       localStorage.removeItem('user');
@@ -104,7 +98,6 @@ export default function EditUser() {
   };
 
   const handleGoBack = () => {
-    console.log('Navigating back to account page');
     navigate('/account');
   };
   return (

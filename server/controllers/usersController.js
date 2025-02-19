@@ -80,7 +80,7 @@ const addUser = async (req, res) => {
             const auth = await authorize();
             await sendWelcomeEmail(auth, email);
         } catch (emailError) {
-            console.error('שגיאה בשליחת מייל ברוכים הבאים:', emailError);
+            console.error('Error sending welcome email:', emailError);
         }
 
         res.json({
@@ -88,14 +88,13 @@ const addUser = async (req, res) => {
             user: newUser
         });
     } catch (err) {
-        console.error('שגיאה ביצירת המשתמש:', err);
-        res.status(500).json({ message: 'שגיאת מסד נתונים' });
+        console.error('Error creating user:', err);
+        res.status(500).json({ message: 'Database error' });
     }
 };
 
 const updateUserDetails = async (req, res) => {
     try {
-        console.log(req.user);
         const userId = req.user.id;
         const updates = req.body;
         if (updates.email) {
@@ -109,7 +108,6 @@ const updateUserDetails = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).send('User not found');
         }
-        console.log("Updated user:", updatedUser);
         res.json(updatedUser);
     } catch (err) {
         console.error('Error updating user', err);
@@ -119,7 +117,6 @@ const updateUserDetails = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
-    console.log(loginUser);
     try {
         const user = await User.findOne({ displayName: username }) || await User.findOne({ fullName: username });
         if (!user) {
@@ -189,7 +186,6 @@ const handleGoogleLogin = async (req, res) => {
         }
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
-        console.log("token", token);
         res.cookie('token', token, {
             httpOnly: true,
             secure: true,

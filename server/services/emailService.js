@@ -132,7 +132,7 @@ async function sendReceiptEmail(auth, to, receiptUrl) {
          <p style="font-size: 16px; margin: 16px 0;">
             בקרו באתר שלנו: 
              <br>
-            <a href="https://www.scrollssite.com/products" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
+            <a href="https://scrolls-website.vercel.app/products" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
         </p>
         <p style="color: #888; font-size: 12px; text-align: center;">
             הודעה זו נשלחה באופן אוטומטי, אין צורך להשיב אליה.
@@ -197,7 +197,7 @@ async function sendWelcomeEmail(auth, email) {
                   <p style="font-size: 16px; margin: 16px 0;">
                    בקרו באתר שלנו: 
                      <br>
-                     <a href="https://www.scrollssite.com" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
+                     <a href="https://scrolls-website.vercel.app" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
                   </p>
                   <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
                   <p style="color: #888; font-size: 12px;">

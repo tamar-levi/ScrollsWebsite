@@ -26,7 +26,6 @@ const ProductList = () => {
           method: 'GET',
           credentials: 'include',
         });
-        console.log('Response:', response);
         const data = await response.json();
         setProducts(data);
         setFilteredProducts(data);
@@ -48,7 +47,6 @@ const ProductList = () => {
   };
 
   const handleFilter = ({ priceRange, fontType, scrollType, city, seller }) => {
-    console.log('Filtering with:', { priceRange, fontType, scrollType, city, seller });
     const filtered = products.filter((product) => {
       const isPriceInRange = product.price >= priceRange[0] && product.price <= priceRange[1];
       const normalizedProductFont = product.scriptType?.replace(/['"]/g, '');

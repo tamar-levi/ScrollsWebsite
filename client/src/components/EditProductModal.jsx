@@ -76,11 +76,8 @@ const EditProductModal = ({ open, onClose, product }) => {
       if (!response.ok) {
         throw new Error(responseData.message || 'Failed to update product');
       }
-
-      console.log('Product updated successfully:', responseData);
       window.location.reload();
       onClose();
-
     } catch (error) {
       console.error('Error updating product:', error);
       setAlertMessage("שגיאה בעדכון המוצר");
