@@ -106,6 +106,10 @@ const ProductList = () => {
                 },
                 '& .MuiAlert-message': {
                   padding: '8px 0'
+                },
+                '& .MuiAlert-action': {
+                  paddingLeft: '16px',
+                  marginLeft: '8px'
                 }
               }}
             >

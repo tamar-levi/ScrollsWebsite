@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Typography, Snackbar } from "@mui/material";
+import { Button, Typography, Snackbar, CircularProgress } from "@mui/material";
 import { Payment as PaymentIcon, CheckCircle as CheckCircleIcon, ArrowForward as ArrowForward } from "@mui/icons-material";
 import { useSelector } from 'react-redux';
 
@@ -7,7 +7,9 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const iframeRef = useRef(null);
     const [transactionResult, setTransactionResult] = useState(null);
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [loading, setLoading] = useState(false); 
     const currentUser = useSelector((state) => state.user?.currentUser) || {};
+
     useEffect(() => {
         const handleMessage = (event) => {
             console.log("Received event:", event.data);
@@ -19,13 +21,13 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 case "TransactionResponse":
                     console.log("Transaction Response:", event.data.Value);
                     setTransactionResult(event.data.Value);
-                    console.log("OK", event.data.Value?.Status === 'OK');
                     if (event.data.Value?.Status === 'OK') {
                         setOpenSnackbar(true);
                         setTimeout(() => {
                             onNext();
                         }, 1000);
                     }
+                    setLoading(false);  
                     break;
                 default:
                     break;
@@ -36,6 +38,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     }, [onNext]);
 
     const sendPaymentRequest = () => {
+        setLoading(true); 
         const iframeWin = iframeRef.current.contentWindow;
         iframeWin.postMessage(
             {
@@ -69,7 +72,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     function calculatePaymentAmount(price) {
         if (!price) return 40 + (productData.isPremiumAd ? 20 : 0);
-        if (price <= 6000) return 1.4 + (productData.isPremiumAd ? 20 : 0);
+        if (price <= 6000) return 1.5 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
@@ -107,6 +110,13 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     בצע תשלום
                 </Button>
             </div>
+
+            {loading && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <CircularProgress />
+                </div>
+            )}
+
             <Snackbar
                 open={openSnackbar}
                 onClose={() => setOpenSnackbar(false)}

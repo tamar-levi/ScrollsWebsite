@@ -33,8 +33,8 @@ export default function About() {
             fontWeight: 700,
             color: '#1976d2',
             marginBottom: 2,
-            lineHeight: 1.4,
-            fontSize: { xs: '1rem', sm: '2rem', md: '2.5rem' }
+            lineHeight: 1.2,
+            fontSize: { xs: '0.8rem', sm: '1.5rem', md: '2rem' }
           }}
         >
           לוח המגילות
@@ -47,7 +47,7 @@ export default function About() {
             fontWeight: 500,
             color: '#000',
             marginBottom: 2,
-            lineHeight: 1.4,
+            lineHeight: 1.2,
             fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' }
           }}
         >
