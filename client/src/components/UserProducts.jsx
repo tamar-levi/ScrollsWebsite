@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditableProductCard from './EditableProductCard';
 import EditProductModal from './EditProductModal';
-import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { Mail, Phone, X, Scroll } from 'lucide-react';
+import { Box, Grid, Typography, useMediaQuery, useTheme, CircularProgress } from '@mui/material';
+import { Scroll } from 'lucide-react';
 
 const UserProducts = () => {
     const [products, setProducts] = useState([]);
@@ -21,9 +21,9 @@ const UserProducts = () => {
                     withCredentials: true,
                 });
                 setProducts(response.data);
-                setLoading(false);
             } catch (error) {
                 console.error('Error fetching user products:', error);
+            } finally {
                 setLoading(false);
             }
         };
@@ -31,11 +31,14 @@ const UserProducts = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+                <CircularProgress size={60} />
+            </Box>
+        );
     }
 
     const handleOpenEditModal = (product) => {
-        console.log('Opening modal with product:', product);
         setSelectedProduct(product);
         setIsEditModalOpen(true);
     };
@@ -51,11 +54,7 @@ const UserProducts = () => {
 
     return (
         <>
-            <Box sx={{
-                padding: '20px',
-                maxWidth: '1200px',
-                margin: '0 auto',
-            }}>
+            <Box sx={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" gap={1} sx={{ mb: 3, mt: 2 }}>
                     <Scroll size={35} color="#1976d2" />
                     <Typography fontWeight="bold" sx={{ color: '#333', fontSize: '1.5rem' }}>
