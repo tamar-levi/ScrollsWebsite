@@ -12,9 +12,11 @@ const getReceiptUrl = async (transactionId) => {
                 MosadNumber: MOSAD_NUMBER,
                 ApiPassword: API_PASSWORD,
                 TransactionId: transactionId,
+                TamalType: 400
             },
         });
-        if (response.data && response.data.Result == "OK") {
+        console.log("✅ Response Data:", response);
+        if (response.data == "OK") {
             return response.data.Message; 
         } else {
             console.error("⚠️ Error getting receipt:", response.data?.Message || "Invalid server response");
