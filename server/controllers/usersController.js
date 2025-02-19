@@ -50,7 +50,7 @@ const addUser = async (req, res) => {
         }
 
         // וולידציה לסיסמה
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({ message: 'הסיסמה לא עומדת בדרישות' });
         }
