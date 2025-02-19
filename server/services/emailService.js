@@ -5,7 +5,7 @@ const readline = require('readline-sync');
 const SCOPES_SEND = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify'];
 require('dotenv').config();
 
-async function authorize(scopes) {
+async function authorize() {
     const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
     const { client_secret, client_id, redirect_uris } = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
@@ -16,14 +16,13 @@ async function authorize(scopes) {
     };
     if (token.access_token) {
         oAuth2Client.setCredentials(token);
-
         if (isTokenExpired(token)) {
             console.log('Refreshing access token...');
             await refreshToken(oAuth2Client, token);
         }
         return oAuth2Client;
     } else {
-        return getNewToken(oAuth2Client, scopes);
+        return getNewToken(oAuth2Client);
     }
 }
 
@@ -169,9 +168,9 @@ async function sendReceiptEmail(auth, to, receiptUrl) {
                 raw: Buffer.from(rawMessage).toString('base64')
             }
         });
-        console.log('✅ קבלה נשלחה בהצלחה:', res.data);
+        console.log('✅ Email with receipt sent successfully.', res.data);
     } catch (err) {
-        console.error('❌ שגיאה בשליחת הקבלה:', err);
+        console.error('❌ Error sending receipt:', err);
     }
 }
 
@@ -238,9 +237,9 @@ async function sendWelcomeEmail(auth, email) {
                 raw: Buffer.from(rawMessage).toString('base64')
             }
         });
-        console.log('✅ דוא"ל ברוך הבא נשלח בהצלחה:', res.data);
+        console.log('✅ Welcome email sent successfully:', res.data);
     } catch (err) {
-        console.error('❌ שגיאה בשליחת דוא"ל ברוך הבא:', err);
+        console.error('❌ Error sending welcome email:', err);
     }
 }
 

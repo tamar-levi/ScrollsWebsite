@@ -1,19 +1,15 @@
-const fs = require('fs');
-const path = require('path');
 const { google } = require('googleapis');
 const readline = require('readline-sync');
 const { simpleParser } = require('mailparser');
 const { createProductsPDF } = require('./services/pdfService');
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.send'];
-const CREDENTIALS_PATH = path.join(__dirname, 'credentials.json');
-const TOKEN_PATH = path.join(__dirname, 'token.json');
 
 function loadCredentials() {
-    if (!fs.existsSync(CREDENTIALS_PATH)) {
-        throw new Error('Missing credentials.json file. Please download it from Google Cloud Console.');
+    if (!process.env.GOOGLE_CREDENTIALS) {
+        throw new Error('Missing GOOGLE_CREDENTIALS environment variable.');
     }
-    return JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
+    return JSON.parse(process.env.GOOGLE_CREDENTIALS);
 }
 
 async function authorize() {
@@ -21,9 +17,12 @@ async function authorize() {
     const { client_secret, client_id, redirect_uris } = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
-    if (fs.existsSync(TOKEN_PATH)) {
-        const token = JSON.parse(fs.readFileSync(TOKEN_PATH));
-        oAuth2Client.setCredentials(token);
+    if (process.env.ACCESS_TOKEN && process.env.REFRESH_TOKEN && process.env.EXPIRY_DATE) {
+        oAuth2Client.setCredentials({
+            access_token: process.env.ACCESS_TOKEN,
+            refresh_token: process.env.REFRESH_TOKEN,
+            expiry_date: Number(process.env.EXPIRY_DATE),
+        });
         return oAuth2Client;
     } else {
         return getNewToken(oAuth2Client);
@@ -39,8 +38,12 @@ function getNewToken(oAuth2Client) {
         oAuth2Client.getToken(code, (err, token) => {
             if (err) return reject('Error retrieving access token: ' + err);
             oAuth2Client.setCredentials(token);
-            fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
-            console.log('Token saved to', TOKEN_PATH);
+
+            console.log('🔑 Save these values as environment variables:');
+            console.log(`ACCESS_TOKEN=${token.access_token}`);
+            console.log(`REFRESH_TOKEN=${token.refresh_token}`);
+            console.log(`EXPIRY_DATE=${token.expiry_date}`);
+
             resolve(oAuth2Client);
         });
     });
@@ -92,7 +95,6 @@ async function getMessageDetails(gmail, messageId) {
             await createProductsPDF(from);
         }
 
-        // Mark the message as read
         await gmail.users.messages.modify({
             userId: 'me',
             id: messageId,
@@ -106,11 +108,10 @@ async function getMessageDetails(gmail, messageId) {
     }
 }
 
-
 async function startListening() {
     const auth = await authorize();
     console.log('✅ Listening for new emails...');
-    setInterval(() => listMessages(auth), 180 * 1000);
+    setInterval(() => listMessages(auth), 60 * 1000);
 }
 
 startListening();

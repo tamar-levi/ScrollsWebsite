@@ -8,8 +8,9 @@ const getAllProducts = async (req, res) => {
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
+        const allowedUrl = process.env.REACT_URL; 
 
-        if (!referer || !referer.includes(allowedPort)) {
+        if (!referer || !(referer.includes(allowedPort) || referer.includes(allowedUrl))) {
             products.forEach(product => {
                 product.primaryImage = product.primaryImage.slice(0, 50);
                 product.additionalImages = product.additionalImages.map(img => img.slice(0, 50));

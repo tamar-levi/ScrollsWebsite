@@ -5,8 +5,9 @@ const Product = require("../models/productModel");
 const User = require('../models/userModel');
 const mongoose = require('mongoose')
 require('dotenv').config();
-const { sendEmail, getAuth } = require('./emailService');
+const { sendEmail, authorize } = require('./emailService');
 const path = require('path');
+
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.CONECTION_URL, {
@@ -73,7 +74,7 @@ const createProductsPDF = async (email) => {
     const html = generateHTML(products);
     const pdf = await generatePDF(html);
     console.log('📤 Sending email with PDF...');
-    const auth = await getAuth();
+    const auth = await authorize();
     await sendEmail(auth, email, pdf);
 };
 

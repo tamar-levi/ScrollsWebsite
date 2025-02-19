@@ -71,7 +71,7 @@ const addUser = async (req, res) => {
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 2592000000,
             sameSite: 'None'
         });
@@ -133,7 +133,7 @@ const loginUser = async (req, res) => {
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 2592000000,
             sameSite: 'None'
         });
@@ -192,7 +192,7 @@ const handleGoogleLogin = async (req, res) => {
         console.log("token", token);
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 2592000000,
             sameSite: 'None',
         });
