@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Alert } from '@mui/material';
 
 const clearUserData = () => {
   sessionStorage.removeItem('user');
@@ -87,13 +88,15 @@ export const fetchUserData = () => async (dispatch) => {
   console.log("document.cookie.token", document.cookie.token);
   try {
     const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
-      withCredentials: true, 
+      withCredentials: true,
     });
-    dispatch(setUser(response.data));  
+    dispatch(setUser(response.data));
   } catch (error) {
-    if (error.response && error.response.status === 401) {
-      alert('פג תוקף הסשן, התחבר מחדש');
-      dispatch(setError('פג תוקף הסשן, התחבר מחדש')); 
+    if (error.response?.status === 401 && sessionStorage.getItem('user')) {
+      <Alert severity="error" sx={{ direction: 'rtl' }}>
+        פג תוקף הסשן, התחבר מחדש
+      </Alert>
+      dispatch(setError('פג תוקף הסשן, התחבר מחדש'));
     } else {
       console.error('Error fetching user data:', error);
       dispatch(setError('לא הצלחנו למצוא את המשתמש'));

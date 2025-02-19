@@ -12,7 +12,6 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
         const handleMessage = (event) => {
             console.log("Received event:", event.data);
             if (!event.data?.Name) return;
-
             switch (event.data.Name) {
                 case "Height":
                     iframeRef.current.style.height = `${parseInt(event.data.Value) + 15}px`;
@@ -60,7 +59,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     Groupe: '',
                     Param1: '',
                     Param2: '',
-                    CallBack: '',
+                    CallBack: 'https://scrolls-website.onrender.com/paymentApi/payment-callback',
                     CallBackMailError: 'scrollsSite@gmail.com',
                 },
             },

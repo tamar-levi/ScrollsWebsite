@@ -5,8 +5,9 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import FilterComponent from './FilterComponent';
-import { Alert, Box, CircularProgress } from '@mui/material';
+import { Alert, Box, CircularProgress, Snackbar } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { useSelector } from 'react-redux';
 
 const ProductList = () => {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ const ProductList = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [noProducts, setNoProducts] = useState(false);
   const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.user.currentUser);
+  const [openAlert, setOpenAlert] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -72,9 +75,33 @@ const ProductList = () => {
     <>
       <Box sx={{ marginTop: 8, marginRight: '20%' }}>
         <Stack spacing={2} direction="row">
-          <Button variant="outlined" onClick={() => navigate('/add-product')} startIcon={<AddIcon />}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              if (!user) {
+                setOpenAlert(true);
+              } else {
+                navigate('/add-product');
+              }
+            }}
+            startIcon={<AddIcon />}
+          >
             פרסם את המגילה שלך
           </Button>
+          <Snackbar
+            open={openAlert}
+            autoHideDuration={6000}
+            onClose={() => setOpenAlert(false)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              onClose={() => setOpenAlert(false)}
+              severity="warning"
+              sx={{ width: '100%', direction: 'rtl' }}
+            >
+              עליך להתחבר כדי לפרסם מגילה
+            </Alert>
+          </Snackbar>
         </Stack>
 
         {loading && (
