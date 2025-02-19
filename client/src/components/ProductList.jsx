@@ -97,7 +97,17 @@ const ProductList = () => {
             <Alert
               onClose={() => setOpenAlert(false)}
               severity="warning"
-              sx={{ width: '100%', direction: 'rtl' }}
+              sx={{
+                width: '100%',
+                direction: 'rtl',
+                '& .MuiAlert-icon': {
+                  marginRight: '16px',
+                  marginLeft: '16px'
+                },
+                '& .MuiAlert-message': {
+                  padding: '8px 0'
+                }
+              }}
             >
               עליך להתחבר כדי לפרסם מגילה
             </Alert>

@@ -14,7 +14,7 @@ const getReceiptUrl = async (transactionId) => {
                 TransactionId: transactionId,
             },
         });
-        if (response.data && response.data.Result === "OK") {
+        if (response.data && response.data.Result == "OK") {
             return response.data.Message; 
         } else {
             console.error("⚠️ Error getting receipt:", response.data?.Message || "Invalid server response");
