@@ -4,6 +4,8 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
 
 const ProductCard = ({ product, onOpenModal }) => {
   const typographyStyle = {
@@ -51,10 +53,14 @@ const ProductCard = ({ product, onOpenModal }) => {
           p: 3,
           display: 'flex',
           flexDirection: 'column',
-          gap: 1.5,
+          gap: 1.1,
           backgroundColor: '#ffffff'
         }}
       >
+        <Typography sx={typographyStyle}>
+          <PersonOutlineIcon sx={iconStyle} />
+          <strong>שם הסופר:</strong> {product.userId.displayName || product.userId.fullName}
+        </Typography>
         <Typography sx={typographyStyle}>
           <ArticleOutlinedIcon sx={iconStyle} />
           <strong>סוג המגילה:</strong> {product.scrollType}
@@ -64,15 +70,15 @@ const ProductCard = ({ product, onOpenModal }) => {
           <strong>סוג הכתב:</strong> {product.scriptType}
         </Typography>
         <Typography sx={typographyStyle}>
-          <StickyNote2OutlinedIcon sx={iconStyle} />
-          <strong>הערות:</strong> {product.note || 'אין הערות'}
-        </Typography>
-        <Typography sx={typographyStyle}>
           <SellOutlinedIcon sx={iconStyle} />
           <strong>מחיר:</strong>
           <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            {product.price} ₪
+            {product.price ? `${product.price} ₪` : 'לא צוין'}
           </Box>
+        </Typography>
+        <Typography sx={typographyStyle}>
+          <LocationCityOutlinedIcon sx={iconStyle} />
+          <strong>עיר:</strong> {product.userId.city || 'לא צוין'}
         </Typography>
         <Button
           onClick={() => onOpenModal(product)}

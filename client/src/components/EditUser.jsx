@@ -6,7 +6,6 @@ import { Box, TextField, Button, Typography, Avatar, useMediaQuery, useTheme } f
 import axios from 'axios';
 import { Snackbar, Alert } from '@mui/material';
 
-
 export default function EditUser() {
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -24,6 +23,7 @@ export default function EditUser() {
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
   const [city, setCity] = useState(user?.city || '');
+  const [phone, setPhone] = useState(user?.phone || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
@@ -37,6 +37,7 @@ export default function EditUser() {
     if (displayName !== user.displayName) userData.displayName = displayName;
     if (email.toLowerCase() !== user.email.toLowerCase()) userData.email = email;
     if (city !== user.city) userData.city = city;
+    if (phone != user.phoneNumber) userData.phone = phone;
 
     if (Object.keys(userData).length === 0) {
       setSnackbar({ open: true, message: 'לא בוצע שינוי בשדות', severity: 'info' });
@@ -74,7 +75,7 @@ export default function EditUser() {
 
 
   const handleDelete = async () => {
-    if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? המוצרים שלך ימחקו גם כן.')) {
+    if (!window.confirm('האם אתה בטוח שברצונך למחוק את המשתמש? המגילות שלך ימחקו גם כן.')) {
       return;
     }
 
@@ -152,7 +153,13 @@ export default function EditUser() {
           onChange={(e) => { setCity(e.target.value); }}
           sx={{ mt: 2 }}
         />
-
+        <TextField
+          fullWidth
+          label="טלפון"
+          value={phone}
+          onChange={(e) => { setPhone(e.target.value); }}
+          sx={{ mt: 2 }}
+        />
         {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>

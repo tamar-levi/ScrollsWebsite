@@ -47,7 +47,7 @@ export default function NavBar() {
             אודות
           </Button>
           <Button sx={buttonStyles} component={Link} to="/products">
-            מוצרים
+            מגילות
           </Button>
           <Button sx={buttonStyles} component={Link} to="/">
             בית

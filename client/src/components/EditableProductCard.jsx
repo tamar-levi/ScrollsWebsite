@@ -7,8 +7,6 @@ import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-
-
 const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -110,7 +108,7 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
               endIcon={<EditIcon />}
               sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
             >
-              עריכת מוצר
+              עריכת פרטים
             </Button>
             <Button
               className="delete-button"

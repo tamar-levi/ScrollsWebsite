@@ -27,7 +27,6 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         setOpenSnackbar(true);
                         setTimeout(() => {
                             onNext();
-                            setDisableButton(false);
                         }, 1000);
                     } else {
                         setOpenErrorSnackbar(true);
