@@ -82,7 +82,7 @@ function createRawMessage(to, subject, attachmentPath) {
         "",
         `--${boundary}`,
         `Content-Type: text/plain; charset=UTF-8`,
-        `לצפייה באתר שלנו: https://www.scrollssite.com`,
+        `לצפייה באתר שלנו: https://scrolls-website.vercel.app`,
         "",
         `--${boundary}`,
         `Content-Type: application/pdf; name="=?UTF-8?B?${encodedFileName}?="`,
@@ -124,7 +124,6 @@ async function sendReceiptEmail(auth, to, receiptUrl) {
                 הורד את הקבלה כאן
             </a>
         </p>
-        <p style="color: #555; font-size: 16px;">אם יש לך שאלות נוסxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>
         <p style="color: #333; font-size: 14px;">
             📞 טלפון: 03-1234567<br><br>
             ✉️ מייל: scrollssite@gmail.com
@@ -132,7 +131,7 @@ async function sendReceiptEmail(auth, to, receiptUrl) {
          <p style="font-size: 16px; margin: 16px 0;">
             בקרו באתר שלנו: 
              <br>
-            <a href="https://scrolls-website.vercel.app/products" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
+            <a href="https://scrolls-website.vercel.app/products" style="color:rgb(12, 12, 12); text-decoration: none;">https://scrolls-website.vercel.app</a>
         </p>
         <p style="color: #888; font-size: 12px; text-align: center;">
             הודעה זו נשלחה באופן אוטומטי, אין צורך להשיב אליה.
@@ -197,7 +196,7 @@ async function sendWelcomeEmail(auth, email) {
                   <p style="font-size: 16px; margin: 16px 0;">
                    בקרו באתר שלנו: 
                      <br>
-                     <a href="https://scrolls-website.vercel.app" style="color:rgb(12, 12, 12); text-decoration: none;">www.scrollssite.com</a>
+                     <a href="https://scrolls-website.vercel.app" style="color:rgb(12, 12, 12); text-decoration: none;">https://scrolls-website.vercel.app</a>
                   </p>
                   <div style="border-top: 1px solid #ddd; margin: 20px 0;"></div>
                   <p style="color: #888; font-size: 12px;">

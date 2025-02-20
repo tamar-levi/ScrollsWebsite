@@ -12,7 +12,7 @@ const UserProducts = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
 
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); 
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const fetchUserProducts = async () => {
@@ -52,6 +52,7 @@ const UserProducts = () => {
         setProducts(prevProducts => prevProducts.filter(p => p._id !== productId));
     };
 
+
     return (
         <>
             <Box sx={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -69,6 +70,11 @@ const UserProducts = () => {
                     .לא ינתן החזר על מחיקת מודעה <br />
                     .ניתן לערוך את פרטי המגילה, את המחיר ניתן לשנות עד תקרת הסכום של עלות פרסום המודעה
                 </Typography>
+                {products.length === 0 && (
+                    <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', mb: 4 }}>
+                        עדיין לא הוספת מגילות 
+                    </Typography>
+                )}
                 <Box
                     sx={{
                         display: 'grid',
@@ -109,5 +115,4 @@ const UserProducts = () => {
         </>
     );
 };
-
 export default UserProducts;

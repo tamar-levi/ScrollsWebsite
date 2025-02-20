@@ -5,42 +5,67 @@ const { createProductsPDF } = require('./services/pdfService');
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify', 'https://www.googleapis.com/auth/gmail.send'];
 
-function loadCredentials() {
-    if (!process.env.GOOGLE_CREDENTIALS) {
-        throw new Error('Missing GOOGLE_CREDENTIALS environment variable.');
-    }
-    return JSON.parse(process.env.GOOGLE_CREDENTIALS);
-}
-
 async function authorize() {
-    const credentials = loadCredentials();
+    const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
     const { client_secret, client_id, redirect_uris } = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-
-    if (process.env.ACCESS_TOKEN && process.env.REFRESH_TOKEN && process.env.EXPIRY_DATE) {
-        oAuth2Client.setCredentials({
-            access_token: process.env.ACCESS_TOKEN,
-            refresh_token: process.env.REFRESH_TOKEN,
-            expiry_date: Number(process.env.EXPIRY_DATE),
-        });
+    const token = {
+        access_token: process.env.ACCESS_TOKEN,
+        refresh_token: process.env.REFRESH_TOKEN,
+        expiry_date: process.env.EXPIRY_DATE
+    };
+    if (token.access_token) {
+        oAuth2Client.setCredentials(token);
+        if (isTokenExpired(token)) {
+            console.log('Refreshing access token...');
+            await refreshToken(oAuth2Client, token);
+        }
         return oAuth2Client;
     } else {
         return getNewToken(oAuth2Client);
     }
 }
 
-function getNewToken(oAuth2Client) {
-    const authUrl = oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
-    console.log('Authorize this app by visiting this URL:', authUrl);
+function isTokenExpired(token) {
+    const expiryDate = token.expiry_date;
+    return expiryDate && expiryDate < Date.now();
+}
 
-    const code = readline.question('Enter the code from the page: ');
-    return new Promise((resolve, reject) => {
-        oAuth2Client.getToken(code, (err, token) => {
-            if (err) return reject('Error retrieving access token: ' + err);
-            oAuth2Client.setCredentials(token);
-            resolve(oAuth2Client);
-        });
+async function refreshToken(oAuth2Client, token) {
+    try {
+        const response = await oAuth2Client.refreshToken(token.refresh_token);
+        const newToken = {
+            access_token: response.tokens.access_token,
+            refresh_token: token.refresh_token,
+            expiry_date: response.tokens.expiry_date
+        };
+        process.env.ACCESS_TOKEN = newToken.access_token;
+        process.env.EXPIRY_DATE = newToken.expiry_date;
+        console.log('Token refreshed successfully!');
+        oAuth2Client.setCredentials(newToken);
+    } catch (err) {
+        console.error('Error refreshing token:', err);
+    }
+}
+
+async function getNewToken(oAuth2Client, scopes) {
+    const authUrl = oAuth2Client.generateAuthUrl({
+        access_type: 'offline',
+        prompt: 'consent',
+        scope: scopes
     });
+    console.log('Authorize this app by visiting this URL:', authUrl);
+    const code = readline.question('Enter the code from the page: ');
+    try {
+        const { tokens } = await oAuth2Client.getToken(code);
+        oAuth2Client.setCredentials(tokens);
+        process.env.ACCESS_TOKEN = tokens.access_token;
+        process.env.EXPIRY_DATE = tokens.expiry_date;
+        console.log('Token saved successfully!');
+        return oAuth2Client;
+    } catch (err) {
+        throw new Error('Error retrieving access token: ' + err);
+    }
 }
 
 async function listMessages(auth) {
