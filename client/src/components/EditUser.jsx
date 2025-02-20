@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteUser, deleteUserProducts, updateUser } from '../redux/userSlice';
+import { deleteUser, deleteUserProducts, updateUser, logoutUser } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import axios from 'axios';
@@ -85,8 +85,7 @@ export default function EditUser() {
       });
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
+      dispatch(logoutUser());
       navigate('/');
     } catch (err) {
       console.error('Error deleting user:', err);

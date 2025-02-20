@@ -32,6 +32,7 @@ const userSlice = createSlice({
       state.products = [];
       state.error = null;
       clearUserData();
+
     },
 
     deleteUserProducts: (state) => {
@@ -43,7 +44,6 @@ const userSlice = createSlice({
       state.products = [];
       state.error = null;
       clearUserData();
-
     },
 
     setError: (state, action) => {
