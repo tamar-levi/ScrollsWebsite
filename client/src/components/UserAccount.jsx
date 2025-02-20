@@ -81,7 +81,9 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
           {user?.city || 'כתובת לא זמינה'}
         </Typography>
-
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          {user?.phoneNumber || 'מספר טלפון לא צוין'}
+        </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, flexDirection: isMobile ? 'column' : 'row' }}>
           <Button
             variant="contained"
