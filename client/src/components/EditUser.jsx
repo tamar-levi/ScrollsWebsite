@@ -37,7 +37,7 @@ export default function EditUser() {
     if (displayName !== user.displayName) userData.displayName = displayName;
     if (email.toLowerCase() !== user.email.toLowerCase()) userData.email = email;
     if (city !== user.city) userData.city = city;
-    if (phone != user.phoneNumber) userData.phone = phone;
+    if (phone != user.phoneNumber) userData.phoneNumber = phone;
 
     if (Object.keys(userData).length === 0) {
       setSnackbar({ open: true, message: 'לא בוצע שינוי בשדות', severity: 'info' });

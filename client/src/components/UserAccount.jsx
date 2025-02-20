@@ -1,4 +1,4 @@
-import React ,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -82,7 +82,7 @@ export default function UserAccount({ openDialog, onDialogOpen, onDialogClose })
           {user?.city || 'כתובת לא זמינה'}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          {user?.phoneNumber || 'מספר טלפון לא צוין'}
+          {user?.phoneNumber != 0 ? user?.phoneNumber : 'מספר טלפון לא צוין'}
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, flexDirection: isMobile ? 'column' : 'row' }}>
           <Button

@@ -12,16 +12,13 @@ export default function About() {
         document.body.style.overflow = "auto";
       }
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
       document.body.style.overflow = "auto";
     };
   }, []);
-
   return (
     <Box sx={{ direction: 'rtl', padding: '30px 0' }}>
       <Container maxWidth="lg">
@@ -52,8 +49,8 @@ export default function About() {
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.6,
-            marginBottom: 2,
+            lineHeight: 1.4,
+            marginBottom: 1.5,
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           הלוח נועד לפרסם בתפוצה רחבה מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה הן למעוניינים לרכוש והן לסופרי הסת"ם המעוניינים למכור.
@@ -62,8 +59,8 @@ export default function About() {
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.6,
-            marginBottom: 2,
+            lineHeight: 1.4,
+            marginBottom: 1.5,
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           חולמים על מגילה משלכם? בלוח המגילות תמצאו בקלות ובנוחות מגילת אסתר כלבבכם, לפי כל המנהגים, ברמות שונות ובמחיר הטוב ביותר, באיכות ובהידור שאתם מחפשים.
@@ -82,23 +79,40 @@ export default function About() {
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.6,
-            marginBottom: 2,
+            lineHeight: 1.4,
+            marginBottom: 1.5,
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
-          הלוח מעניק לך פלטפורמה ייחודית לרכישת מגילה בעצמך  - בשקיפות ובאחריות מלאה של הסופר, וללא עמלות סוחר.
+          הלוח מעניק לך פלטפורמה ייחודית לרכישת מגילה בעצמך - בשקיפות ובאחריות מלאה של הסופר, וללא עמלות סוחר.
         </Typography>
         <Typography variant="body1" align="center"
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.6,
-            marginBottom: 2,
+            lineHeight: 1.4,
+            marginBottom: 1.5,
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           אצלינו הרכישה מתבצעת ישירות מול הסופר על ידי יצירת קשר אישי עם הסופר,
           וכך תוכל לקבל את כל המידע שרצית על הסופר ועל המגילה שכתב.
         </Typography>
+
+        {/* התוספת לפני "כאן רוכשים ישירות מהסופר!" */}
+        <Typography variant="body1" align="center"
+          sx={{
+            fontFamily: 'Rubik, sans-serif',
+            color: '#000',
+            lineHeight: 1.4,
+            marginBottom: 1.5,
+            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
+          }}>
+          לראות בעיניך שהסופר אכן מחזיק בתעודה בתוקף,<br />
+          לברר על איזה קלף ובאיזה דיו היא נכתבה,<br />
+          תוכל גם לוודא שהמגילה עברה הגהה רצינית ומדוקדקת<br />
+          ולקבל מחיר הוגן ללא פערי תיווך.<br />
+          ומבלי להיות נתון לחסדיהם של סוחרים שיתכן ומוכרים לך חתול בשק, מבלי שתדע באופן ברור מה עבר על המגילה, ומה טיבו של הסופר שכתב אותה.
+        </Typography>
+
         <Typography variant="h6" align="center"
           sx={{
             fontFamily: 'Rubik, sans-serif',
@@ -109,12 +123,13 @@ export default function About() {
           }}>
           כאן רוכשים ישירות מהסופר!
         </Typography>
+
         <Typography variant="body1" align="center"
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.6,
-            marginBottom: 2,
+            lineHeight: 1.4,
+            marginBottom: 1.5,
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           אנחנו עושים הכל על מנת שהשימוש בלוח יהיה קל, זמין ונוח. אם בכל זאת נתקלתם בבעיה או סתם שאלה
@@ -123,14 +138,13 @@ export default function About() {
           sx={{
             fontFamily: 'Rubik, sans-serif',
             color: '#000',
-            lineHeight: 1.6,
-            marginBottom: 2,
+            lineHeight: 1.4,
+            marginBottom: 1.5,
             fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
           }}>
           ניתן לפנות אלינו בטלפון: 052-7672693 או במייל: ScrollsSite@gmail.com
         </Typography>
       </Container>
     </Box>
-
   );
 }
