@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Typography, Snackbar, CircularProgress, Alert } from "@mui/material";
 import { Payment as PaymentIcon, CheckCircle as CheckCircleIcon, ArrowForward as ArrowForward } from "@mui/icons-material";
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const NedarimPayment = ({ productData, onBack, onNext }) => {
     const iframeRef = useRef(null);
@@ -11,10 +12,27 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const [loading, setLoading] = useState(false);
     const [paymentInProgress, setPaymentInProgress] = useState(false);
     const [disableButton, setDisableButton] = useState(false);
-    const currentUser = useSelector((state) => state.user?.currentUser) || {};
+    const [currentUser, setCurrentUser] = useState(null);
     const [showAddingProductSnackbar, setShowAddingProductSnackbar] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
+                    withCredentials: true,
+                });
+                setCurrentUser(response.data);
+            } catch (error) {
+                setOpenErrorSnackbar(true);  
+                setDisableButton(true);
+                setTimeout(() => {
+                    navigate('/');  
+                }, 2000);
+            }
+        };
+        fetchCurrentUser(); 
+
         const handleMessage = (event) => {
             if (!event.data?.Name) return;
             switch (event.data.Name) {
@@ -39,9 +57,10 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     break;
             }
         };
+
         window.addEventListener("message", handleMessage);
         return () => window.removeEventListener("message", handleMessage);
-    }, [onNext]);
+    }, [navigate, onNext]);
 
     const sendPaymentRequest = () => {
         setLoading(true);
@@ -66,7 +85,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     Mail: currentUser.email || '',
                     Amount: calculatePaymentAmount(productData?.price),
                     Tashlumim: "1",
-                    Comment: "בדיקת תשלום",
+                    Comment: "תשלום",
                     Groupe: '',
                     Param1: '',
                     Param2: '',
@@ -85,7 +104,13 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
     }
-
+    if (!currentUser) {
+        setOpenErrorSnackbar(true);
+        setDisableButton(true);
+        setTimeout(() => {
+            navigate('/');
+        }, 2000);
+    }
     return (
         <>
             <div style={{ marginTop: "10px" }}>
@@ -142,10 +167,10 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 </Snackbar>
                 <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
                     <Alert severity="error" sx={{ display: 'flex', alignItems: 'center' }}>
-                        שגיאה בביצוע התשלום. אנא נסה שוב.
+                        שגיאה בהבאת נתוני המשתמש, אנא התחבר מחדש.
                     </Alert>
                 </Snackbar>
-            </div >
+            </div>
             <Snackbar
                 open={showAddingProductSnackbar}
                 onClose={() => setShowAddingProductSnackbar(false)}
