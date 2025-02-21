@@ -44,6 +44,9 @@ const ProductModal = ({ product, onClose }) => {
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} sx={{ textAlign: 'right' }}>
             <ImageSlider images={[product.primaryImage, ...product.additionalImages]} />
+            <Typography variant="body2" fontWeight="bold" sx={{ textAlign: 'center', marginBottom: '5px', marginTop: '10px' }}>
+              ניתן ללחוץ על התמונה ע"מ להציג אותה בגודל מלא
+            </Typography>
             <Typography variant="body1" paragraph>
               {product.note}
             </Typography>

@@ -16,28 +16,8 @@ const FilterComponent = ({ onFilter, products }) => {
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedSeller, setSelectedSeller] = useState('');
     const [sellers, setSellers] = useState([]);
+    const [cities, setCities] = useState([]);
 
-    const israeliCities = [
-        'ירושלים',
-        'בני ברק',
-        'אלעד',
-        'ביתר עילית',
-        'מודיעין עילית',
-        'צפת',
-        'בית שמש',
-        'אשדוד',
-        'פתח תקווה',
-        'רחובות',
-        'נתניה',
-        'חיפה',
-        'טבריה',
-        'אשקלון',
-        'רכסים',
-        'כפר חבד',
-        'קרית גת',
-        'עפולה',
-        'קרית ספר'
-    ];
 
     useEffect(() => {
         const sellerNames = products.reduce((uniqueSellers, product) => {
@@ -50,6 +30,17 @@ const FilterComponent = ({ onFilter, products }) => {
         setSellers(sellerNames);
     }, [products]);
 
+    useEffect(()=> {
+        const cityNames = products.reduce((uniqueCities, product) => {
+            const cityName = product.userId.city;
+            if (!uniqueCities.includes(cityName)) {
+                uniqueCities.push(cityName);
+            }
+            return uniqueCities;
+        }, []);
+        setCities(cityNames);
+    }, [products]);
+
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth < 900);
@@ -57,18 +48,10 @@ const FilterComponent = ({ onFilter, products }) => {
                 setIsFilterOpen(true);
             }
         };
-
         window.addEventListener('resize', handleResize);
         handleResize();
 
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        products.forEach(product => {
-            const sellerName = product.userId.displayName || product.userId.fullName;
-            sellers.push(sellerName);
-        });
     }, []);
 
     const handlePriceChange = (event, newValue) => {
@@ -259,7 +242,7 @@ const FilterComponent = ({ onFilter, products }) => {
                         <MenuItem value="">
                             <em>כל הערים</em>
                         </MenuItem>
-                        {israeliCities.map((city) => (
+                        {cities.map((city) => (
                             <MenuItem key={city} value={city}>
                                 {city}
                             </MenuItem>
