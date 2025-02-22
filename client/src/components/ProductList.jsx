@@ -27,8 +27,13 @@ const ProductList = () => {
           credentials: 'include',
         });
         const data = await response.json();
-        setProducts(data);
-        setFilteredProducts(data);
+
+        const filteredData = data.filter(product => {
+          const fullName = product.userId?.fullName?.trim().toLowerCase();
+          return !fullName.includes('rachel chadad');
+        });
+        setProducts(filteredData);
+        setFilteredProducts(filteredData);
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch products:', error);
@@ -37,6 +42,7 @@ const ProductList = () => {
     };
     fetchProducts();
   }, []);
+
 
   const handleOpenModal = (product) => {
     setSelectedProduct(product);
@@ -58,8 +64,7 @@ const ProductList = () => {
         ? (product.userId?.displayName?.trim().toLowerCase() == seller.trim().toLowerCase()) ||
         (product.userId?.fullName?.trim().toLowerCase() == seller.trim().toLowerCase())
         : true;
-      const isNotRachelChadad = product.userId?.fullName?.trim().toLowerCase() !== 'rachel chadad'.toLowerCase();
-      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch && isSellerMatch && isNotRachelChadad;
+      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch && isSellerMatch;
     });
 
     setFilteredProducts(filtered);
