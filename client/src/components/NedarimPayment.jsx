@@ -14,6 +14,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const [disableButton, setDisableButton] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [showAddingProductSnackbar, setShowAddingProductSnackbar] = useState(false);
+    const [isLoadingUser, setIsLoadingUser] = useState(true); // חדש - מונע בדיקות מוקדמות מדי
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,21 +23,20 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
                     withCredentials: true,
                 });
+                console.log("User response:", response);
+                if (!response.data) throw new Error("No user data received");
                 setCurrentUser(response.data);
             } catch (error) {
-                setOpenErrorSnackbar(true);  
+                console.error("Error fetching user:", error.response ? error.response.data : error.message);
+                setOpenErrorSnackbar(true);
                 setDisableButton(true);
-                setTimeout(() => {
-                    navigate('/');  
-                }, 2000);
+                setTimeout(() => navigate('/'), 2000);
+            } finally {
+                setIsLoadingUser(false);
             }
         };
-        fetchCurrentUser(); 
-    }, [navigate]);
+        fetchCurrentUser();
 
-    useEffect(() => {
-        if (!currentUser) return;
-        
         const handleMessage = (event) => {
             if (!event.data?.Name) return;
             switch (event.data.Name) {
@@ -47,9 +47,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     setTransactionResult(event.data.Value);
                     if (event.data.Value?.Status === 'OK') {
                         setOpenSnackbar(true);
-                        setTimeout(() => {
-                            onNext();
-                        }, 1000);
+                        setTimeout(() => onNext(), 1000);
                     } else {
                         setOpenErrorSnackbar(true);
                         setDisableButton(false);
@@ -64,59 +62,55 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
         window.addEventListener("message", handleMessage);
         return () => window.removeEventListener("message", handleMessage);
-    }, [currentUser, navigate, onNext]);
-
-    useEffect(() => {
-        if (!currentUser) {
-            setOpenErrorSnackbar(true);
-            setDisableButton(true);
-            setTimeout(() => {
-                navigate('/');
-            }, 2000);
-        }
-    }, [currentUser, navigate]);
+    }, [navigate, onNext]);
 
     const sendPaymentRequest = () => {
+        if (!currentUser) return;
+
         setLoading(true);
         setPaymentInProgress(true);
         setDisableButton(true);
 
         const iframeWin = iframeRef.current.contentWindow;
-        iframeWin.postMessage(
-            {
-                Name: "FinishTransaction2",
-                Value: {
-                    Mosad: "7014113",
-                    ApiValid: "5tezOx+JDY",
-                    Zeout: '',
-                    PaymentType: "Ragil",
-                    Currency: "1",
-                    FirstName: currentUser.fullName || '',
-                    LastName: '',
-                    Street: '',
-                    City: currentUser.city || '',
-                    Phone: currentUser.phoneNumber || '',
-                    Mail: currentUser.email || '',
-                    Amount: calculatePaymentAmount(productData?.price),
-                    Tashlumim: "1",
-                    Comment: "תשלום",
-                    Groupe: '',
-                    Param1: '',
-                    Param2: '',
-                    CallBack: 'https://scrolls-website.onrender.com/paymentApi/payment-callback',
-                    CallBackMailError: 'scrollsSite@gmail.com',
-                },
+        iframeWin.postMessage({
+            Name: "FinishTransaction2",
+            Value: {
+                Mosad: "7014113",
+                ApiValid: "5tezOx+JDY",
+                Zeout: '',
+                PaymentType: "Ragil",
+                Currency: "1",
+                FirstName: currentUser.fullName || '',
+                LastName: '',
+                Street: '',
+                City: currentUser.city || '',
+                Phone: currentUser.phoneNumber || '',
+                Mail: currentUser.email || '',
+                Amount: calculatePaymentAmount(productData?.price),
+                Tashlumim: "1",
+                Comment: "תשלום",
+                Groupe: '',
+                Param1: '',
+                Param2: '',
+                CallBack: 'https://scrolls-website.onrender.com/paymentApi/payment-callback',
+                CallBackMailError: 'scrollsSite@gmail.com',
             },
-            "*"
-        );
+        }, "*");
     };
 
     function calculatePaymentAmount(price) {
         if (!price) return 40 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 6000) return 30 + (productData.isPremiumAd ? 20 : 0);
         if (price <= 12000) return 35 + (productData.isPremiumAd ? 20 : 0);
-        if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
-        return 40;
+        return 40 + (productData.isPremiumAd ? 20 : 0);
+    }
+
+    if (isLoadingUser) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <CircularProgress />
+            </div>
+        );
     }
 
     return (
@@ -169,14 +163,10 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     autoHideDuration={3000}
                     sx={{ direction: 'rtl' }}
                 >
-                    <Alert severity="success" sx={{ display: 'flex', alignItems: 'center' }}>
-                        תשלום בוצע בהצלחה!
-                    </Alert>
+                    <Alert severity="success">תשלום בוצע בהצלחה!</Alert>
                 </Snackbar>
                 <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
-                    <Alert severity="error" sx={{ display: 'flex', alignItems: 'center' }}>
-                        שגיאה בהבאת נתוני המשתמש, אנא התחבר מחדש.
-                    </Alert>
+                    <Alert severity="error">שגיאה בהבאת נתוני המשתמש, אנא התחבר מחדש.</Alert>
                 </Snackbar>
             </div>
             <Snackbar
@@ -186,9 +176,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 sx={{ direction: 'rtl' }}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-                <Alert severity="info" sx={{ display: 'flex', alignItems: 'center' }}>
-                    מוסיף את המוצר שלך, אנא המתן...
-                </Alert>
+                <Alert severity="info">מוסיף את המוצר שלך, אנא המתן...</Alert>
             </Snackbar>
         </>
     );
