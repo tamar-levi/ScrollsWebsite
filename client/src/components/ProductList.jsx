@@ -58,7 +58,8 @@ const ProductList = () => {
         ? (product.userId?.displayName?.trim().toLowerCase() == seller.trim().toLowerCase()) ||
         (product.userId?.fullName?.trim().toLowerCase() == seller.trim().toLowerCase())
         : true;
-      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch && isSellerMatch;
+      const isNotRachelChadad = product.userId?.fullName?.trim().toLowerCase() !== 'rachel chadad'.toLowerCase();
+      return isPriceInRange && isFontTypeMatch && isScrollTypeMatch && isCityMatch && isSellerMatch && isNotRachelChadad;
     });
 
     setFilteredProducts(filtered);
