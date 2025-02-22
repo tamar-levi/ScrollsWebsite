@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Typography, Snackbar, CircularProgress, Alert } from "@mui/material";
-import { Payment as PaymentIcon, CheckCircle as CheckCircleIcon, ArrowForward as ArrowForward } from "@mui/icons-material";
+import { Payment as PaymentIcon, ArrowForward as ArrowForward } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -32,7 +32,11 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
             }
         };
         fetchCurrentUser(); 
+    }, [navigate]);
 
+    useEffect(() => {
+        if (!currentUser) return;
+        
         const handleMessage = (event) => {
             if (!event.data?.Name) return;
             switch (event.data.Name) {
@@ -60,7 +64,17 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
         window.addEventListener("message", handleMessage);
         return () => window.removeEventListener("message", handleMessage);
-    }, [navigate, onNext]);
+    }, [currentUser, navigate, onNext]);
+
+    useEffect(() => {
+        if (!currentUser) {
+            setOpenErrorSnackbar(true);
+            setDisableButton(true);
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+        }
+    }, [currentUser, navigate]);
 
     const sendPaymentRequest = () => {
         setLoading(true);
@@ -104,18 +118,12 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
         if (price > 12000) return 40 + (productData.isPremiumAd ? 20 : 0);
         return 40;
     }
-    if (!currentUser) {
-        setOpenErrorSnackbar(true);
-        setDisableButton(true);
-        setTimeout(() => {
-            navigate('/');
-        }, 2000);
-    }
+
     return (
         <>
             <div style={{ marginTop: "10px" }}>
                 <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl" }}>
-                    סכום לתשלום: {calculatePaymentAmount(productData.price)} ₪
+                    סכום לתשלום: {calculatePaymentAmount(productData?.price)} ₪
                 </Typography>
                 <iframe
                     ref={iframeRef}

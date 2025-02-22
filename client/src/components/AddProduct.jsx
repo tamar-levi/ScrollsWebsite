@@ -90,6 +90,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
             return;
         }
         onNext();
+        console.log("Form data before sending:", formData);
         onFormSubmit(formData);
     };
 
