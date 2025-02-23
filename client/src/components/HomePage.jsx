@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import LoginDialog from './LoginDialog';
 import CookieConsentPopup from './CookieConsentPopup';  
 import Cookies from 'js-cookie';
-
+import background from '../assets/background.jpg';
 const HomePage = () => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -43,6 +43,7 @@ const HomePage = () => {
       style={{
         backgroundSize: "cover",
         backgroundPosition: "bottom",
+        backgroundImage: `url(${background})`,
         height: "100vh",
         width: "100%",
         display: "flex",
