@@ -14,7 +14,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const [disableButton, setDisableButton] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [showAddingProductSnackbar, setShowAddingProductSnackbar] = useState(false);
-    const [isLoadingUser, setIsLoadingUser] = useState(true); // חדש - מונע בדיקות מוקדמות מדי
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -65,8 +65,12 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     }, [navigate, onNext]);
 
     const sendPaymentRequest = () => {
-        if (!currentUser) return;
-
+        if (!currentUser || !currentUser.fullName || !currentUser.email) {
+            setOpenErrorSnackbar(true);
+            setDisableButton(false);
+            setTimeout(() => navigate('/'), 2000);
+            return;
+        }
         setLoading(true);
         setPaymentInProgress(true);
         setDisableButton(true);
@@ -80,12 +84,12 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 Zeout: '',
                 PaymentType: "Ragil",
                 Currency: "1",
-                FirstName: currentUser.fullName || '',
+                FirstName: currentUser.fullName,
                 LastName: '',
                 Street: '',
                 City: currentUser.city || '',
                 Phone: currentUser.phoneNumber || '',
-                Mail: currentUser.email || '',
+                Mail: currentUser.email,
                 Amount: calculatePaymentAmount(productData?.price),
                 Tashlumim: "1",
                 Comment: "תשלום",

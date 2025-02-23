@@ -111,16 +111,16 @@ async function getMessageDetails(gmail, messageId) {
         if (subject && subject.toLowerCase().includes('קטלוג')) {
             console.log('🔔 Catalog email detected! Generating PDF...');
             await createProductsPDF(from);
+            await gmail.users.messages.modify({
+                userId: 'me',
+                id: messageId,
+                resource: {
+                    removeLabelIds: ['UNREAD'],
+                },
+            });
+            console.log('✅ Marked message as read');
         }
 
-        await gmail.users.messages.modify({
-            userId: 'me',
-            id: messageId,
-            resource: {
-                removeLabelIds: ['UNREAD'],
-            },
-        });
-        console.log('✅ Marked message as read');
     } catch (error) {
         console.error('Error getting message details:', error);
     }
