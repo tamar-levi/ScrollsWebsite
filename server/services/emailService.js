@@ -82,7 +82,8 @@ function createRawMessage(to, subject, attachmentPath) {
         "",
         `--${boundary}`,
         `Content-Type: text/plain; charset=UTF-8`,
-        `לצפייה באתר שלנו: https://scrolls-website.vercel.app`,
+        "",
+        `לצפייה באתר שלנו: https://scrolls-website.vercel.app`,  // הלינק כאן
         "",
         `--${boundary}`,
         `Content-Type: application/pdf; name="=?UTF-8?B?${encodedFileName}?="`,
@@ -241,5 +242,6 @@ async function sendWelcomeEmail(auth, email) {
         console.error('❌ Error sending welcome email:', err);
     }
 }
-
+ 
+  
 module.exports = { sendEmail, sendReceiptEmail, sendWelcomeEmail, authorize };
