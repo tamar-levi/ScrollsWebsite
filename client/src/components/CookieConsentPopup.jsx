@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, IconButton, Box } from "@mui/material";
-import CookieIcon from '@mui/icons-material/Cookie'; 
+import CookieIcon from '@mui/icons-material/Cookie';
 
 const CookieConsentPopup = ({ onConsent }) => {
   const [isConsentGiven, setIsConsentGiven] = useState(Cookies.get("cookieConsent") === "true");
@@ -30,23 +30,26 @@ const CookieConsentPopup = ({ onConsent }) => {
         <Typography variant="body1" paragraph sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontFamily: 'Roboto, sans-serif' }}>
           האתר הזה משתמש בקבצי קוקיז לשיפור חוויית המשתמש. עליך לאשר את השימוש בקובצי קוקיז כדי להמשיך
         </Typography>
+        <Typography variant="body1" paragraph sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontFamily: 'Roboto, sans-serif' }}>
+          במידה ולא תאשר את הקוקיז אצלך, אין למערכת כל אחריות על בעיות בהעלאת מודעות ותשלומים
+        </Typography>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center' }}>
-        <Button 
-          onClick={handleReject} 
-          color="secondary" 
-          variant="outlined" 
+        <Button
+          onClick={handleReject}
+          color="secondary"
+          variant="outlined"
           sx={{ marginRight: 2, fontSize: { xs: '0.8rem', sm: '1rem' }, padding: '6px 16px', fontFamily: 'Roboto, sans-serif' }}
         >
-          לא מסכים
+          לא מאשר
         </Button>
-        <Button 
-          onClick={handleAccept} 
-          color="primary" 
-          variant="contained" 
+        <Button
+          onClick={handleAccept}
+          color="primary"
+          variant="contained"
           sx={{ fontSize: { xs: '0.8rem', sm: '1rem' }, padding: '6px 16px', fontFamily: 'Roboto, sans-serif' }}
         >
-          אני מסכים
+          אישרתי בדפדפן שלי את הקוקיז
         </Button>
       </DialogActions>
     </Dialog>
