@@ -69,6 +69,15 @@ const getAllProductsByUser = async (req, res) => {
 const updateProductsDetails = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
+    if (req.files) {
+        if (req.files.primaryImage) {
+            updates.primaryImage = req.files.primaryImage[0].buffer;
+        }
+        if (req.files.additionalImages) {
+            updates.additionalImages = req.files.additionalImages.map(image => image.buffer);
+        }
+    }
+    console.log('Update request received');
     try {
         if (!id) {
             console.error('ID is missing');
@@ -80,8 +89,6 @@ const updateProductsDetails = async (req, res) => {
             return res.status(400).send('Invalid ID format');
         }
 
-        console.log('ID is valid');
-
         const updatedProduct = await Product.findByIdAndUpdate(id, updates, { new: true });
 
         if (!updatedProduct) {
@@ -89,7 +96,7 @@ const updateProductsDetails = async (req, res) => {
             return res.status(404).send('Product not found');
         }
 
-        console.log('Product updated successfully:', updatedProduct);
+        console.log('Product updated successfully:');
 
         res.json({
             message: 'Product updated successfully',

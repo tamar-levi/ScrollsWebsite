@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -7,134 +7,206 @@ import {
   Button,
   TextField,
   Box,
-  Snackbar,
+  IconButton,
+  CircularProgress,
   Alert
 } from '@mui/material';
-
-const PRICE_LIMITS = [
-  { max: 6000, min: 0, price: 30 },
-  { max: 12000, min: 6000, price: 35 },
-  { max: Infinity, min: 12000, price: 40 }
-];
-
-const getPriceLimits = (initialPrice) => {
-  for (let i = 0; i < PRICE_LIMITS.length; i++) {
-    if (initialPrice <= PRICE_LIMITS[i].max) {
-      return { max: PRICE_LIMITS[i].max, min: PRICE_LIMITS[i].min };
-    }
-  }
-  return { max: Infinity, min: 0 };
-};
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import imageCompression from 'browser-image-compression';
 
 const EditProductModal = ({ open, onClose, product }) => {
-  const [editedProduct, setEditedProduct] = useState(product);
-  const [priceLimits, setPriceLimits] = useState({ max: Infinity, min: 0 });
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [editedProduct, setEditedProduct] = useState({ ...product, additionalImages: product.additionalImages || [] });
+  const [imagePreview, setImagePreview] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);  
+  const [alertMessage, setAlertMessage] = useState(null);
 
-  useEffect(() => {
-    if (product.price !== undefined && product.price !== "") {
-      setPriceLimits(getPriceLimits(product.price));
-    } else {
-      setPriceLimits({ max: Infinity, min: 0 });
-    }
-  }, [product.price]);
+  const compressionOptions = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+    useWebWorker: false,
+  };
+
+  const compressImage = async (imageFile) => {
+    return await imageCompression(imageFile, compressionOptions);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "price" && value === "") {
-      setEditedProduct(prev => ({
-        ...prev,
-        [name]: priceLimits.max
-      }));
-      return;
-    }
+    setEditedProduct(prev => ({ ...prev, [name]: value }));
+  };
 
-    if (name === "price" && value > priceLimits.max) {
-      setAlertMessage(`המחיר חורג מתקרת הסכום של פרסום המודעה: ${priceLimits.max} ש\"ח.`);
-      setAlertOpen(true);
-      return;
-    }
+  const openPreview = (image) => {
+    setImagePreview(image);
+    setPreviewOpen(true);
+  };
 
+  const removeImage = (index) => {
     setEditedProduct(prev => ({
       ...prev,
-      [name]: value
+      additionalImages: prev.additionalImages.filter((_, i) => i !== index),
     }));
+  };
+
+  const handleImageChange = async (e, type, index = null) => {
+    if (e.target.files[0]) {
+      const files = e.target.files;
+      const compressedImages = await Promise.all(
+        Array.from(files).map(file => compressImage(file))
+      );
+      const base64Images = await Promise.all(
+        compressedImages.map(file => toBase64(file))
+      );
+  
+      setEditedProduct(prev => {
+        const updatedImages = [...prev.additionalImages];
+        if (type === 'primary') {
+          return { ...prev, primaryImage: base64Images[0] };
+        } else {
+          base64Images.forEach((base64, i) => {
+            if (index !== null) {
+              updatedImages[index] = base64;
+            } else {
+              updatedImages.push(base64);
+            }
+          });
+          return { ...prev, additionalImages: updatedImages };
+        }
+      });
+    }
   };
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`https://scrolls-website.onrender.com/productsApi/updateProductsDetails/${editedProduct._id}`, {
+      setIsLoading(true);  // מתחילים את העיבוד
+      setAlertMessage("מעבד את השינויים, אנא המתן...");
+      const response = await fetch(`http://localhost:5000/productsApi/updateProductsDetails/${editedProduct._id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editedProduct),
         credentials: 'include'
       });
+
       const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.message || 'Failed to update product');
-      }
+      if (!response.ok) throw new Error(responseData.message || 'Failed to update product');
+
+      console.log('Product updated successfully:', responseData);
       window.location.reload();
       onClose();
     } catch (error) {
       console.error('Error updating product:', error);
-      setAlertMessage("שגיאה בעדכון המוצר");
-      setAlertOpen(true);
+      alert('שגיאה בעדכון המוצר');
+    } finally {
+      setIsLoading(false);  // סיום עיבוד
+      setAlertMessage(null);
     }
   };
 
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result.split(',')[1]; 
+      resolve(result);
+    };
+    reader.onerror = error => reject(error);
+  });
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth sx={{ backgroundColor: '#fff' }}>
       <DialogTitle>עריכת מוצר</DialogTitle>
       <DialogContent>
+        {alertMessage && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {alertMessage}
+          </Alert>
+        )}
+
+        {/* הצגת עיגול מסתובב רק בזמן שמירה */}
+        {isLoading && (
+          <Box sx={{
+            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center'
+          }}>
+            <CircularProgress size={50} />
+          </Box>
+        )}
+
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-          <TextField
-            name="scrollType"
-            label="סוג המגילה"
-            value={editedProduct.scrollType}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            name="scriptType"
-            label="סוג הכתב"
-            value={editedProduct.scriptType}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            name="note"
-            label="הערות"
-            value={editedProduct.note}
-            onChange={handleChange}
-            fullWidth
-            multiline
-            rows={3}
-          />
-          <TextField
-            name="price"
-            label="מחיר"
-            value={editedProduct.price || ''}
-            onChange={handleChange}
-            fullWidth
-            type="number"
-            inputProps={{ min: priceLimits.min, max: priceLimits.max }}
-          />
+          <TextField name="scrollType" label="סוג המגילה" value={editedProduct.scrollType} onChange={handleChange} fullWidth />
+          <TextField name="scriptType" label="סוג הכתב" value={editedProduct.scriptType} onChange={handleChange} fullWidth />
+          <TextField name="note" label="הערות" value={editedProduct.note} onChange={handleChange} fullWidth multiline rows={3} />
+          <TextField name="price" label="מחיר" value={editedProduct.price} onChange={handleChange} fullWidth type="number" />
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Button variant="outlined" onClick={() => openPreview(editedProduct.primaryImage)}>
+              הצג תמונה ראשית
+            </Button>
+            <IconButton color="primary" component="label">
+              <input type="file" hidden accept="image/*" onChange={(e) => handleImageChange(e, 'primary')} />
+              <EditIcon />
+            </IconButton>
+          </Box>
+
+          {editedProduct.additionalImages.map((img, index) => (
+            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Button variant="outlined" onClick={() => openPreview(img)}>
+                הצג תמונה
+              </Button>
+              <IconButton color="primary" component="label">
+                <input type="file" hidden accept="image/*" onChange={(e) => handleImageChange(e, 'additional', index)} />
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" onClick={() => removeImage(index)}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ))}
+
+          <label htmlFor="additional-images-upload">
+            <input id="additional-images-upload" type="file" accept="image/*" multiple onChange={(e) => handleImageChange(e, 'additional')} style={{ display: 'none' }} />
+            <Button variant="outlined" component="span" startIcon={<CloudUploadIcon />}>
+              הוסף תמונות נוספות
+            </Button>
+          </label>
         </Box>
       </DialogContent>
+
       <DialogActions>
         <Button onClick={onClose}>ביטול</Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">
-          שמור שינויים
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+          disabled={isLoading}  // כפתור שמור שינויים יהיה דיסאיבל בזמן שמירה
+        >
+          {isLoading ? 'שמור שינויים (בעיבוד)' : 'שמור שינויים'}
         </Button>
       </DialogActions>
-      <Snackbar open={alertOpen} autoHideDuration={3000} onClose={() => setAlertOpen(false)}>
-        <Alert severity="error" onClose={() => setAlertOpen(false)}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
+
+      <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)}>
+        <DialogContent>
+          {imagePreview ? (
+            <Box
+              component="img"
+              src={`data:image/jpeg;base64,${imagePreview}`}
+              alt="תצוגה מקדימה"
+              sx={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+              }}
+            />
+          ) : (
+            <p>אין תמונה להצגה</p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPreviewOpen(false)}>סגור</Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 };
