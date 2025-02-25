@@ -17,10 +17,16 @@ const UserProducts = () => {
     useEffect(() => {
         const fetchUserProducts = async () => {
             try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('Token not found');
+                    return;
+                }
                 const response = await axios.get('https://scrolls-website.onrender.com/productsApi/getAllProductsByUser', {
-                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
-                setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching user products:', error);
             } finally {
@@ -72,7 +78,7 @@ const UserProducts = () => {
                 </Typography>
                 {products.length === 0 && (
                     <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', mb: 4 }}>
-                        עדיין לא הוספת מגילות 
+                        עדיין לא הוספת מגילות
                     </Typography>
                 )}
                 <Box

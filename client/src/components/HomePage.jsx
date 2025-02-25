@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import LoginDialog from './LoginDialog';
-import CookieConsentPopup from './CookieConsentPopup';  
-import Cookies from 'js-cookie';
 import background from '../assets/Background.jpg';
 const HomePage = () => {
   useEffect(() => {
@@ -13,28 +11,13 @@ const HomePage = () => {
   }, []);
 
   const [openLogin, setOpenLogin] = useState(false);
-  const [openCookiePopup, setOpenCookiePopup] = useState(false);
 
   const handleOpenLogin = () => {
-    if (Cookies.get("cookieConsent") === "true") {
       setOpenLogin(true); 
-    } else {
-      setOpenCookiePopup(true); 
-    }
   };
 
   const handleCloseLogin = () => {
     setOpenLogin(false);
-  };
-
-  const handleConsent = (consent) => {
-    if (consent) {
-      Cookies.set("cookieConsent", "true", { expires: 365 });
-      setOpenLogin(true);
-    } else {
-      Cookies.set("cookieConsent", "false", { expires: 365 });
-      setOpenCookiePopup(false); 
-    }
   };
 
   return (
@@ -98,10 +81,6 @@ const HomePage = () => {
           התחברות
         </Button>
       </div>
-
-      {openCookiePopup && (
-        <CookieConsentPopup onConsent={handleConsent} />
-      )}
 
       {openLogin && (
         <LoginDialog

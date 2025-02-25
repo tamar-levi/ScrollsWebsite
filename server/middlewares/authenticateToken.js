@@ -3,7 +3,7 @@ require('dotenv').config();
 const secretKey = process.env.JWT_SECRET_KEY;
 
 const authenticateToken = (req, res, next) => {
-    const token = req.cookies['token']; 
+    const token = req.headers['authorization']?.split(' ')[1]; 
 
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
@@ -13,7 +13,6 @@ const authenticateToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ message: 'Invalid token' });
         }
-
         req.user = user; 
         next(); 
     });

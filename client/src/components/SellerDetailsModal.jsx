@@ -45,7 +45,9 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
         try {
             const response = await fetch(`https://scrolls-website.onrender.com/usersApi/getUserById/${sellerId}`, {
                 method: 'GET',
-                credentials: 'include' 
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` 
+                }
             });
             if (!response.ok) throw new Error('Failed to fetch seller details');
             const data = await response.json();

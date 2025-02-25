@@ -9,8 +9,6 @@ const emailRouter = require('./routes/email');
 const paymentRouter = require('./routes/paymentRoutes');
 require('./gmail-listener');
 
-const cookieParser = require('cookie-parser'); 
-
 const corsOptions = {
   origin: process.env.REACT_URL,
   credentials: true, 
@@ -22,7 +20,6 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(cookieParser()); 
 
 app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://googleapis.com https://apis.google.com; script-src-elem 'self' https://apis.google.com; object-src 'none';");

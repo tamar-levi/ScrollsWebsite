@@ -52,19 +52,16 @@ const CreateUser = ({ open, onClose }) => {
     });
   };
 
-  // וולידציה של המייל
   const validateEmail = (email) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
   };
 
-  // וולידציה של מספר טלפון (אורך מינימלי לדוגמה)
   const validatePhone = (phone) => {
-    const regex = /^[0-9]{10}$/; 
+    const regex = /^[0-9]{10}$/;
     return regex.test(phone);
   };
 
-  // וולידציה של סיסמה
   const validatePassword = (password) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return regex.test(password);
@@ -73,7 +70,6 @@ const CreateUser = ({ open, onClose }) => {
   const handleCreateUserSubmit = async (event) => {
     event.preventDefault();
 
-    // וולידציה בצד הקליינט
     if (!validateEmail(formData.email)) {
       setSnackbar({ open: true, message: 'כתובת הדואר האלקטרוני לא תקינה', severity: 'error' });
       return;
@@ -90,13 +86,12 @@ const CreateUser = ({ open, onClose }) => {
     }
 
     try {
-      const response = await axios.post('https://scrolls-website.onrender.com/usersApi/addUser', formData, {
-        withCredentials: true,
-      });
+      const response = await axios.post('https://scrolls-website.onrender.com/usersApi/addUser', formData);
+      localStorage.setItem('token', response.data.token);
       setSnackbar({ open: true, message: 'המשתמש נוצר בהצלחה!', severity: 'success' });
       dispatch(setUser(formData));
       onClose();
-      navigate('/products'); 
+      navigate('/products');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'שגיאה ביצירת המשתמש';
       if (errorMessage.includes("email")) {

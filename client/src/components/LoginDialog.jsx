@@ -46,9 +46,9 @@ const LoginDialog = ({ open, onClose }) => {
             const response = await axios.post('https://scrolls-website.onrender.com/usersApi/loginUser', {
                 username,
                 password,
-            }, {
-                withCredentials: true,
             });
+            const newToken = response.data.token;
+            localStorage.setItem('token', newToken);
             dispatch(setUser(response.data.user));
             const successMessage = document.createElement('div');
             successMessage.innerHTML = '✓ התחברת בהצלחה';

@@ -37,19 +37,16 @@ const addUser = async (req, res) => {
     const emailLowerCase = email.toLowerCase();
 
     try {
-        // וולידציה למייל
         const existingUser = await User.findOne({ email: emailLowerCase });
         if (existingUser) {
             return res.status(400).json({ message: 'כתובת הדואר האלקטרוני כבר קיימת במערכת' });
         }
 
-        // וולידציה לטלפון
         const existingPhone = await User.findOne({ phoneNumber });
         if (existingPhone) {
             return res.status(400).json({ message: 'מספר הטלפון כבר קיים במערכת' });
         }
 
-        // וולידציה לסיסמה
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({ message: 'הסיסמה לא עומדת בדרישות' });
@@ -69,24 +66,18 @@ const addUser = async (req, res) => {
 
         const payload = { id: newUser._id, email: newUser.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 2592000000,
-            sameSite: 'None'
-        });
 
+        res.json({
+            message: 'User created successfully',
+            user: newUser,
+            token: token
+        });
         try {
             const auth = await authorize();
             await sendWelcomeEmail(auth, email);
         } catch (emailError) {
             console.error('Error sending welcome email:', emailError);
         }
-
-        res.json({
-            message: 'User created successfully',
-            user: newUser
-        });
     } catch (err) {
         console.error('Error creating user:', err);
         res.status(500).json({ message: 'Database error' });
@@ -128,15 +119,10 @@ const loginUser = async (req, res) => {
         }
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 2592000000,
-            sameSite: 'None'
-        });
         res.json({
             message: 'Login successful',
-            user: user
+            user: user,
+            token: token
         });
     } catch (err) {
         console.error('Error logging in', err);
@@ -186,15 +172,10 @@ const handleGoogleLogin = async (req, res) => {
         }
         const payload = { id: user._id, email: user.email };
         const token = jwt.sign(payload, secretKey, { expiresIn: '30d' });
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 2592000000,
-            sameSite: 'None',
-        });
         res.json({
             message: 'Google login successful',
-            user: user
+            user: user,
+            token: token
         });
     } catch (err) {
         console.error('Google login error:', err);
@@ -241,14 +222,5 @@ const addUserFromForm = async (req, res) => {
         res.status(500).send('Database error');
     }
 }
-
-const logout = (req, res) => {
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-    });
-    res.status(200).json({ message: 'Logged out successfully' });
-};
 
 module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm, logout };

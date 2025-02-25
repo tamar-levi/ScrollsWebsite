@@ -31,8 +31,15 @@ export default function UserAccount() {
   const handleDelete = async () => {
     handleDialogClose();
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found');
+        return;
+      }
       await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
-        withCredentials: true
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
@@ -114,7 +121,7 @@ export default function UserAccount() {
       </Box>
 
       <Dialog open={openDialog} onClose={handleDialogClose}>
-      <DialogTitle>אישור מחיקה</DialogTitle>
+        <DialogTitle>אישור מחיקה</DialogTitle>
         <DialogContent>
           <DialogContentText>
             האם אתה בטוח שברצונך למחוק את המשתמש? המגילות שלך ימחקו גם כן.

@@ -5,15 +5,21 @@ const readline = require('readline-sync');
 const SCOPES_SEND = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify'];
 require('dotenv').config();
 
+const TOKEN_PATH = path.join(__dirname, '..', 'token.json');
+
 async function authorize() {
     const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
     const { client_secret, client_id, redirect_uris } = credentials.web;
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-    const token = {
-        access_token: process.env.ACCESS_TOKEN,
-        refresh_token: process.env.REFRESH_TOKEN,
-        expiry_date: process.env.EXPIRY_DATE
-    };
+
+    let token;
+    try {
+        token = JSON.parse(fs.readFileSync(TOKEN_PATH));
+    } catch (err) {
+        console.log('Token not found or expired, requesting a new one...');
+        return getNewToken(oAuth2Client);
+    }
+
     if (token.access_token) {
         oAuth2Client.setCredentials(token);
         if (isTokenExpired(token)) {
@@ -39,8 +45,7 @@ async function refreshToken(oAuth2Client, token) {
             refresh_token: token.refresh_token,
             expiry_date: response.tokens.expiry_date
         };
-        process.env.ACCESS_TOKEN = newToken.access_token;
-        process.env.EXPIRY_DATE = newToken.expiry_date;
+        fs.writeFileSync(TOKEN_PATH, JSON.stringify(newToken));
         console.log('Token refreshed successfully!');
         oAuth2Client.setCredentials(newToken);
     } catch (err) {
@@ -48,19 +53,23 @@ async function refreshToken(oAuth2Client, token) {
     }
 }
 
-async function getNewToken(oAuth2Client, scopes) {
+async function getNewToken(oAuth2Client) {
     const authUrl = oAuth2Client.generateAuthUrl({
         access_type: 'offline',
         prompt: 'consent',
-        scope: scopes
+        scope: SCOPES_SEND
     });
     console.log('Authorize this app by visiting this URL:', authUrl);
     const code = readline.question('Enter the code from the page: ');
     try {
         const { tokens } = await oAuth2Client.getToken(code);
         oAuth2Client.setCredentials(tokens);
-        process.env.ACCESS_TOKEN = tokens.access_token;
-        process.env.EXPIRY_DATE = tokens.expiry_date;
+        const tokenData = {
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token,
+            expiry_date: tokens.expiry_date
+        };
+        fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokenData));
         console.log('Token saved successfully!');
         return oAuth2Client;
     } catch (err) {
@@ -243,5 +252,10 @@ async function sendWelcomeEmail(auth, email) {
     }
 }
  
-  
+async function sendExampleEmail(){
+    const auth = await authorize();
+    const email = 'had4059@gmail.com';
+    sendWelcomeEmail(auth, email);
+}
+
 module.exports = { sendEmail, sendReceiptEmail, sendWelcomeEmail, authorize };

@@ -20,7 +20,7 @@ const EditProductModal = ({ open, onClose, product }) => {
   const [editedProduct, setEditedProduct] = useState({ ...product, additionalImages: product.additionalImages || [] });
   const [imagePreview, setImagePreview] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState(null);
 
   const compressionOptions = {
@@ -59,7 +59,7 @@ const EditProductModal = ({ open, onClose, product }) => {
       const base64Images = await Promise.all(
         compressedImages.map(file => toBase64(file))
       );
-  
+
       setEditedProduct(prev => {
         const updatedImages = [...prev.additionalImages];
         if (type === 'primary') {
@@ -80,13 +80,20 @@ const EditProductModal = ({ open, onClose, product }) => {
 
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);  // מתחילים את העיבוד
+      setIsLoading(true);
       setAlertMessage("מעבד את השינויים, אנא המתן...");
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('לא נמצא טוקן, התחבר מחדש');
+        return;
+      }
       const response = await fetch(`https://scrolls-website.onrender.com/productsApi/updateProductsDetails/${editedProduct._id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editedProduct),
-        credentials: 'include'
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(editedProduct)
       });
 
       const responseData = await response.json();
@@ -99,7 +106,7 @@ const EditProductModal = ({ open, onClose, product }) => {
       console.error('Error updating product:', error);
       alert('שגיאה בעדכון המוצר');
     } finally {
-      setIsLoading(false);  // סיום עיבוד
+      setIsLoading(false);  
       setAlertMessage(null);
     }
   };
@@ -108,7 +115,7 @@ const EditProductModal = ({ open, onClose, product }) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      const result = reader.result.split(',')[1]; 
+      const result = reader.result.split(',')[1];
       resolve(result);
     };
     reader.onerror = error => reject(error);
@@ -124,7 +131,6 @@ const EditProductModal = ({ open, onClose, product }) => {
           </Alert>
         )}
 
-        {/* הצגת עיגול מסתובב רק בזמן שמירה */}
         {isLoading && (
           <Box sx={{
             position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
@@ -180,7 +186,7 @@ const EditProductModal = ({ open, onClose, product }) => {
           onClick={handleSubmit}
           variant="contained"
           color="primary"
-          disabled={isLoading}  // כפתור שמור שינויים יהיה דיסאיבל בזמן שמירה
+          disabled={isLoading}  
         >
           {isLoading ? 'שמור שינויים (בעיבוד)' : 'שמור שינויים'}
         </Button>

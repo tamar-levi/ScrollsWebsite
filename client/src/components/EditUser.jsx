@@ -47,7 +47,9 @@ export default function EditUser() {
 
     try {
       const response = await axios.put('https://scrolls-website.onrender.com/usersApi/updateUserDetails', userData, {
-        withCredentials: true
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}` 
+        }
       });
 
       if (response.data) {

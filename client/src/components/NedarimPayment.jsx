@@ -15,13 +15,16 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [showAddingProductSnackbar, setShowAddingProductSnackbar] = useState(false);
     const [isLoadingUser, setIsLoadingUser] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false); 
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
             try {
                 const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
-                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` 
+                    }
                 });
                 console.log("User response:", response);
                 if (!response.data) throw new Error("No user data received");
@@ -64,13 +67,61 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
         return () => window.removeEventListener("message", handleMessage);
     }, [navigate, onNext]);
 
+    const handleAddProductAndProceed = async () => {
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+        try {
+            const formData = new FormData();
+            formData.append('scriptType', productData.scriptType);
+            formData.append('scrollType', productData.scrollType);
+            formData.append('price', productData.price);
+            formData.append('note', productData.note);
+            formData.append('isPremiumAd', productData.isPremiumAd);
+            formData.append('primaryImage', productData.primaryImage);
+            productData.additionalImages.forEach((image) => {
+                formData.append('additionalImages', image);
+            });
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('לא נמצא טוקן');
+                return;
+            }
+
+            const response = await fetch('https://scrolls-website.onrender.com/productsApi/addProduct', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                console.log('Product added successfully');
+                sendPaymentRequest();
+            } else {
+                console.error('Failed to add product');
+                setOpenErrorSnackbar(true);
+                setDisableButton(false);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setOpenErrorSnackbar(true);
+            setDisableButton(false);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const sendPaymentRequest = () => {
         if (!currentUser || !currentUser.fullName || !currentUser.email) {
             setOpenErrorSnackbar(true);
             setDisableButton(false);
-            setTimeout(() => navigate('/'), 2000);
+            setTimeout(() => navigate('/'), 4000);
             return;
         }
+
         setLoading(true);
         setPaymentInProgress(true);
         setDisableButton(true);
@@ -143,7 +194,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         חזור
                     </Button>
                     <Button
-                        onClick={sendPaymentRequest}
+                        onClick={handleAddProductAndProceed}
                         endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
                         variant="contained"
                         sx={{ marginTop: '16px' }}

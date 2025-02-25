@@ -12,7 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { logoutUser } from '../redux/userSlice';
+import { logout } from '../redux/userSlice';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
@@ -35,7 +35,7 @@ export default function AccountMenu() {
 
   const handleLogout = () => {
     setOpenSnackbar(true);
-    dispatch(logoutUser());
+    dispatch(logout());
     navigate('/');
   };
 

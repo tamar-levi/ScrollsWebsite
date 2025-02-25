@@ -13,9 +13,9 @@ const GoogleAuth = ({ onSuccess }) => {
             try {
                 const serverResponse = await axios.post('https://scrolls-website.onrender.com/usersApi/google-login', {
                     googleToken: response.access_token
-                }, {
-                    withCredentials: true,
                 });
+                const token = serverResponse.data.token;
+                localStorage.setItem('token', token);
                 dispatch(setUser(serverResponse.data.user));
                 navigate('/products');
             } catch (error) {

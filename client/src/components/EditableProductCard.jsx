@@ -20,9 +20,16 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
 
   const handleConfirmDelete = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {  
+        console.error('לא נמצא טוקן, התחבר מחדש'); 
+        return;  
+      }
       const response = await fetch(`https://scrolls-website.onrender.com/productsApi/deleteProduct/${product._id}`, {
-        method: 'DELETE',
-        credentials: 'include'
+        method: 'DELETE', 
+        headers: {
+          'Authorization': `Bearer ${token}`  
+        }
       });
 
       if (response.ok) {

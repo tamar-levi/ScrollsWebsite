@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Alert } from '@mui/material';
+import jwt_decode from 'jwt-decode';
 
 const clearUserData = () => {
   sessionStorage.removeItem('user');
-  sessionStorage.removeItem('persist:root');
+  localStorage.removeItem('token');
   if (window.location.pathname !== '/') {
     window.location.href = '/';
   }
@@ -21,6 +21,7 @@ const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.currentUser = action.payload;
+      sessionStorage.setItem('user', JSON.stringify(action.payload));
     },
 
     updateUser: (state, action) => {
@@ -32,7 +33,6 @@ const userSlice = createSlice({
       state.products = [];
       state.error = null;
       clearUserData();
-
     },
 
     deleteUserProducts: (state) => {
@@ -43,7 +43,7 @@ const userSlice = createSlice({
       state.currentUser = null;
       state.products = [];
       state.error = null;
-      clearUserData();
+      sessionStorage.removeItem('user');
     },
 
     setError: (state, action) => {
@@ -73,36 +73,35 @@ export const {
 
 export default userSlice.reducer;
 
-export const logoutUser = () => async (dispatch) => {
-  try {
-    await axios.post('https://scrolls-website.onrender.com/usersApi/logout', {}, { withCredentials: true });
-    dispatch(logout());
-  } catch (error) {
-    console.error('Logout error:', error);
-    dispatch(logout());
-  }
-};
-
 export const fetchUserData = () => async (dispatch) => {
   try {
+    const user = sessionStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      dispatch(setError('לא נמצא טוקן, התחבר מחדש'));
+      return;
+    }
+
+    const decodedToken = jwt_decode(token);
+    const currentTime = Date.now() / 1000;
+    if (decodedToken.exp < currentTime) {
+      dispatch(setError('פג תוקף הסשן, התחבר מחדש'));
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      return;
+    }
+
     const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+
     dispatch(setUser(response.data));
+    sessionStorage.setItem('user', JSON.stringify(response.data));
+
   } catch (error) {
-    if (error.response?.status === 401 && sessionStorage.getItem('user')) {
-      <Alert
-        severity="error"
-        sx={{
-          direction: 'rtl',
-          '& .MuiAlert-icon': {
-            marginRight: '16px',
-            marginLeft: '16px'
-          }
-        }}
-      >
-        פג תוקף הסשן, התחבר מחדש
-      </Alert>
+    if (error.response?.status === 401) {
       dispatch(setError('פג תוקף הסשן, התחבר מחדש'));
     } else {
       console.error('Error fetching user data:', error);
@@ -110,4 +109,3 @@ export const fetchUserData = () => async (dispatch) => {
     }
   }
 };
-

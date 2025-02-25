@@ -96,7 +96,7 @@ const FilterComponent = ({ onFilter, products }) => {
         setSelectedCity('');
         setSelectedSeller('');
         onFilter({
-            priceRange: [0, 10000], fontType: null, scrollType: null, selectedCity: null, selectedSeller: null
+            priceRange: [0, 100000], fontType: null, scrollType: null, selectedCity: null, selectedSeller: null
         });
         if (isMobile) setIsFilterOpen(false);
     };

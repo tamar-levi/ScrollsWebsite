@@ -24,7 +24,9 @@ const ProductList = () => {
       try {
         const response = await fetch('https://scrolls-website.onrender.com/productsApi/getAllProducts', {
           method: 'GET',
-          credentials: 'include',
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}` 
+          }
         });
         const data = await response.json();
 

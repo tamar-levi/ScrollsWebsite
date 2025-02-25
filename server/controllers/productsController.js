@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('userId'); 
+        const products = await Product.find().populate('userId');
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
-        const allowedUrl = process.env.REACT_URL; 
+        const allowedUrl = process.env.REACT_URL;
 
         if (!referer || !(referer.includes(allowedPort) || referer.includes(allowedUrl))) {
             products.forEach(product => {
@@ -20,7 +20,7 @@ const getAllProducts = async (req, res) => {
         res.json(products);
     } catch (err) {
         console.error('Error fetching products', err);
-        res.status(500).json({ error: 'Database error' }); 
+        res.status(500).json({ error: 'Database error' });
     }
 };
 
@@ -48,7 +48,7 @@ const addProduct = async (req, res) => {
         });
 
         await newProduct.save();
-        res.status(201).json({ message: 'Product created successfully', product: newProduct });
+        res.status(201).json({ message: 'Product created successfully', product: newProduct, productId: newProduct._id });
     } catch (err) {
         console.error('Error adding product', err);
         res.status(500).send('Database error');
