@@ -4,7 +4,7 @@ import { Box, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/m
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Snackbar, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { deleteUser, deleteUserProducts, logoutUser } from '../redux/userSlice';
+import { deleteUser, deleteUserProducts, logout } from '../redux/userSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ export default function UserAccount() {
       });
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
-      dispatch(logoutUser());
+      dispatch(logout());
       navigate('/');
     } catch (err) {
       console.error('Error deleting user:', err);
