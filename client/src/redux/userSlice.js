@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { decode as jwt_decode } from 'jwt-decode';
 
 const clearUserData = () => {
   sessionStorage.removeItem('user');
@@ -76,13 +75,24 @@ export default userSlice.reducer;
 export const logoutUser = () => async (dispatch) => {
   dispatch(logout());
 };
+
+const isTokenExpired = (token) => {
+  if (!token) return true;
+
+  const base64Url = token.split('.')[1]; 
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');  
+  const decodedData = JSON.parse(atob(base64));  
+
+  const currentTime = Date.now() / 1000;  
+  return decodedData.exp < currentTime; 
+};
+
 export const fetchUserData = () => async (dispatch) => {
   try {
     const user = sessionStorage.getItem('user');
     const token = localStorage.getItem('token');
-    const decodedToken = jwt_decode(token);
-    const currentTime = Date.now() / 1000;
-    if (decodedToken.exp < currentTime) {
+
+    if (isTokenExpired(token)) {
       dispatch(setError('פג תוקף הסשן, התחבר מחדש'));
       localStorage.removeItem('token');
       sessionStorage.removeItem('user');
