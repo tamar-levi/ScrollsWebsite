@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+import { decode as jwt_decode } from 'jwt-decode';
 
 const clearUserData = () => {
   sessionStorage.removeItem('user');
