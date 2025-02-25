@@ -73,6 +73,9 @@ export const {
 
 export default userSlice.reducer;
 
+export const logoutUser = () => async (dispatch) => {
+  dispatch(logout());
+};
 export const fetchUserData = () => async (dispatch) => {
   try {
     const user = sessionStorage.getItem('user');
