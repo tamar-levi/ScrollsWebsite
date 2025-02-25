@@ -15,22 +15,24 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [showAddingProductSnackbar, setShowAddingProductSnackbar] = useState(false);
     const [isLoadingUser, setIsLoadingUser] = useState(true);
-    const [isSubmitting, setIsSubmitting] = useState(false); 
     const navigate = useNavigate();
+    const [errorSnackbarMessage, setErrorSnackbarMessage] = useState("");
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
             try {
+                const token = localStorage.getItem('token');
                 const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}` 
-                    }
+                        'Authorization': `Bearer ${token}`
+                    },
                 });
                 console.log("User response:", response);
                 if (!response.data) throw new Error("No user data received");
                 setCurrentUser(response.data);
             } catch (error) {
                 console.error("Error fetching user:", error.response ? error.response.data : error.message);
+                setErrorSnackbarMessage('שגיאה בהבאת פרטי המשתמש');
                 setOpenErrorSnackbar(true);
                 setDisableButton(true);
                 setTimeout(() => navigate('/'), 2000);
@@ -52,7 +54,9 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         setOpenSnackbar(true);
                         setTimeout(() => onNext(), 1000);
                     } else {
+                        const errorMessage = event.data.Value?.Message || "שגיאה בביצוע התשלום";
                         setOpenErrorSnackbar(true);
+                        setErrorSnackbarMessage(errorMessage);
                         setDisableButton(false);
                     }
                     setLoading(false);
@@ -67,61 +71,13 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
         return () => window.removeEventListener("message", handleMessage);
     }, [navigate, onNext]);
 
-    const handleAddProductAndProceed = async () => {
-        if (isSubmitting) return;
-
-        setIsSubmitting(true);
-        try {
-            const formData = new FormData();
-            formData.append('scriptType', productData.scriptType);
-            formData.append('scrollType', productData.scrollType);
-            formData.append('price', productData.price);
-            formData.append('note', productData.note);
-            formData.append('isPremiumAd', productData.isPremiumAd);
-            formData.append('primaryImage', productData.primaryImage);
-            productData.additionalImages.forEach((image) => {
-                formData.append('additionalImages', image);
-            });
-
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('לא נמצא טוקן');
-                return;
-            }
-
-            const response = await fetch('https://scrolls-website.onrender.com/productsApi/addProduct', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                console.log('Product added successfully');
-                sendPaymentRequest();
-            } else {
-                console.error('Failed to add product');
-                setOpenErrorSnackbar(true);
-                setDisableButton(false);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            setOpenErrorSnackbar(true);
-            setDisableButton(false);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
     const sendPaymentRequest = () => {
         if (!currentUser || !currentUser.fullName || !currentUser.email) {
             setOpenErrorSnackbar(true);
             setDisableButton(false);
-            setTimeout(() => navigate('/'), 4000);
+            setTimeout(() => navigate('/'), 2000);
             return;
         }
-
         setLoading(true);
         setPaymentInProgress(true);
         setDisableButton(true);
@@ -194,7 +150,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         חזור
                     </Button>
                     <Button
-                        onClick={handleAddProductAndProceed}
+                        onClick={sendPaymentRequest}
                         endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
                         variant="contained"
                         sx={{ marginTop: '16px' }}
@@ -221,7 +177,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                     <Alert severity="success">תשלום בוצע בהצלחה!</Alert>
                 </Snackbar>
                 <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
-                    <Alert severity="error">שגיאה בהבאת נתוני המשתמש, אנא התחבר מחדש.</Alert>
+                    <Alert severity="error">{errorSnackbarMessage}</Alert>
                 </Snackbar>
             </div>
             <Snackbar

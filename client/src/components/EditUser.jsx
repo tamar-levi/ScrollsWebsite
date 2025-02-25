@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteUser, deleteUserProducts, updateUser, logoutUser } from '../redux/userSlice';
+import { deleteUser, deleteUserProducts, updateUser, logout } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import axios from 'axios';
@@ -48,7 +48,7 @@ export default function EditUser() {
     try {
       const response = await axios.put('https://scrolls-website.onrender.com/usersApi/updateUserDetails', userData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}` 
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
 
@@ -82,12 +82,15 @@ export default function EditUser() {
     }
 
     try {
+      const token = localStorage.getItem('token');
       await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
-        withCredentials: true
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
       });
       dispatch(deleteUserProducts());
       dispatch(deleteUser());
-      dispatch(logoutUser());
+      dispatch(logout());
       navigate('/');
     } catch (err) {
       console.error('Error deleting user:', err);

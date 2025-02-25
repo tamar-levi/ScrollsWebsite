@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles'; 
 import theme from './theme'; 
-import { Box } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { fetchUserData } from './redux/userSlice';
+import { Box, Snackbar, Alert } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserData, clearError } from './redux/userSlice';
 import CreateUser from './components/CreateUser';
 import ProductList from './components/ProductList';
 import NavBar from './components/NavBar';
@@ -18,10 +18,23 @@ import ContactUs from './components/ContactUs';
 
 function App() {
   const dispatch = useDispatch();
+  const error = useSelector((state) => state.user.error);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUserData());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      setOpen(true); 
+    }
+  }, [error]);
+
+  const handleClose = () => {
+    setOpen(false); 
+    dispatch(clearError()); 
+  };
 
   return (
     <ThemeProvider theme={theme}> 
@@ -50,6 +63,15 @@ function App() {
             </Routes>
           </Box>
         </Box>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
       </Router>
     </ThemeProvider>
   );

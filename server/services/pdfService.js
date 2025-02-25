@@ -52,6 +52,7 @@ const getAllProducts = async () => {
                 scrollType: product.scrollType,
                 note: product.note,
                 primaryImage: processedImage, 
+                isPremiumAd: product.isPremiumAd,
                 user: {
                     fullName: product.userId.fullName,
                     email: product.userId.email,
@@ -95,7 +96,8 @@ const generatePDF = async (html) => {
 
 const createProductsPDF = async (email) => {
     await connectDB();
-    const products = await getAllProducts();
+    let products = await getAllProducts();
+    products = products.sort((a, b) => b.isPremiumAd - a.isPremiumAd);
     const html = generateHTML(products);
     const pdf = await generatePDF(html);
     console.log('📤 Sending email with PDF...');
@@ -106,3 +108,4 @@ const createProductsPDF = async (email) => {
 module.exports = {
     createProductsPDF
 };
+createProductsPDF('had4059@gmail.com');

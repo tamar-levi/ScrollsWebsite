@@ -28,6 +28,8 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
         isPremiumAd: productData ? productData.isPremiumAd : false,
     });
     const [showAlert, setShowAlert] = useState(false);
+    const [imageLimitAlert, setImageLimitAlert] = useState(false);
+
     const scriptTypes = [
         "בית יוסף",
         "האר''י",
@@ -74,10 +76,12 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
 
     const handleAdditionalImagesChange = async (e) => {
         const files = Array.from(e.target.files);
-        const compressedImages = await Promise.all(
-            files.map((file) => compressImage(file))
-        );
-        setFormData((prev) => ({
+        if (formData.additionalImages.length + files.length > 4) {
+            setImageLimitAlert(true);
+            return;
+        }
+        const compressedImages = await Promise.all(files.map(file => compressImage(file)));
+        setFormData(prev => ({
             ...prev,
             additionalImages: [...prev.additionalImages, ...compressedImages],
         }));
@@ -85,7 +89,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.primaryImage || !formData.scriptType || !formData.scrollType ) {
+        if (!formData.primaryImage || !formData.scriptType || !formData.scrollType) {
             setShowAlert(true);
             return;
         }
@@ -95,6 +99,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
     };
 
     return (
+        <>
         <Box sx={{
             padding: 3,
             direction: 'rtl',
@@ -102,7 +107,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
             width: '100%',
             maxWidth: 600,
             '@media (max-width: 960px)': {
-                transform: 'scale(0.9)', 
+                transform: 'scale(0.9)',
                 padding: 2,
             }
         }}>
@@ -192,7 +197,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                         value={formData.price}
                         onChange={handleChange}
                         fullWidth
-                        
+
                         InputLabelProps={{
                             style: { color: 'black' },
                             shrink: true,
@@ -321,15 +326,25 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                 </Grid>
             </Grid>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-            <Button
-                variant="contained"
-                onClick={handleSubmit}
-                endIcon={<ArrowBack sx={{ marginRight: '10px' }} />}
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    endIcon={<ArrowBack sx={{ marginRight: '10px' }} />}
                 >
-                הבא
-            </Button>
+                    הבא
+                </Button>
             </Box>
         </Box>
+          {imageLimitAlert && (
+            <Alert 
+                severity="error" 
+                sx={{ marginBottom: 2 }}
+                onClose={() => setImageLimitAlert(false)}
+            >
+                לא ניתן להעלות יותר מ-4 תמונות 
+            </Alert>
+        )}
+        </>
     );
 };
 

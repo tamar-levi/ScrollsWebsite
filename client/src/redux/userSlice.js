@@ -77,11 +77,6 @@ export const fetchUserData = () => async (dispatch) => {
   try {
     const user = sessionStorage.getItem('user');
     const token = localStorage.getItem('token');
-    if (!token) {
-      dispatch(setError('לא נמצא טוקן, התחבר מחדש'));
-      return;
-    }
-
     const decodedToken = jwt_decode(token);
     const currentTime = Date.now() / 1000;
     if (decodedToken.exp < currentTime) {

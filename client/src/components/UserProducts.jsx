@@ -27,6 +27,7 @@ const UserProducts = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+                setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching user products:', error);
             } finally {
@@ -57,7 +58,6 @@ const UserProducts = () => {
     const handleDelete = (productId) => {
         setProducts(prevProducts => prevProducts.filter(p => p._id !== productId));
     };
-
 
     return (
         <>

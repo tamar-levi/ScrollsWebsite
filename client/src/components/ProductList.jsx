@@ -84,9 +84,7 @@ const ProductList = () => {
           <Button
             variant="outlined"
             onClick={() => {
-              if (!navigator.cookieEnabled) {
-                alert('הדפדפן שלך לא תומך בקוקיז, ע"מ להוסיף מגילה עליך לאפשר קוקיז ולהתחבר מחדש');
-              } else if (!user) {
+             if (!user) {
                 setOpenAlert(true);
               } else {
                 navigate('/add-product');

@@ -15,12 +15,17 @@ import Info from './Info';
 import InfoMobile from './InfoMobile';
 import { Link } from 'react-router-dom';
 import NedarimPayment from './NedarimPayment';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 const steps = ['פרטי המוצר', 'תשלום', 'סיום'];
 
 export default function Checkout() {
     const [activeStep, setActiveStep] = useState(0);
     const [productData, setProductData] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const getStepContent = (step) => {
         switch (step) {
@@ -34,7 +39,12 @@ export default function Checkout() {
     }
 
     const handleNext = async () => {
-        if (activeStep <= 2) { setActiveStep((prev) => prev + 1); }
+        if (activeStep === 1) {
+            await addProduct(productData);
+        }
+        else {
+            if (activeStep <= 1) { setActiveStep((prev) => prev + 1); }
+        }
     };
 
     const handleBack = () => {
@@ -43,6 +53,44 @@ export default function Checkout() {
 
     const handleProductData = (data) => {
         setProductData(data);
+    };
+
+    const addProduct = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            const formData = new FormData();
+            formData.append('scriptType', productData.scriptType);
+            formData.append('scrollType', productData.scrollType);
+            formData.append('price', productData.price);
+            formData.append('note', productData.note);
+            formData.append('isPremiumAd', productData.isPremiumAd);
+            formData.append('primaryImage', productData.primaryImage);
+            productData.additionalImages.forEach((image) => {
+                formData.append('additionalImages', image);
+            });
+            const token = localStorage.getItem('token'); 
+            const response = await fetch('https://scrolls-website.onrender.com/productsApi/addProduct', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: formData,
+            });
+            if (response.ok) {
+                console.log('Product added successfully');
+                setActiveStep((prev) => prev + 1);
+            } else {
+                setErrorMessage("שגיאה בהוספת המוצר, אנא פנה למנהל המערכת לזיכוי התשלום. מתנצלים.");
+                setOpenErrorSnackbar(true);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setErrorMessage("שגיאה בהוספת המוצר, אנא פנה למנהל המערכת לזיכוי התשלום. מתנצלים.");
+            setOpenErrorSnackbar(true);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -248,6 +296,23 @@ export default function Checkout() {
                     </Box>
                 </Grid>
             </Grid>
+
+            <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
+                <Alert
+                    severity="error"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center', 
+                        padding: '8px 16px', 
+                        '& .MuiAlert-icon': {
+                            marginRight: 2, 
+                        },
+                        '& .MuiAlert-action': {
+                            marginLeft: 2, 
+                        }
+                    }}
+                >שגיאה בהוספת המוצר, אנא פנה למנהל המערכת לזיכוי התשלום. אנו מתנצלים על אי הנוחות .    </Alert>
+            </Snackbar>
         </>
     );
 }
