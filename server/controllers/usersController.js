@@ -21,7 +21,7 @@ const getAllUsers = async (req, res) => {
 const getCurrentUser = async (req, res) => {
     try {
         const userId = req.user.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select('-password'); 
         if (!user) {
             return res.status(404).send('User not found');
         }

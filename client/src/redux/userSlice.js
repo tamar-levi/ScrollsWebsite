@@ -77,12 +77,10 @@ export const logoutUser = () => async (dispatch) => {
 };
 
 const isTokenExpired = (token) => {
-  if (!token) return true;
-
+  if (!token) return false;
   const base64Url = token.split('.')[1]; 
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');  
   const decodedData = JSON.parse(atob(base64));  
-
   const currentTime = Date.now() / 1000;  
   return decodedData.exp < currentTime; 
 };
