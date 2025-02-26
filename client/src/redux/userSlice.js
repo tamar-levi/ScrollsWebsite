@@ -42,7 +42,7 @@ const userSlice = createSlice({
       state.currentUser = null;
       state.products = [];
       state.error = null;
-      sessionStorage.removeItem('user');
+      clearUserData();  
     },
 
     setError: (state, action) => {
@@ -111,7 +111,6 @@ export const fetchUserData = () => async (dispatch) => {
       dispatch(setError('פג תוקף הסשן, התחבר מחדש'));
     } else {
       console.error('Error fetching user data:', error);
-      dispatch(setError('לא הצלחנו למצוא את המשתמש'));
     }
   }
 };
