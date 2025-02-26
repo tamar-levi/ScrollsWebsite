@@ -108,4 +108,3 @@ const createProductsPDF = async (email) => {
 module.exports = {
     createProductsPDF
 };
-createProductsPDF('had4059@gmail.com');
