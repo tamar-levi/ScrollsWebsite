@@ -16,13 +16,32 @@ const getAllProducts = async (req, res) => {
                 product.additionalImages = product.additionalImages.map(img => img.slice(0, 50));
             });
         }
-
+        products.forEach(product => {
+            delete product.additionalImages;
+        });
         res.json(products);
     } catch (err) {
         console.error('Error fetching products', err);
         res.status(500).json({ error: 'Database error' });
     }
 };
+
+const getProductAdditionalImages = async (req, res) => {
+    try {
+        const productId = req.params.id;      
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.json({
+            additionalImages: product.additionalImages || []  
+        });
+    } catch (err) {
+        console.error('Error fetching additional images', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+};
+
 
 const addProduct = async (req, res) => {
     try {
@@ -164,4 +183,4 @@ const addProductFromForm = async (req, res) => {
     }
 };
 
-module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm };
+module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm, getProductAdditionalImages };
