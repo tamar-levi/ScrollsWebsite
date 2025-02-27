@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography } from '@mui/material';
 import ImageSlider from './ImageSlider';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,23 +10,6 @@ import SellerDetailsModal from './SellerDetailsModal';
 
 const ProductModal = ({ product, onClose }) => {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
-  const [additionalImages, setAdditionalImages] = useState([]);
-  useEffect(() => {
-    const fetchAdditionalImages = async () => {
-      try {
-        const response = await fetch(`https://scrolls-website.onrender.com/productsApi/getProductAdditionalImages/${product._id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch additional images');
-        }
-        const data = await response.json();
-        setAdditionalImages(data.additionalImages || []);
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    fetchAdditionalImages();
-  }, [product._id]);
-
   const buttonStyle = {
     border: '1px solid #1976d2',
     color: '#1976d2',
@@ -60,7 +43,7 @@ const ProductModal = ({ product, onClose }) => {
         </DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} sx={{ textAlign: 'right' }}>
-            <ImageSlider images={[product.primaryImage, additionalImages]} />
+            <ImageSlider images={[product.primaryImage, ...product.additionalImages]} />
             <Typography variant="body2" fontWeight="bold" sx={{ textAlign: 'center', marginBottom: '5px', marginTop: '10px' }}>
               ניתן ללחוץ על התמונה ע"מ להציג אותה בגודל מלא
             </Typography>

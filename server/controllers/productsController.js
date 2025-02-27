@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find({}, { additionalImages: 0 }).populate('userId').lean();
+        const products = await Product.find().populate('userId').lean();
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
