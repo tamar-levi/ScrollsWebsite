@@ -30,7 +30,7 @@ const processImage = async (file) => {
 };
 
 router.get('/getAllProducts', productsController.getAllProducts);
-router.get('/getProductAdditionalImages', productsController.getProductAdditionalImages);
+router.get('/getProductAdditionalImages/:id', productsController.getProductAdditionalImages);
 router.get('/getAllProductsByUser', authenticateToken, productsController.getAllProductsByUser);
 router.post('/addProduct', authenticateToken, upload.fields([
     { name: 'primaryImage', maxCount: 1 },

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('userId').lean();
+        const products = await Product.find({}, { additionalImages: 0 }).populate('userId').lean();
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
@@ -16,9 +16,6 @@ const getAllProducts = async (req, res) => {
                 product.additionalImages = product.additionalImages.map(img => img.slice(0, 50));
             });
         }
-        products.forEach(product => {
-            delete product.additionalImages;
-        });
         res.json(products);
     } catch (err) {
         console.error('Error fetching products', err);
@@ -28,13 +25,13 @@ const getAllProducts = async (req, res) => {
 
 const getProductAdditionalImages = async (req, res) => {
     try {
-        const productId = req.params.id;      
+        const productId = req.params.id; 
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });
         }
         res.json({
-            additionalImages: product.additionalImages || []  
+            additionalImages: product.additionalImages || [] 
         });
     } catch (err) {
         console.error('Error fetching additional images', err);
