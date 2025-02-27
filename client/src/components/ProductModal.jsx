@@ -24,10 +24,8 @@ const ProductModal = ({ product, onClose }) => {
         const data = await response.json();
         setAdditionalImages(data.additionalImages || []); 
       } catch (err) {
-        setError(err.message); 
-      } finally {
-        setLoading(false); 
-      }
+        console.log(err.message); 
+      } 
     };
 
     fetchAdditionalImages();
