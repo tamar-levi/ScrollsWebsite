@@ -7,7 +7,7 @@ const userRouter = require('./routes/users');
 const productRouter = require('./routes/products');
 const emailRouter = require('./routes/email');
 const paymentRouter = require('./routes/paymentRoutes');
-require('./gmail-listener');
+// require('./gmail-listener');
 
 const corsOptions = {
   origin: process.env.REACT_URL,
