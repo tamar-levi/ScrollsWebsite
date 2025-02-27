@@ -7,6 +7,7 @@ const userRouter = require('./routes/users');
 const productRouter = require('./routes/products');
 const emailRouter = require('./routes/email');
 const paymentRouter = require('./routes/paymentRoutes');
+const compression = require('compression');
 // require('./gmail-listener');
 
 const corsOptions = {
@@ -14,7 +15,7 @@ const corsOptions = {
   credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 };
-
+app.use(compression());
 app.use(cors(corsOptions));
 
 app.use(express.json({ limit: '50mb' }));

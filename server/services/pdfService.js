@@ -8,6 +8,8 @@ require('dotenv').config();
 const { sendEmail, authorize } = require('./emailService');
 const path = require('path');
 const sharp = require("sharp");
+const api_key = 'sk_ccc7601203466efc85b20a8b1e77a92c46c02341';
+const { minify } = require('html-minifier');
 
 const connectDB = async () => {
     try {
@@ -24,14 +26,29 @@ const connectDB = async () => {
 
 const processImage = async (imageBase64) => {
     try {
+        // המרת ה-B64 לבופר
         const imageBuffer = Buffer.from(imageBase64, "base64");
 
+        // קבלת מידע על התמונה (כדי להחליט על איכות דינמית)
+        const metadata = await sharp(imageBuffer).metadata();
+
+        // קביעת איכות דינמית על פי גודל התמונה
+        let quality = 80;  // ברירת מחדל
+        if (metadata.size > 1000000) { // אם התמונה מעל 1MB
+            quality = 60;  // איכות נמוכה יותר
+        } else if (metadata.size > 500000) { // אם התמונה בין 500KB ל-1MB
+            quality = 70;  // איכות בינונית
+        }
+
+        // כיווץ התמונה לפי פורמט WebP או JPEG (על פי גודל התמונה)
         const resizedImage = await sharp(imageBuffer)
-            .resize({ width: 300 })
-            .toFormat("webp", { quality: 80 })
+            .resize({ width: 300 })  // גודל יעד ברוחב 300 (אתה יכול לשנות זאת)
+            .webp({ quality: quality })  // שימוש ב-WebP עם האיכות שנבחרה
             .toBuffer();
 
+        // החזרת התמונה המכווצת כ-B64
         return `data:image/webp;base64,${resizedImage.toString("base64")}`;
+        
     } catch (err) {
         console.error("❌ Error processing image", err);
         return null;
@@ -62,7 +79,7 @@ const getAllProducts = async () => {
             };
         }));
     } catch (err) {
-        console.error("Error fetching products", err);
+        console.error("Error fetching products");
         return [];
     }
 };
@@ -75,24 +92,38 @@ const generateHTML = (products) => {
 };
 
 const generatePDF = async (html) => {
-    console.log("HTML size:", html.length);
+    const minifiedHTML = minify(html, {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+    });
+    console.log("Minified HTML size:", minifiedHTML.length);
+    console.log("Minified HTML size in bytes:", Buffer.byteLength(minifiedHTML, 'utf8'));
     try {
-        const response = await axios.post("https://api.pdfshift.io/v3/convert/pdf", {
-            source: html,
-        }, {
-            username: 'api', password: "sk_e3f8be6892a7bc6198947058a42813d7739550c9",
-            responseType: "arraybuffer",
+        const response = await axios.post('https://api.pdfshift.io/v3/convert/pdf', {
+            source: minifiedHTML,
+            auth: {
+                username: 'api',
+                password: api_key
+            },
+            responseType: 'arraybuffer',
         });
 
         const filePath = path.join(__dirname, 'products.pdf');
         fs.writeFileSync(filePath, response.data);
         console.log("📄 PDF created successfully!");
+
+        // קבלת גודל הקובץ שנשמר
+        const stats = fs.statSync(filePath);
+        console.log("File size:", stats.size, "bytes"); // יראה את הגודל בבייטים
+
         return filePath;
     } catch (err) {
-        console.error("❌ Error creating PDF", err);
-        throw err;
+        console.error("❌ Error creating PDF");
     }
 };
+
 
 const createProductsPDF = async (email) => {
     await connectDB();
@@ -104,6 +135,7 @@ const createProductsPDF = async (email) => {
     const auth = await authorize();
     await sendEmail(auth, email, pdf);
 };
+
 
 module.exports = {
     createProductsPDF
