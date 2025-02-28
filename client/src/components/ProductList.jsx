@@ -30,10 +30,7 @@ const ProductList = () => {
         });
         const data = await response.json();
 
-        const filteredData = data.filter(product => {
-          const fullName = product.userId?.fullName?.trim().toLowerCase();
-          return !fullName.includes('rachel chadad');
-        });
+        const filteredData = data;
         setProducts(filteredData);
         setFilteredProducts(filteredData);
         setLoading(false);
