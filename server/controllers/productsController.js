@@ -4,13 +4,14 @@ const mongoose = require('mongoose');
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('userId').lean();
+        const products = await Product.find({}, '-primaryImage -additionalImages')
+        .populate('userId')
+        .lean();        
         const referer = req.get('Referer');
         const origin = req.get('Origin');
         const allowedPort = process.env.PORT || 3000;
-        const allowedUrl = process.env.REACT_URL;
 
-        if (!referer || !(referer.includes(allowedPort) || referer.includes(allowedUrl))) {
+        if (!referer || !referer.includes(allowedPort)) {
             products.forEach(product => {
                 product.primaryImage = product.primaryImage.slice(0, 50);
                 product.additionalImages = product.additionalImages.map(img => img.slice(0, 50));
@@ -19,26 +20,37 @@ const getAllProducts = async (req, res) => {
         res.json(products);
     } catch (err) {
         console.error('Error fetching products', err);
-        res.status(500).json({ error: 'Database error' });
+        res.status(500).json({ error: 'Database error' }); 
     }
 };
 
 const getProductAdditionalImages = async (req, res) => {
     try {
         const productId = req.params.id; 
-        const product = await Product.findById(productId);
+        const product = await Product.findById(productId, 'additionalImages').lean();
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });
         }
-        res.json({
-            additionalImages: product.additionalImages || [] 
-        });
+        res.json({ additionalImages: product.additionalImages || [] });
     } catch (err) {
         console.error('Error fetching additional images', err);
         res.status(500).json({ error: 'Database error' });
     }
 };
 
+const getProductPrimaryImage = async (req, res) => {
+    try {
+        const productId = req.params.id; 
+        const product = await Product.findById(productId, 'primaryImage').lean();
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.json({ primaryImage: product.primaryImage });
+    } catch (err) {
+        console.error('Error fetching primary image', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+};
 
 const addProduct = async (req, res) => {
     try {
@@ -180,4 +192,4 @@ const addProductFromForm = async (req, res) => {
     }
 };
 
-module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm, getProductAdditionalImages };
+module.exports = { getAllProducts, addProduct, updateProductsDetails, getAllProductsByUser, deleteProduct, addProductFromForm, getProductAdditionalImages, getProductPrimaryImage };

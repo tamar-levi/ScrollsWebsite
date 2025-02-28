@@ -25,12 +25,13 @@ const processImage = async (file) => {
             fit: 'inside',
             withoutEnlargement: true
         })
-        .jpeg({ quality: 80 })
+        .jpeg({ quality: 70 })
         .toBuffer();
 };
 
 router.get('/getAllProducts', productsController.getAllProducts);
 router.get('/getProductAdditionalImages/:id', productsController.getProductAdditionalImages);
+router.get('/getProductPrimaryImage/:id', productsController.getProductPrimaryImage);
 router.get('/getAllProductsByUser', authenticateToken, productsController.getAllProductsByUser);
 router.post('/addProduct', authenticateToken, upload.fields([
     { name: 'primaryImage', maxCount: 1 },

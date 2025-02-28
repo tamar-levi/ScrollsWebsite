@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography } from '@mui/material';
 import ImageSlider from './ImageSlider';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,6 +10,9 @@ import SellerDetailsModal from './SellerDetailsModal';
 
 const ProductModal = ({ product, onClose }) => {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const buttonStyle = {
     border: '1px solid #1976d2',
     color: '#1976d2',
@@ -35,6 +38,40 @@ const ProductModal = ({ product, onClose }) => {
     setIsSellerModalOpen(false);
   };
 
+  useEffect(() => {
+    if (!product?._id) return;
+
+    const fetchImages = async () => {
+      try {
+        setLoading(true);
+
+        const [primaryImageResponse, additionalImagesResponse] = await Promise.all([
+          fetch(`https://scrolls-website.onrender.com/productsApi/getProductPrimaryImage/${product._id}`),
+          fetch(`https://scrolls-website.onrender.com/productsApi/getProductAdditionalImages/${product._id}`)
+        ]);
+
+        if (!primaryImageResponse.ok || !additionalImagesResponse.ok) {
+          throw new Error('Failed to fetch images');
+        }
+
+        const primaryImageData = await primaryImageResponse.json();
+        const additionalImagesData = await additionalImagesResponse.json();
+
+        const allImages = [
+          primaryImageData.primaryImage,
+          ...additionalImagesData.additionalImages,
+        ];
+        setImages(allImages);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, [product._id]);
+
   return (
     <>
       <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth dir="rtl">
@@ -43,7 +80,11 @@ const ProductModal = ({ product, onClose }) => {
         </DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} sx={{ textAlign: 'right' }}>
-            <ImageSlider images={[product.primaryImage, ...product.additionalImages]} />
+            {loading ? (
+              <Typography variant="body2" color="textSecondary">טוען תמונות...</Typography>
+            ) : (
+              <ImageSlider images={images} />
+            )}
             <Typography variant="body2" fontWeight="bold" sx={{ textAlign: 'center', marginBottom: '5px', marginTop: '10px' }}>
               ניתן ללחוץ על התמונה ע"מ להציג אותה בגודל מלא
             </Typography>

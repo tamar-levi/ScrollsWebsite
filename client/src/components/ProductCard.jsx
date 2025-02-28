@@ -35,19 +35,9 @@ const ProductCard = ({ product, onOpenModal }) => {
         flexDirection: 'column',
         mx: 'auto',
         direction: 'rtl',
-        boxShadow: product.isPremiumAd ? '0 0 3px 3px rgb(101, 136, 186)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
+        border: product.isPremiumAd ? '2px solid #1976d2' : 'none'
       }}
     >
-      <Box
-        component="img"
-        src={`data:image/jpeg;base64,${product.primaryImage}`}
-        alt={product.scriptType}
-        sx={{
-          width: '100%',
-          height: { xs: '180px', sm: '220px' },
-          objectFit: 'cover',
-        }}
-      />
       <CardContent
         sx={{
           p: 3,
@@ -87,7 +77,7 @@ const ProductCard = ({ product, onOpenModal }) => {
           fullWidth
           sx={{ mt: 1 }}
         >
-          פרטים נוספים
+          תמונות ופרטים נוספים
         </Button>
       </CardContent>
     </Card>
