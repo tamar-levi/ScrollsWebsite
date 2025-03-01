@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const readline = require('readline-sync');
 const { simpleParser } = require('mailparser');
-const { createProductsPDF } = require('./services/pdfService');
+const { sendPDFEmail } = require('./services/pdfService');
 const fs = require('fs');
 const path = require('path');
 const SCOPES_SEND = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify'];
@@ -122,7 +122,7 @@ async function getMessageDetails(gmail, messageId) {
 
         if (subject && subject.toLowerCase().includes('קטלוג')) {
             console.log('🔔 Catalog email detected! Generating PDF...');
-            await createProductsPDF(from);
+            await sendPDFEmail(from);
             await gmail.users.messages.modify({
                 userId: 'me',
                 id: messageId,
@@ -141,7 +141,7 @@ async function getMessageDetails(gmail, messageId) {
 async function startListening() {
     const auth = await authorize();
     console.log('✅ Listening for new emails...');
-    setInterval(() => listMessages(auth), 180 * 1000);
+    setInterval(() => listMessages(auth), 300 * 1000);
 }
 
 startListening();
