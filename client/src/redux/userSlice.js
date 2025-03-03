@@ -97,7 +97,7 @@ export const fetchUserData = () => async (dispatch) => {
       return;
     }
 
-    const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
+    const response = await axios.get('http://localhost:5000/usersApi/getCurrentUser', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

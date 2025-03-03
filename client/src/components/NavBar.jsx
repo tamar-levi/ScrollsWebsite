@@ -10,71 +10,52 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import ContactUs from './ContactUs';
-import { Bold } from 'lucide-react';
+import logo from '../assets/Logo.png';
+
 export default function NavBar() {
   const theme = useTheme();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.currentUser);
   const [openContact, setOpenContact] = useState(false);
   const isLoggedIn = Boolean(user);
- 
+
   const buttonStyles = {
-    color: theme.palette.primary.main,
-    fontFamily: 'Rubik, sans-serif',
+    color: 'rgb(90, 59, 65)',
     fontSize: {
-      xs: '0.8rem',
-      sm: '0.9rem',
-      md: '1rem',
+      xs: '1rem',
+      sm: '1.1rem',
+      md: '1.2rem',
     },
     whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: 'transparent',
-      borderBottom: `2px solid ${theme.palette.primary.main}`
-    }
+    fontFamily: "'Heebo', sans-serif"
   };
 
   return (
     <>
-    <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
-      <Toolbar>
-        <AccountMenu isLoggedIn={isLoggedIn} />
-        <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.4, sm: 3, md: 3 } }}>
-          <Button sx={buttonStyles} onClick={() => setOpenContact(true)}>
-            צור קשר
-          </Button>
-          <Button sx={buttonStyles} component={Link} to="/about">
-            אודות
-          </Button>
-          <Button sx={buttonStyles} component={Link} to="/products">
-            מגילות
-          </Button>
-          <Button sx={buttonStyles} component={Link} to="/">
-            בית
-          </Button>
-          <Typography
-            variant="h6"
-            sx={{
-              color: '#1C1C1C',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 550,
-              fontSize: {
-                xs: '0.8rem',
-                sm: '1rem',
-                md: '1.25rem',
-              },
-              textAlign: 'center',
-              width: '100%',
-              whiteSpace: 'pre-wrap',
-              lineHeight: 1.2
-            }}
-          >
-           לוח המגילות והסת"ם
-          </Typography>
-        </Box>
-      </Toolbar>
-    </AppBar>
-    <ContactUs open={openContact} onClose={() => setOpenContact(false)} />
-</>
+      <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
+        <Toolbar sx={{ minHeight: '100px' }}>
+          <AccountMenu isLoggedIn={isLoggedIn} />
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 2, md: 3 } }}>
+            <Button sx={buttonStyles} onClick={() => setOpenContact(true)}>
+              צור קשר
+            </Button>
+            <Button sx={buttonStyles} component={Link} to="/about">
+              אודות
+            </Button>
+            <Button sx={buttonStyles} component={Link} to="/products">
+              מגילות
+            </Button>
+            <Button sx={buttonStyles} component={Link} to="/">
+              בית
+            </Button>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <img src={logo} alt="Logo" style={{ height: '50px', width: 'auto', paddingRight: '100px', paddingLeft: '20px' }} />
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <ContactUs open={openContact} onClose={() => setOpenContact(false)} />
+    </>
   );
 }

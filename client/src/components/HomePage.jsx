@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import LoginDialog from './LoginDialog';
-import background from '../assets/Background.jpg';
+import { Typography } from '@mui/material';
+import background from '../assets/Bac.png';
 const HomePage = () => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto"; 
+      document.body.style.overflow = "auto";
     };
   }, []);
 
   const [openLogin, setOpenLogin] = useState(false);
 
   const handleOpenLogin = () => {
-      setOpenLogin(true); 
+    setOpenLogin(true);
   };
 
   const handleCloseLogin = () => {
@@ -45,9 +46,9 @@ const HomePage = () => {
       <div
         style={{
           position: "absolute",
-          right: "max(10px, 10%)", 
-          bottom: "25%",
-          fontFamily: "'Rubik', sans-serif",
+          right: "max(10px, 7%)",
+          bottom: "30%",
+          fontFamily: "'Heebo', sans-serif",
           color: "#212121",
           display: "flex",
           flexDirection: "column",
@@ -58,9 +59,22 @@ const HomePage = () => {
         }}
       >
         <div>
-          <div style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", fontWeight: "bold" }}>לוח</div>
-          <div style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: "600" }}>המגילות</div>
-          <div style={{ fontSize: "clamp(2rem, 4vw, 4rem)", fontWeight: "500" }}>והסת"ם</div>
+          <div style={{ fontSize: "clamp(3rem, 5vw, 4.1rem)", fontWeight: "bold", color: "#7A5950" }}>
+            לוח המגילות
+          </div>
+          <div style={{ color: "#5A3B41", fontSize: '2rem', fontWeight: "bold" }}>
+            <span>המקום למגילה משלך </span>
+            <span style={{ fontWeight: "bold" }}>בקלות</span>
+          </div>
+          <div style={{ color: "#5A3B41", fontSize: '1.3rem' }}>
+            <span>בלוח המגילות תמצאו בקלות ובנוחות</span>
+            <br>
+            </br>
+            <span>מגילות אסתר כלבבכם</span>
+            <br>
+            </br>
+            <span>באיכות ובהידור שאתם מחפשים</span>
+          </div>
         </div>
         <Button
           variant="contained"
@@ -73,7 +87,7 @@ const HomePage = () => {
             marginRight: "-25%",
             width: "max-content",
             fontFamily: "'Rubik', sans-serif",
-            fontSize: "1rem", 
+            fontSize: "1rem",
             lineHeight: "normal",
             minHeight: "unset",
           }}

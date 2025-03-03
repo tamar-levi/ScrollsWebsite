@@ -87,7 +87,7 @@ const EditProductModal = ({ open, onClose, product }) => {
         console.error('לא נמצא טוקן, התחבר מחדש');
         return;
       }
-      const response = await fetch(`https://scrolls-website.onrender.com/productsApi/updateProductsDetails/${editedProduct._id}`, {
+      const response = await fetch(`http://localhost:5000/productsApi/updateProductsDetails/${editedProduct._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

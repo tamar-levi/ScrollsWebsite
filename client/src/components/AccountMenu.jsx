@@ -15,6 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../redux/userSlice';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -48,10 +49,12 @@ export default function AccountMenu() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
+      <Box sx={{ display: 'flex', marginLeft: '50px', justifyContent: 'flex-start' }}>
         <Tooltip title={user?.fullName || 'אורח'}>
-          <IconButton onClick={handleClick}>
-            <Avatar sx={{ bgcolor: 'primary.main' }}>{firstLetter}</Avatar>
+          <IconButton onClick={handleClick} >
+            <Avatar sx={{ bgcolor: 'transparent', color: '#47515A' }}>
+            <PersonOutlineIcon sx={{ fontSize: 40 }} />
+            </Avatar>
           </IconButton>
         </Tooltip>
         <Menu
@@ -70,7 +73,7 @@ export default function AccountMenu() {
           }}
         >
           <Box sx={{ mb: 2, textAlign: 'center' }}>
-            <Avatar sx={{ width: 60, height: 60, margin: '0 auto', bgcolor: 'primary.main' }}>
+            <Avatar sx={{ width: 60, height: 60, margin: '0 auto', bgcolor: 'rgb(90, 59, 65)' }}>
               {firstLetter}
             </Avatar>
             <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>

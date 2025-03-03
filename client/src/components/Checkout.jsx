@@ -70,7 +70,7 @@ export default function Checkout() {
                 formData.append('additionalImages', image);
             });
             const token = localStorage.getItem('token'); 
-            const response = await fetch('https://scrolls-website.onrender.com/productsApi/addProduct', {
+            const response = await fetch('http://localhost:5000/productsApi/addProduct', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}` 

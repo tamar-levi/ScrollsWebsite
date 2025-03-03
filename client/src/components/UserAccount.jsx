@@ -36,7 +36,7 @@ export default function UserAccount() {
         console.error('Token not found');
         return;
       }
-      await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
+      await axios.delete('http://localhost:5000/usersApi/deleteUser', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

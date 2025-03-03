@@ -25,7 +25,7 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
         console.error('לא נמצא טוקן, התחבר מחדש'); 
         return;  
       }
-      const response = await fetch(`https://scrolls-website.onrender.com/productsApi/deleteProduct/${product._id}`, {
+      const response = await fetch(`http://localhost:5000/productsApi/deleteProduct/${product._id}`, {
         method: 'DELETE', 
         headers: {
           'Authorization': `Bearer ${token}`  

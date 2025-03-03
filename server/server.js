@@ -8,10 +8,10 @@ const productRouter = require('./routes/products');
 const emailRouter = require('./routes/email');
 const paymentRouter = require('./routes/paymentRoutes');
 const compression = require('compression');
-require('./gmail-listener');
+// require('./gmail-listener');
 
 const corsOptions = {
-  origin: process.env.REACT_URL,
+  origin: 'http://localhost:3001',
   credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 };

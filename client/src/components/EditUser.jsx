@@ -46,7 +46,7 @@ export default function EditUser() {
     }
 
     try {
-      const response = await axios.put('https://scrolls-website.onrender.com/usersApi/updateUserDetails', userData, {
+      const response = await axios.put('http://localhost:5000/usersApi/updateUserDetails', userData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -83,7 +83,7 @@ export default function EditUser() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete('https://scrolls-website.onrender.com/usersApi/deleteUser', {
+      await axios.delete('http://localhost:5000/usersApi/deleteUser', {
         headers: {
           'Authorization': `Bearer ${token}`
         },

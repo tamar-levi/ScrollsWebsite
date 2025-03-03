@@ -43,7 +43,7 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
     const fetchSellerDetails = useCallback(async () => {
         if (!sellerId) return;
         try {
-            const response = await fetch(`https://scrolls-website.onrender.com/usersApi/getUserById/${sellerId}`, {
+            const response = await fetch(`http://localhost:5000/usersApi/getUserById/${sellerId}`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}` 
