@@ -39,19 +39,20 @@ function isTokenExpired(token) {
 
 async function refreshToken(oAuth2Client, token) {
     try {
-        const response = await oAuth2Client.refreshToken(token.refresh_token);
+        const { credentials } = await oAuth2Client.refreshAccessToken();
         const newToken = {
-            access_token: response.tokens.access_token,
+            access_token: credentials.access_token,
             refresh_token: token.refresh_token,
-            expiry_date: response.tokens.expiry_date
+            expiry_date: credentials.expiry_date
         };
         fs.writeFileSync(TOKEN_PATH, JSON.stringify(newToken));
-        console.log('Token refreshed successfully!');
+        console.log('✅ Token refreshed successfully!');
         oAuth2Client.setCredentials(newToken);
     } catch (err) {
-        console.error('Error refreshing token:', err);
+        console.error('❌ Error refreshing token:', err);
     }
 }
+
 
 async function getNewToken(oAuth2Client) {
     const authUrl = oAuth2Client.generateAuthUrl({
@@ -73,7 +74,7 @@ async function getNewToken(oAuth2Client) {
         console.log('Token saved successfully!');
         return oAuth2Client;
     } catch (err) {
-        throw new Error('Error retrieving access token: ' + err);
+        throw new Error('Error retrieving access token: ' + err.message);
     }
 }
 
