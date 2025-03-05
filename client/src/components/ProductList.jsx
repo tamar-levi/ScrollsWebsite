@@ -53,8 +53,7 @@ const ProductList = () => {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
-        width: '100%',
-        padding: 4,
+        width: '103.2%',
       }}
     >
       <Box sx={{
@@ -81,20 +80,26 @@ const ProductList = () => {
             }}
             startIcon={<AddIcon />}
             sx={{
-              position: 'absolute',
-              width: '310px',
-              height: '45px',
-              left: 'calc(50% - 580px/2)',
-              top: '90px',
+              width: '300px',
+              height: '35px',
               borderRadius: '50px',
               backgroundColor: '#E6DBC9',
-              color: '#5A3B41',  
-              fontWeight: 'bold',
+              color: '#5A3B41',
+              border: 'none',
+              fontSize: '120%',
+              fontFamily: 'Heebo, sans-serif',
+              marginTop: '20px', 
+              marginBottom: '20px', 
+              display: 'flex',
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              position: 'relative',
+              zIndex: 1, 
+              padding: '0', 
             }}
           >
             פרסום המגילה שלך
           </Button>
-
           <Snackbar
             open={openAlert}
             autoHideDuration={6000}
@@ -121,7 +126,7 @@ const ProductList = () => {
           <Box sx={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 2,
+            gap: 3,
             maxWidth: '100%',
             width: '100%',
             marginLeft: 'auto',
@@ -137,10 +142,10 @@ const ProductList = () => {
             {[...filteredProducts]
               .sort((a, b) => (b.isPremiumAd ? 1 : 0) - (a.isPremiumAd ? 1 : 0))
               .map((product) => (
-                <ProductCard 
-                  key={product._id} 
-                  product={product} 
-                  onOpenModal={() => setSelectedProduct(product)} 
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onOpenModal={() => setSelectedProduct(product)}
                 />
               ))}
           </Box>

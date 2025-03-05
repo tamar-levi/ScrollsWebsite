@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardContent, Button, Typography, Box, CardMedia } from '@mui/material';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
@@ -18,6 +17,8 @@ const ProductCard = ({ product, onOpenModal }) => {
     textAlign: 'right',
     transition: 'all 0.3s ease',
     color: product.isPremiumAd ? '#E6DBC9' : 'white',
+    fontFamily: 'Heebo, sans-serif',
+    fontWeight: 200,
   };
 
   const iconStyle = {
@@ -29,7 +30,7 @@ const ProductCard = ({ product, onOpenModal }) => {
   return (
     <Card
       sx={{
-        width: { xs: '100%', sm: '320px' },
+        width: { xs: '100%', sm: '300px' },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         borderRadius: '16px',
         overflow: 'hidden',
@@ -39,44 +40,48 @@ const ProductCard = ({ product, onOpenModal }) => {
         direction: 'rtl',
         backgroundColor: product.isPremiumAd ? '#5A3B41' : '#3F414E',
         color: 'white',
-        height: '430px', // הכרטיס ארוך יותר
+        height: '500px',
       }}
     >
-      <CardMedia
+      <Box
         component="img"
-        height="150"
-        image={cardImage}
-        alt="תמונת כרטיס"
+        src={cardImage}
+        alt={product.scriptType}
+        sx={{
+          width: '100%',
+          height: { xs: '180px', sm: '220px' },
+          objectFit: 'cover',
+        }}
       />
       <CardContent
         sx={{
           p: 3,
           display: 'flex',
           flexDirection: 'column',
-          gap: 1.1,
+          gap: 1.15,
           backgroundColor: 'inherit',
           position: 'relative',
         }}
       >
         <Typography sx={typographyStyle}>
           <PersonOutlineIcon sx={iconStyle} />
-          <strong>שם הסופר:</strong> {product.userId.displayName || product.userId.fullName}
+          <span style={{ fontWeight: 600 }}>שם הסופר:</span> {product.userId.displayName || product.userId.fullName}
         </Typography>
         <Typography sx={typographyStyle}>
           <ArticleOutlinedIcon sx={iconStyle} />
-          <strong>סוג המגילה:</strong> {product.scrollType}
+          <span style={{ fontWeight: 600 }}>סוג המגילה:</span> {product.scrollType}
         </Typography>
         <Typography sx={typographyStyle}>
           <DriveFileRenameOutlineIcon sx={iconStyle} />
-          <strong>סוג הכתב:</strong> {product.scriptType}
+          <span style={{ fontWeight: 600 }}>סוג הכתב:</span> {product.scriptType}
         </Typography>
         <Typography sx={typographyStyle}>
           <SellOutlinedIcon sx={iconStyle} />
-          <strong>מחיר:</strong> {product.price ? `${product.price} ₪` : 'לא צוין'}
+          <span style={{ fontWeight: 600 }}>מחיר:</span> {product.price ? `${product.price} ₪` : 'לא צוין'}
         </Typography>
         <Typography sx={typographyStyle}>
           <LocationCityOutlinedIcon sx={iconStyle} />
-          <strong>עיר:</strong> {product.userId.city || 'לא צוין'}
+          <span style={{ fontWeight: 600 }}>עיר:</span> {product.userId.city || 'לא צוין'}
         </Typography>
         <Button
           onClick={() => onOpenModal(product)}

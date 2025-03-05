@@ -29,7 +29,7 @@ const FilterComponent = ({ onFilter, products }) => {
         setSellers(sellerNames);
     }, [products]);
 
-    useEffect(()=> {
+    useEffect(() => {
         const cityNames = products.reduce((uniqueCities, product) => {
             const cityName = product.userId.city;
             if (!uniqueCities.includes(cityName)) {
@@ -128,23 +128,23 @@ const FilterComponent = ({ onFilter, products }) => {
                 style={{
                     width: '260px',
                     padding: '20px',
-                    borderRadius: '12px',
+                    borderRadius: '40px 0 0 40px',
                     backgroundColor: '#E6DBC9',
                     boxShadow: '2px 4px 12px rgba(0,0,0,0.15)',
                     position: 'fixed',
-                    top: '68px',
+                    top: '60px',
                     right: isMobile ? (isFilterOpen ? '0' : '-300px') : '0',
-                    height: 'calc(100vh - 68px)',
+                    height: 'calc(100vh - 100px)',
                     textAlign: 'right',
                     direction: 'rtl',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    justifyContent: 'flex-start',
                     gap: '16px',
                     zIndex: 1000,
                     transition: 'right 0.3s ease-in-out',
-                    overflowY: 'auto',
-                    fontFamily: 'Roboto, sans-serif',
+                    fontFamily: 'Heebo, sans-serif',
                 }}
             >
                 {isMobile && (
@@ -155,14 +155,22 @@ const FilterComponent = ({ onFilter, products }) => {
                             top: '10px',
                             left: '10px',
                             minWidth: '40px',
+                            marginTop: '-15px'
                         }}
                     >
                         <CloseIcon />
                     </Button>
                 )}
-
-                <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-15px', color: '#5A3B41' }}>
+                <div style={{ width: '70%' }}>
+                    <Typography
+                        variant="subtitle2"
+                        style={{
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            color: '#5A3B41',
+                            fontFamily: 'Heebo, sans-serif',
+                        }}
+                    >
                         בחר סוג כתב:
                     </Typography>
                     <RadioGroup
@@ -171,24 +179,40 @@ const FilterComponent = ({ onFilter, products }) => {
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '6px',
-                            padding: '5px 0'
+                            fontFamily: 'Heebo, sans-serif',
+                            gap: '-10px',
                         }}
                     >
                         {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני', 'אחר'].map((type) => (
                             <FormControlLabel
                                 key={type}
                                 value={type}
-                                control={<Radio size="small" style={{ padding: '1.3px' }} />}
-                                label={<span style={{ fontSize: '0.8rem', color: '#5A3B41' }}>{type}</span>}
+                                control={
+                                    <Radio
+                                        size="small"
+                                        style={{
+                                            padding: '1px',
+                                            transform: 'scale(0.5)',
+                                        }}
+                                    />
+                                }
+                                label={<span style={{ fontSize: '0.9rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
                     </RadioGroup>
                 </div>
 
-                <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px', color: '#5A3B41' }}>
+                <div style={{ width: '70%' }}>
+                    <Typography
+                        variant="subtitle2"
+                        style={{
+                            fontWeight: 'bold',
+                            fontSize: '1rem',
+                            color: '#5A3B41',
+                            fontFamily: 'Heebo, sans-serif',
+                        }}
+                    >
                         בחר סוג מגילה:
                     </Typography>
                     <RadioGroup
@@ -197,48 +221,53 @@ const FilterComponent = ({ onFilter, products }) => {
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '6px',
-                            padding: '5px 0'
+                            fontFamily: 'Heebo, sans-serif',
+                            gap: '-10px',
                         }}
                     >
                         {['המלך 28 שורות', 'המלך 21 שורות', '11 שורות', '42 שורות', "11 שורות גליון ס''ת", 'אחר'].map((type) => (
                             <FormControlLabel
                                 key={type}
                                 value={type}
-                                control={<Radio size="small" style={{ padding: '1.3px' }} />}
-                                label={<span style={{ fontSize: '0.8rem', color: '#5A3B41' }}>{type}</span>}
+                                control={
+                                    <Radio
+                                        size="small"
+                                        style={{
+                                            padding: '1px',
+                                            transform: 'scale(0.5)',
+
+                                        }}
+                                    />
+                                }
+                                label={<span style={{ fontSize: '0.9rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif', }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
                     </RadioGroup>
                 </div>
 
-                <div style={{ width: '90%' }}>
-                    <Typography style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px', color: '#5A3B41' }}>
-                        טווח מחירים:
+
+                <div style={{ width: '70%' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '1rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif', marginBottom: '8px' }}>
+                        בחר עיר:
                     </Typography>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Slider
-                            value={priceRange}
-                            onChange={handlePriceChange}
-                            valueLabelDisplay="auto"
-                            min={100}
-                            max={maxPrice}
-                            style={{ width: '85%', color: '#5A3B41' }} // פס טווח המחירים בצבע החדש
-                        />
-                    </div>
-                </div>
-                <div style={{ width: '90%' }}>
                     <Select
                         value={selectedCity}
                         onChange={handleCityChange}
                         fullWidth
                         size="small"
                         displayEmpty
-                        sx={{ textAlign: 'right', direction: 'rtl' }}
+                        sx={{
+                            textAlign: 'right',
+                            direction: 'rtl',
+                            borderRadius: '20px',
+                            height: '30px',
+                            width: '80%',
+                            maxWidth: '300px',
+                        }}
                     >
                         <MenuItem value="">
-                            <em style={{ color: '#5A3B41' }}>כל הערים</em>
+                            <em style={{ color: '#5A3B41', fontFamily: 'Heebo, sans-serif' }}>כל הערים</em>
                         </MenuItem>
                         {cities.map((city) => (
                             <MenuItem key={city} value={city} style={{ color: '#5A3B41' }}>
@@ -247,17 +276,28 @@ const FilterComponent = ({ onFilter, products }) => {
                         ))}
                     </Select>
                 </div>
-                <div style={{ width: '90%' }}>
+
+                <div style={{ width: '70%' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '1rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif', marginBottom: '8px' }}>
+                        בחר סופר:
+                    </Typography>
                     <Select
                         value={selectedSeller}
                         onChange={handleSellerChange}
                         fullWidth
                         size="small"
                         displayEmpty
-                        sx={{ textAlign: 'right', direction: 'rtl', marginTop: '-10px' }}
+                        sx={{
+                            textAlign: 'right',
+                            direction: 'rtl',
+                            borderRadius: '20px',
+                            height: '30px',
+                            width: '80%',
+                            maxWidth: '300px',
+                        }}
                     >
                         <MenuItem value="">
-                            <em style={{ color: '#5A3B41' }}>כל הסופרים</em>
+                            <em style={{ color: '#5A3B41', fontFamily: 'Heebo, sans-serif' }}>כל הסופרים</em>
                         </MenuItem>
                         {sellers.map((seller) => (
                             <MenuItem key={seller} value={seller} style={{ color: '#5A3B41' }}>
@@ -266,13 +306,37 @@ const FilterComponent = ({ onFilter, products }) => {
                         ))}
                     </Select>
                 </div>
+                <div style={{ width: '70%' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '1rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif' }}>
+                        בחר טווח מחירים:
+                    </Typography>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Slider
+                            value={priceRange}
+                            onChange={handlePriceChange}
+                            valueLabelDisplay="auto"
+                            min={100}
+                            max={maxPrice}
+                            style={{ width: '65%', color: '#5A3B41' }}
+                        />
+                    </div>
+                </div>
+
                 <Box display="flex" justifyContent="center" gap="10px" width="90%" style={{ paddingBottom: '20px' }}>
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={applyFilters}
                         endIcon={<FilterListIcon />}
-                        sx={{ flex: 1, gap: '6px', backgroundColor: '#5A3B41' }} // כפתור בצבע החדש
+                        sx={{
+                            flex: 1,
+                            gap: '6px',
+                            backgroundColor: '#5A3B41',
+                            borderRadius: '20px',
+                            fontFamily: 'Heebo, sans-serif',
+                            height: '30px',
+                            minHeight: '30px',
+                        }}
                     >
                         סנן
                     </Button>
@@ -281,7 +345,16 @@ const FilterComponent = ({ onFilter, products }) => {
                         color="primary"
                         onClick={resetFilters}
                         endIcon={<RestartAltIcon />}
-                        sx={{ flex: 1, gap: '6px', borderColor: '#5A3B41', color: '#5A3B41' }} // כפתור עם גבול וצבע חדש
+                        sx={{
+                            flex: 1,
+                            gap: '6px',
+                            borderColor: '#5A3B41',
+                            color: '#5A3B41',
+                            borderRadius: '20px',
+                            fontFamily: 'Heebo, sans-serif',
+                            height: '30px',
+                            minHeight: '30px',
+                        }}
                     >
                         איפוס
                     </Button>

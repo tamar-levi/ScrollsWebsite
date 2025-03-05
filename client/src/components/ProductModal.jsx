@@ -102,13 +102,44 @@ const ProductModal = ({ product, onClose }) => {
             </Typography>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ padding: 2 }}>
-          <Button variant="outlined" sx={{ ...buttonStyle }} endIcon={<PersonIcon />} onClick={handleSellerDetailsClick}>
+        <DialogActions sx={{ padding: 2, gap: 2 }}>
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSellerDetailsClick}
+            endIcon={<PersonIcon />}
+            sx={{
+              gap: '6px',
+              backgroundColor: 'rgba(230, 219, 201, 1)',
+              borderRadius: '20px',
+              fontFamily: 'Heebo, sans-serif',
+              height: '34px',
+              minHeight: '30px',
+              minWidth: '120px', 
+              color: 'rgba(90, 59, 65, 1)',
+            }}
+          >
             פרטי המוכר
           </Button>
-          <Button onClick={onClose} variant="outlined" sx={{ ...buttonStyle }} endIcon={<CloseIcon />}>
+          <Button
+            onClick={onClose}
+            variant="contained"
+            color="primary"
+            endIcon={<CloseIcon />}
+            sx={{
+              gap: '6px',
+              color: 'rgba(90, 59, 65, 1)',
+              backgroundColor: 'rgba(230, 219, 201, 1)',
+              borderRadius: '20px',
+              fontFamily: 'Heebo, sans-serif',
+              height: '34px',
+              minHeight: '30px',
+              minWidth: '100px', // גודל מינימלי קצת יותר קצר לכפתור "סגור"
+            }}
+          >
             סגור
           </Button>
+
         </DialogActions>
       </Dialog>
       <SellerDetailsModal sellerId={product.userId._id} isOpen={isSellerModalOpen} onClose={handleSellerModalClose} />
