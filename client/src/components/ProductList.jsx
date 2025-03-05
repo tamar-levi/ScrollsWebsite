@@ -57,9 +57,8 @@ const ProductList = () => {
         padding: 4,
       }}
     >
-      {/* השקיפות על כל התמונה, גם כשגוללים */}
       <Box sx={{
-        position: 'fixed', // כך שהשקיפות תישאר גם בזמן גלילה
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
@@ -89,10 +88,8 @@ const ProductList = () => {
               top: '90px',
               borderRadius: '50px',
               backgroundColor: '#E6DBC9',
-              color: '#5A3B41',  // צבע המילים החדש
-              
+              color: '#5A3B41',  
               fontWeight: 'bold',
-              
             }}
           >
             פרסום המגילה שלך
@@ -103,6 +100,7 @@ const ProductList = () => {
             autoHideDuration={6000}
             onClose={() => setOpenAlert(false)}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            sx={{ top: '100px !important' }}
           >
             <Alert severity="warning" onClose={() => setOpenAlert(false)}>
               עליך להתחבר כדי לפרסם מגילה
@@ -123,7 +121,7 @@ const ProductList = () => {
           <Box sx={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 2, // הקטנת הרווחים בין הכרטיסים למינימום
+            gap: 2,
             maxWidth: '100%',
             width: '100%',
             marginLeft: 'auto',
@@ -139,9 +137,11 @@ const ProductList = () => {
             {[...filteredProducts]
               .sort((a, b) => (b.isPremiumAd ? 1 : 0) - (a.isPremiumAd ? 1 : 0))
               .map((product) => (
-                <Box key={product._id} sx={{ marginBottom: '5px' }}>
-                  <ProductCard product={product} onOpenModal={() => setSelectedProduct(product)} />
-                </Box>
+                <ProductCard 
+                  key={product._id} 
+                  product={product} 
+                  onOpenModal={() => setSelectedProduct(product)} 
+                />
               ))}
           </Box>
         )}

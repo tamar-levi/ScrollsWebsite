@@ -1,11 +1,12 @@
 import React from 'react';
-import { Card, CardContent, Button, Typography, Box } from '@mui/material';
+import { Card, CardContent, Button, Typography, Box, CardMedia } from '@mui/material';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
+import cardImage from '../assets/Card.png';
 
 const ProductCard = ({ product, onOpenModal }) => {
   const typographyStyle = {
@@ -15,19 +16,20 @@ const ProductCard = ({ product, onOpenModal }) => {
     alignItems: 'center',
     gap: '8px',
     textAlign: 'right',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s ease',
+    color: product.isPremiumAd ? '#E6DBC9' : 'white',
   };
 
   const iconStyle = {
     fontSize: { xs: '0.9rem', sm: '1rem' },
     strokeWidth: 1,
-    color: '#1976d2'
+    color: product.isPremiumAd ? '#E6DBC9' : 'white',
   };
 
   return (
     <Card
       sx={{
-        width: { xs: '100%', sm: '300px' },
+        width: { xs: '100%', sm: '320px' },
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         borderRadius: '16px',
         overflow: 'hidden',
@@ -35,16 +37,25 @@ const ProductCard = ({ product, onOpenModal }) => {
         flexDirection: 'column',
         mx: 'auto',
         direction: 'rtl',
-        border: product.isPremiumAd ? '2px solid #1976d2' : 'none'
+        backgroundColor: product.isPremiumAd ? '#5A3B41' : '#3F414E',
+        color: 'white',
+        height: '430px', // הכרטיס ארוך יותר
       }}
     >
+      <CardMedia
+        component="img"
+        height="150"
+        image={cardImage}
+        alt="תמונת כרטיס"
+      />
       <CardContent
         sx={{
           p: 3,
           display: 'flex',
           flexDirection: 'column',
           gap: 1.1,
-          backgroundColor: '#ffffff'
+          backgroundColor: 'inherit',
+          position: 'relative',
         }}
       >
         <Typography sx={typographyStyle}>
@@ -61,10 +72,7 @@ const ProductCard = ({ product, onOpenModal }) => {
         </Typography>
         <Typography sx={typographyStyle}>
           <SellOutlinedIcon sx={iconStyle} />
-          <strong>מחיר:</strong>
-          <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            {product.price ? `${product.price} ₪` : 'לא צוין'}
-          </Box>
+          <strong>מחיר:</strong> {product.price ? `${product.price} ₪` : 'לא צוין'}
         </Typography>
         <Typography sx={typographyStyle}>
           <LocationCityOutlinedIcon sx={iconStyle} />
@@ -74,8 +82,18 @@ const ProductCard = ({ product, onOpenModal }) => {
           onClick={() => onOpenModal(product)}
           variant="outlined"
           color="primary"
-          fullWidth
-          sx={{ mt: 1 }}
+          sx={{
+            position: 'absolute',
+            width: '190px',
+            height: '25px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            bottom: '-5px',
+            background: '#E6DBC9',
+            borderRadius: '50px',
+            color: product.isPremiumAd ? '#5A3B41' : '#3F414E',
+            borderColor: 'white',
+          }}
         >
           תמונות ופרטים נוספים
         </Button>
