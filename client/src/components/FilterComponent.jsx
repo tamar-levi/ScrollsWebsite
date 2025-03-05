@@ -18,7 +18,6 @@ const FilterComponent = ({ onFilter, products }) => {
     const [sellers, setSellers] = useState([]);
     const [cities, setCities] = useState([]);
 
-
     useEffect(() => {
         const sellerNames = products.reduce((uniqueSellers, product) => {
             const sellerName = product.userId.displayName || product.userId.fullName;
@@ -114,7 +113,7 @@ const FilterComponent = ({ onFilter, products }) => {
                     borderRadius: '50%',
                     minWidth: '50px',
                     height: '50px',
-                    backgroundColor: '#1976d2',
+                    backgroundColor: '#5A3B41',
                 }}
             >
                 <FilterListIcon />
@@ -130,7 +129,7 @@ const FilterComponent = ({ onFilter, products }) => {
                     width: '260px',
                     padding: '20px',
                     borderRadius: '12px',
-                    backgroundColor: 'white',
+                    backgroundColor: '#E6DBC9',
                     boxShadow: '2px 4px 12px rgba(0,0,0,0.15)',
                     position: 'fixed',
                     top: '68px',
@@ -146,7 +145,6 @@ const FilterComponent = ({ onFilter, products }) => {
                     transition: 'right 0.3s ease-in-out',
                     overflowY: 'auto',
                     fontFamily: 'Roboto, sans-serif',
-
                 }}
             >
                 {isMobile && (
@@ -164,7 +162,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 )}
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-15px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-15px', color: '#5A3B41' }}>
                         בחר סוג כתב:
                     </Typography>
                     <RadioGroup
@@ -182,7 +180,7 @@ const FilterComponent = ({ onFilter, products }) => {
                                 key={type}
                                 value={type}
                                 control={<Radio size="small" style={{ padding: '1.3px' }} />}
-                                label={<span style={{ fontSize: '0.8rem' }}>{type}</span>}
+                                label={<span style={{ fontSize: '0.8rem', color: '#5A3B41' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
@@ -190,7 +188,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px' }}>
+                    <Typography variant="subtitle2" style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px', color: '#5A3B41' }}>
                         בחר סוג מגילה:
                     </Typography>
                     <RadioGroup
@@ -208,7 +206,7 @@ const FilterComponent = ({ onFilter, products }) => {
                                 key={type}
                                 value={type}
                                 control={<Radio size="small" style={{ padding: '1.3px' }} />}
-                                label={<span style={{ fontSize: '0.8rem' }}>{type}</span>}
+                                label={<span style={{ fontSize: '0.8rem', color: '#5A3B41' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
@@ -216,7 +214,7 @@ const FilterComponent = ({ onFilter, products }) => {
                 </div>
 
                 <div style={{ width: '90%' }}>
-                    <Typography style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px' }}>
+                    <Typography style={{ fontWeight: 'bold', fontSize: '0.9rem', marginTop: '-10px', color: '#5A3B41' }}>
                         טווח מחירים:
                     </Typography>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -226,7 +224,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             valueLabelDisplay="auto"
                             min={100}
                             max={maxPrice}
-                            style={{ width: '85%' }}
+                            style={{ width: '85%', color: '#5A3B41' }} // פס טווח המחירים בצבע החדש
                         />
                     </div>
                 </div>
@@ -240,10 +238,10 @@ const FilterComponent = ({ onFilter, products }) => {
                         sx={{ textAlign: 'right', direction: 'rtl' }}
                     >
                         <MenuItem value="">
-                            <em>כל הערים</em>
+                            <em style={{ color: '#5A3B41' }}>כל הערים</em>
                         </MenuItem>
                         {cities.map((city) => (
-                            <MenuItem key={city} value={city}>
+                            <MenuItem key={city} value={city} style={{ color: '#5A3B41' }}>
                                 {city}
                             </MenuItem>
                         ))}
@@ -259,10 +257,10 @@ const FilterComponent = ({ onFilter, products }) => {
                         sx={{ textAlign: 'right', direction: 'rtl', marginTop: '-10px' }}
                     >
                         <MenuItem value="">
-                            <em>כל הסופרים</em>
+                            <em style={{ color: '#5A3B41' }}>כל הסופרים</em>
                         </MenuItem>
                         {sellers.map((seller) => (
-                            <MenuItem key={seller} value={seller}>
+                            <MenuItem key={seller} value={seller} style={{ color: '#5A3B41' }}>
                                 {seller}
                             </MenuItem>
                         ))}
@@ -274,7 +272,7 @@ const FilterComponent = ({ onFilter, products }) => {
                         color="primary"
                         onClick={applyFilters}
                         endIcon={<FilterListIcon />}
-                        sx={{ flex: 1, gap: '6px' }}
+                        sx={{ flex: 1, gap: '6px', backgroundColor: '#5A3B41' }} // כפתור בצבע החדש
                     >
                         סנן
                     </Button>
@@ -283,7 +281,7 @@ const FilterComponent = ({ onFilter, products }) => {
                         color="primary"
                         onClick={resetFilters}
                         endIcon={<RestartAltIcon />}
-                        sx={{ flex: 1, gap: '6px' }}
+                        sx={{ flex: 1, gap: '6px', borderColor: '#5A3B41', color: '#5A3B41' }} // כפתור עם גבול וצבע חדש
                     >
                         איפוס
                     </Button>
