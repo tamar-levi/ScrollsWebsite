@@ -1,149 +1,107 @@
 import * as React from 'react';
-import { Box, Typography, Container } from '@mui/material';
-import ScrollIcon from '@mui/icons-material/HistoryEdu';
-import { useEffect } from 'react';
+import { Box, Container, Button, Typography } from '@mui/material';
+import background from '../assets/AboutOur.jfif';
+import image from '../assets/About.png';
+import { Link } from 'react-router-dom';
 
 export default function About() {
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 960) {
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "auto";
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      document.body.style.overflow = "auto";
-    };
-  }, []);
   return (
-    <Box sx={{ direction: 'rtl', padding: '30px 0' }}>
-      <Container maxWidth="lg">
-        <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
-          <ScrollIcon sx={{ fontSize: 40, color: '#1976d2' }} />
-        </Box>
-        <Typography variant="h4" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            fontWeight: 700,
-            color: '#1976d2',
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '1.3rem', md: '1.8rem' }
-          }}>
-          לוח המגילות
-        </Typography>
-        <Typography variant="h6" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            fontWeight: 500,
-            color: '#000',
-            marginBottom: 2,
-            fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }
-          }}>
-          מיזם ייחודי וייעודי פורץ דרך לפרסום מגילות אסתר ושאר כתבי סת"ם.
-        </Typography>
-        <Typography variant="body1" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          הלוח נועד לפרסם בתפוצה רחבה מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה הן למעוניינים לרכוש והן לסופרי הסת"ם המעוניינים למכור.
-        </Typography>
-        <Typography variant="body1" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          חולמים על מגילה משלכם? בלוח המגילות תמצאו בקלות ובנוחות מגילת אסתר כלבבכם, לפי כל המנהגים, ברמות שונות ובמחיר הטוב ביותר, באיכות ובהידור שאתם מחפשים.
-        </Typography>
-        <Typography variant="h6" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            fontWeight: 500,
-            color: '#000',
-            marginBottom: 2,
-            fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }
-          }}>
-          איך זה עובד?
-        </Typography>
-        <Typography variant="body1" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          הלוח מעניק לך פלטפורמה ייחודית לרכישת מגילה בעצמך - בשקיפות ובאחריות מלאה של הסופר, וללא עמלות סוחר.
-        </Typography>
-        <Typography variant="body1" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          אצלינו הרכישה מתבצעת ישירות מול הסופר על ידי יצירת קשר אישי עם הסופר,
-          וכך תוכל לקבל את כל המידע שרצית על הסופר ועל המגילה שכתב.
-        </Typography>
+    <Box sx={{
+      direction: 'rtl',
+      padding: '30px 0',
+      position: 'relative',
+      height: "90vh",
+      width: "103.2%",
+      display: 'flex',
+      alignItems: 'center',
+    }}>
+      <Box sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `url(${background})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.52,
+        zIndex: 1,
+      }} />
 
-        {/* התוספת לפני "כאן רוכשים ישירות מהסופר!" */}
-        <Typography variant="body1" align="center"
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '30%',
+        marginRight: '12%',
+        zIndex: 2,
+      }}>
+        <Typography
           sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          לראות בעיניך שהסופר אכן מחזיק בתעודה בתוקף,<br />
-          לברר על איזה קלף ובאיזה דיו היא נכתבה,<br />
-          תוכל גם לוודא שהמגילה עברה הגהה רצינית ומדוקדקת<br />
-          ולקבל מחיר הוגן ללא פערי תיווך.<br />
-          ומבלי להיות נתון לחסדיהם של סוחרים שיתכן ומוכרים לך חתול בשק, מבלי שתדע באופן ברור מה עבר על המגילה, ומה טיבו של הסופר שכתב אותה.
+            marginBottom: '50px',
+            background: '#E6DBC9',
+            borderRadius: '39px',
+            color: 'rgba(90, 59, 65, 1)',
+            fontFamily: 'Heebo, sans-serif',
+            fontWeight: 'bold',
+            padding: '0.5% 15%',
+            fontSize: '1.2rem',
+            display: 'inline-block',
+            cursor: 'pointer',
+          }}
+        >
+          אז מי אנחנו?
         </Typography>
-
-        <Typography variant="h6" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            fontWeight: 500,
-            color: '#000',
-            marginBottom: 2,
-            fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }
-          }}>
-          כאן רוכשים ישירות מהסופר!
-        </Typography>
-
-        <Typography variant="body1" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          אנחנו עושים הכל על מנת שהשימוש בלוח יהיה קל, זמין ונוח. אם בכל זאת נתקלתם בבעיה או סתם שאלה
-        </Typography>
-        <Typography variant="body1" align="center"
-          sx={{
-            fontFamily: 'Rubik, sans-serif',
-            color: '#000',
-            lineHeight: 1.4,
-            marginBottom: 1.5,
-            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-          }}>
-          ניתן לפנות אלינו בטלפון: 052-7672693 או במייל: ScrollsSite@gmail.com
-        </Typography>
+        <Box sx={{
+          width: '100%',
+          height: '250px',
+          backgroundImage: `url(${image})`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          borderRadius: '15px',
+        }} />
+        <Link to="/products">
+          <Button
+            variant="contained"
+            sx={{
+              marginTop: '50px',
+              backgroundColor: '#47515A',
+              color: 'white',
+              padding: '0 50px',
+              borderRadius: '50px',
+              '&:hover': {
+                backgroundColor: '#373F47'
+              },
+              fontFamily: 'Heebo, sans-serif',
+              fontWeight: 'bold',
+              fontSize: '1.2rem',
+            }}
+          >
+            אני רוצה לקנות
+          </Button>
+        </Link>
+      </Box>
+      <Container maxWidth="lg" sx={{
+        flex: 1,
+        position: 'relative',
+        zIndex: 2,
+        fontFamily: 'Heebo, sans-serif',
+        color: 'rgb(39, 21, 37)',
+        lineHeight: '1.5',
+        paddingRight: '30%',
+        marginRight: '7%',
+        marginLeft: '13%',
+        fontSize: '1.2rem'
+      }}>
+        מיזם ייחודי וייעודי לפרסום מגילות אסתר ושאר כתבי סת"ם,<br />
+        הלוח נועד לפרסם בתפוצה רחבה מאד מגילות אסתר ושאר חפצי סת"ם, ובכך נותן מענה הן למעונינים לרכוש והן לסופרי הסת"ם המעוניינים למכור,<br />
+        בלוח המגילות תמצאו בקלות ובנוחות מגילת אסתר כלבבכם, מתוך מגוון ענק של כל סוגי מגילות אסתר ולפי כל המנהגים, בטווח מחירים גדול, ובאיכות ובהידור שאתם מחפשים,<br />
+        בלוח המגילות מפרסמים טובי הסופרים את היצירות שלהם,<br />
+        הלוח מפנה אותך באופן ישיר אל הסופר, בכך תוכל להתרשם מהסופר באופן אישי ולשמוע את כל הפרטים על המגילה שלו, על רמת ההידור וההקפדה החל מבחירת הקלף הדיו והכתיבה עצמה, וכלה בהגהה ותיקון.<br />
+        <span style={{ fontWeight: 'bold', color: 'rgba(90, 59, 65, 1)' }}>
+          בלוח המגילות תרכשו את המגילה ישר מהסופר, ללא פערי תיווך כלל, ובהתרשמות אישית ובשיח פתוח מול הסופר עצמו.
+        </span>
       </Container>
     </Box>
   );

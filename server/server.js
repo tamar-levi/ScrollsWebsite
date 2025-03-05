@@ -11,7 +11,7 @@ const compression = require('compression');
 // require('./gmail-listener');
 
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:3000',
   credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 };
