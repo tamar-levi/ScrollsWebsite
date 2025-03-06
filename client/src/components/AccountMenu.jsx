@@ -16,6 +16,10 @@ import { logout } from '../redux/userSlice';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { Scroll } from 'lucide-react';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -73,10 +77,10 @@ export default function AccountMenu() {
           }}
         >
           <Box sx={{ mb: 2, textAlign: 'center' }}>
-            <Avatar sx={{ width: 60, height: 60, margin: '0 auto', bgcolor: 'rgb(90, 59, 65)' }}>
+            <Avatar sx={{ width: 50, height: 50, margin: '0 auto', bgcolor: 'rgba(230, 219, 201, 1)', fontFamily: 'Heebo, sans-serif', color: '' }}>
               {firstLetter}
             </Avatar>
-            <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>
+            <Typography sx={{ mt: 1, fontFamily: 'Heebo, sans-serif' }}>
               {user?.fullName || 'אורח'}
             </Typography>
             {user?.email && (
@@ -87,26 +91,27 @@ export default function AccountMenu() {
           </Box>
 
           {user && (
-            <>
-              <MenuItem component={Link} to="/account" onClick={handleClose} dir="rtl">
-                <ListItemIcon sx={{ marginLeft: 1 }}>
-                  <AccountCircleIcon />
-                </ListItemIcon>
-                החשבון שלי
-              </MenuItem>
-              <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
-                <ListItemIcon sx={{ marginLeft: 1 }}>
-                  <InventoryIcon />
-                </ListItemIcon>
-                המגילות שלי
-              </MenuItem>
-              <MenuItem onClick={handleLogout} dir="rtl">
-                <ListItemIcon sx={{ marginLeft: 1 }}>
-                  <LogoutIcon />
-                </ListItemIcon>
-                התנתק
-              </MenuItem>
-            </>
+        <>
+        <MenuItem component={Link} to="/account" onClick={handleClose} dir="rtl">
+          <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
+            <AccountCircleOutlinedIcon />
+          </ListItemIcon>
+          החשבון שלי
+        </MenuItem>
+        <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
+          <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
+            <Scroll />
+          </ListItemIcon>
+          המגילות שלי
+        </MenuItem>
+        <MenuItem onClick={handleLogout} dir="rtl">
+          <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
+            <LogoutOutlinedIcon />
+          </ListItemIcon>
+          התנתק
+        </MenuItem>
+      </>
+        
           )}
         </Menu>
       </Box>

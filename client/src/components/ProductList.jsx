@@ -154,9 +154,12 @@ const ProductList = () => {
       </Box>
 
       <FilterComponent onFilter={(filters) => {
+        console.log(filters);
         const filtered = products.filter((product) => {
+          const normalizedProductFont = product.scriptType?.replace(/['"]/g, '');
           const isPriceInRange = product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
-          const isFontTypeMatch = filters.fontType ? product.scriptType === filters.fontType : true;
+          const isFontTypeMatch = filters.fontType ? normalizedProductFont === filters.fontType.replace(/['"]/g, '') : true;
+          console.log(product.scriptType, isFontTypeMatch);
           const isScrollTypeMatch = filters.scrollType ? product.scrollType === filters.scrollType : true;
           const isCityMatch = filters.city ? product.userId.city === filters.city : true;
           const isSellerMatch = filters.seller ? product.userId?.displayName === filters.seller : true;
