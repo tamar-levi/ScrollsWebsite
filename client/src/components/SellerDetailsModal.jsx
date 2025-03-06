@@ -1,41 +1,37 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-    Dialog, 
-    DialogTitle, 
-    DialogContent, 
-    DialogActions, 
-    Button, 
-    Typography, 
-    Box, 
+import {
+    Dialog,
+    DialogContent,
+    Button,
+    Typography,
+    Box,
     CircularProgress,
     Fade,
     Alert,
-    useTheme
+    IconButton
 } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import CallIcon from '@mui/icons-material/Call';
+import PersonIcon from '@mui/icons-material/PersonOutlined';
+import EmailIcon from '@mui/icons-material/EmailOutlined';
+import PhoneIcon from '@mui/icons-material/PhoneOutlined';
+import LocationCityIcon from '@mui/icons-material/LocationCityOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 
 const SellerInfo = React.memo(({ icon: Icon, label, value }) => (
     <Fade in={true} timeout={300}>
         <Typography sx={{
             display: 'flex',
-            alignItems: 'center',
-            gap: 2,
+            gap: 1.5,
             fontSize: '16px',
-            color: '#34495e',
-            padding: '8px 0',
-            transition: 'all 0.2s ease',
+            color: 'rgba(71, 81, 90, 1)',
+            fontFamily: 'Heebo, sans-serif',
+            textAlign: 'right'
         }}>
-            <Icon color="primary" /> {label}: {value}
+            <Icon color="rgba(90, 59, 65, 1)" fontSize='20%' /> {label}{value}
         </Typography>
     </Fade>
 ));
 
 const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
-    const theme = useTheme();
     const [seller, setSeller] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -46,7 +42,7 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
             const response = await fetch(`http://localhost:5000/usersApi/getUserById/${sellerId}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}` 
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
             if (!response.ok) throw new Error('Failed to fetch seller details');
@@ -77,24 +73,43 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
     const dialogStyles = useMemo(() => ({
         '& .MuiDialog-paper': {
             backgroundColor: '#f8f9fa',
-            borderRadius: '12px',
-            overflow: 'hidden'
-        }
+            borderRadius: '25px',
+            overflow: 'hidden',
+            width: '700px',
+            height: '450px',
+        },
     }), []);
 
     const sellerDetails = useMemo(() => (
         seller && (
-            <Box sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: 2,
-                paddingTop: '24px',
-                paddingBottom: '8px'
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                paddingBottom: '8px',
+                alignItems: 'flex-start',
+                width: '100%'
             }}>
-                <SellerInfo icon={PersonIcon} label="שם" value={seller.displayName || seller.fullName} />
-                <SellerInfo icon={EmailIcon} label="אימייל" value={seller.email} />
-                <SellerInfo icon={PhoneIcon} label="טלפון" value={seller.phoneNumber!= '0' ? seller.phoneNumber : 'לא צוין'} />
-                <SellerInfo icon={LocationCityIcon} label="עיר" value={seller.city} />
+                <SellerInfo
+                    icon={PersonIcon}
+                    label={<span style={{ fontWeight: 'bold' }}>שם:</span>}
+                    value={seller.displayName || seller.fullName}
+                />
+                <SellerInfo
+                    icon={EmailIcon}
+                    label={<span style={{ fontWeight: 'bold' }}>מייל:</span>}
+                    value={seller.email}
+                />
+                <SellerInfo
+                    icon={PhoneIcon}
+                    label={<span style={{ fontWeight: 'bold' }}>טלפון:</span>}
+                    value={seller.phoneNumber !== '0' ? seller.phoneNumber : 'לא צוין'}
+                />
+                <SellerInfo
+                    icon={LocationCityIcon}
+                    label={<span style={{ fontWeight: 'bold' }}>עיר:</span>}
+                    value={seller.city}
+                />
             </Box>
         )
     ), [seller]);
@@ -103,33 +118,59 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
         <Dialog
             open={isOpen}
             onClose={onClose}
-            maxWidth="sm"
+            maxWidth="md"
             fullWidth
             dir="rtl"
             TransitionComponent={Fade}
             sx={dialogStyles}
         >
-            <DialogTitle sx={{
-                textAlign: 'right',
-                fontFamily: 'Rubik, sans-serif',
-                fontSize: '24px',
-                color: theme.palette.primary.main,
-                borderBottom: '1px solid #e0e0e0',
+            <DialogContent sx={{
+                backgroundColor: '#fff',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
                 padding: '20px',
-                backgroundColor: '#fff'
+                position: 'relative',
+                height: '100%'
             }}>
-                פרטי המוכר
-            </DialogTitle>
+                <IconButton
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        color: 'rgba(71, 81, 90, 1)',
+                        backgroundColor: 'rgba(230, 219, 201, 1)',
+                        borderRadius: '50%',
+                        padding: '6px',
+                        '&:hover': {
+                            backgroundColor: 'rgba(190, 185, 173, 1)',
+                        },
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <Typography
+                    sx={{
+                        background: 'rgba(230, 219, 201, 1)',
+                        borderRadius: '39px',
+                        color: 'rgba(0, 0, 0, 1)',
+                        fontFamily: 'Heebo, sans-serif',
+                        fontWeight: 'bold',
+                        padding: '5px 80px',
+                        textAlign: 'center',
+                        width: 'fit-content',
+                        marginBottom: '20px'
+                    }}
+                >
+                    פרטי יצירת קשר עם המוכר
+                </Typography>
 
-            <DialogContent sx={{ 
-                minHeight: '250px',
-                padding: '24px',
-                backgroundColor: '#fff'
-            }}>
                 {isLoading && (
-                    <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
                         alignItems: 'center',
                         height: '200px'
                     }}>
@@ -138,8 +179,8 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
                 )}
 
                 {error && (
-                    <Alert 
-                        severity="error" 
+                    <Alert
+                        severity="error"
                         sx={{ marginTop: 2 }}
                         onClose={() => setError(null)}
                     >
@@ -147,44 +188,64 @@ const SellerDetailsModal = ({ sellerId, isOpen, onClose }) => {
                     </Alert>
                 )}
 
-                {!isLoading && !error && sellerDetails}
+                {!isLoading && !error && (
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                        paddingTop: '24px',
+                        paddingBottom: '8px',
+                        alignItems: 'flex-end',
+                    }}>
+                        {sellerDetails}
+                    </Box>
+                )}
+
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '16px',
+                    marginTop: '20px',
+                    width: '100%',
+                }}>
+                    <Button
+                        onClick={handleCallClick}
+                        variant="contained"
+                        sx={{
+                            width: '150px',
+                            gap: '6px',
+                            backgroundColor: 'rgba(71, 81, 90, 1)',
+                            borderRadius: '24px',
+                            fontFamily: 'Heebo, sans-serif',
+                            height: '30px',
+                            minHeight: '30px',
+                            color: '#fff',
+                            fontWeight: 'normal'
+                        }}
+                    >
+                        התקשר
+                    </Button>
+
+                    <Button
+                        onClick={onClose}
+                        variant="contained"
+                        sx={{
+                            width: '150px',
+                            gap: '6px',
+                            backgroundColor: 'rgba(71, 81, 90, 1)',
+                            borderRadius: '24px',
+                            fontFamily: 'Heebo, sans-serif',
+                            height: '30px',
+                            minHeight: '30px',
+                            color: '#fff',
+                            fontWeight: 'normal'
+                        }}
+                    >
+                        סגור
+                    </Button>
+                </Box>
             </DialogContent>
-
-            <DialogActions sx={{ 
-                padding: '16px 24px',
-                backgroundColor: '#fff',
-                borderTop: '1px solid #e0e0e0',
-                gap: '16px'
-            }}>
-                <Button
-                    onClick={handleCallClick}
-                    variant="contained"
-                    disabled={isLoading || !seller}
-                    endIcon={<CallIcon />}
-                    sx={{
-                        fontFamily: 'Rubik, sans-serif',
-                        minWidth: '120px',
-                        transition: 'all 0.2s ease',
-                        '& .MuiButton-endIcon': {
-                            marginRight: '12px',
-                            marginLeft: '-4px'
-                        }
-                    }}
-                >
-                    התקשר
-                </Button>
-
-                <Button
-                    onClick={onClose}
-                    variant="outlined"
-                    sx={{
-                        fontFamily: 'Rubik, sans-serif',
-                        minWidth: '120px'
-                    }}
-                >
-                    סגור
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 };

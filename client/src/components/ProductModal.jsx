@@ -75,29 +75,29 @@ const ProductModal = ({ product, onClose }) => {
   return (
     <>
       <Dialog open={true} onClose={onClose} maxWidth="sm" fullWidth dir="rtl">
-        <DialogTitle sx={{ textAlign: 'right' }}>
+        <DialogTitle sx={{ textAlign: 'right', fontFamily: 'Heebo, sans-serif' }}>
           {product.title}
         </DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} sx={{ textAlign: 'right' }}>
             {loading ? (
-              <Typography variant="body2" color="textSecondary">טוען תמונות...</Typography>
+              <Typography variant="body2" color="textSecondary" fontFamily='Heebo, sans-serif'>טוען תמונות...</Typography>
             ) : (
               <ImageSlider images={images} />
             )}
-            <Typography variant="body2" fontWeight="bold" sx={{ textAlign: 'center', marginBottom: '5px', marginTop: '10px' }}>
+            <Typography variant="body2" fontWeight="bold" sx={{ textAlign: 'center', marginBottom: '5px', marginTop: '10px',fontFamily: 'Heebo, sans-serif' }}>
               ניתן ללחוץ על התמונה ע"מ להציג אותה בגודל מלא
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" paragraph fontFamily='Heebo, sans-serif'>
               {product.note}
             </Typography>
-            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontFamily: 'Heebo, sans-serif' }}>
               <PriceCheckIcon /> מחיר: {product.price} ₪
             </Typography>
-            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontFamily: 'Heebo, sans-serif' }}>
               <DrawIcon /> סוג הכתב: {product.scriptType}
             </Typography>
-            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontFamily: 'Heebo, sans-serif' }}>
               <AutoStoriesIcon /> סוג המגילה: {product.scrollType}
             </Typography>
           </Box>
@@ -134,7 +134,7 @@ const ProductModal = ({ product, onClose }) => {
               fontFamily: 'Heebo, sans-serif',
               height: '34px',
               minHeight: '30px',
-              minWidth: '100px', // גודל מינימלי קצת יותר קצר לכפתור "סגור"
+              minWidth: '100px', 
             }}
           >
             סגור
