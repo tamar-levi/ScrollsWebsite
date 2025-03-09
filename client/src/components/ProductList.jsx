@@ -9,6 +9,15 @@ import { Alert, Box, CircularProgress, Snackbar } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import background from '../assets/About.png';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+`;
 
 const ProductList = () => {
   const navigate = useNavigate();
@@ -42,20 +51,27 @@ const ProductList = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        backgroundImage: `url(${background})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        width: '103.2%',
-      }}
-    >
+    <>
+   <GlobalStyle />
+  <Box
+    sx={{
+      minHeight: '100vh',
+      width: '100vw',
+      margin: 0,
+      padding: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundImage: `url(${background})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      position: 'relative',
+      left: 0,
+      right: 0,
+    }}
+  >
       <Box sx={{
         position: 'fixed',
         top: 0,
@@ -69,37 +85,58 @@ const ProductList = () => {
 
       <Box sx={{ zIndex: 1, marginTop: 8, marginRight: '20%' }}>
         <Stack spacing={2} direction="row">
-          <Button
-            variant="outlined"
-            onClick={() => {
-              if (!user) {
-                setOpenAlert(true);
-              } else {
-                navigate('/add-product');
-              }
-            }}
-            startIcon={<AddIcon />}
-            sx={{
-              width: '300px',
-              height: '35px',
-              borderRadius: '50px',
-              backgroundColor: '#E6DBC9',
-              color: '#5A3B41',
-              border: 'none',
-              fontSize: '120%',
-              fontFamily: 'Heebo, sans-serif',
-              marginTop: '20px', 
-              marginBottom: '20px', 
-              display: 'flex',
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              position: 'relative',
-              zIndex: 1, 
-              padding: '0', 
-            }}
-          >
-            פרסום המגילה שלך
-          </Button>
+        <Button
+  variant="outlined"
+  onClick={() => {
+    if (!user) {
+      setOpenAlert(true);
+    } else {
+      navigate('/add-product');
+    }
+  }}
+  startIcon={<AddIcon />}
+  sx={{
+    width: {
+      xs: '250px',
+      sm: '280px',
+      md: '300px'
+    },
+    height: {
+      xs: '30px',
+      sm: '32px',
+      md: '35px'
+    },
+    borderRadius: '50px',
+    backgroundColor: '#E6DBC9',
+    color: '#5A3B41',
+    border: 'none',
+    fontSize: {
+      xs: '90%',
+      sm: '100%',
+      md: '120%'
+    },
+    fontFamily: 'Heebo, sans-serif',
+    marginTop: {
+      xs: '15px',
+      sm: '18px',
+      md: '20px'
+    },
+    marginBottom: {
+      xs: '15px',
+      sm: '18px',
+      md: '20px'
+    },
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    zIndex: 1,
+    padding: '0',
+  }}
+>
+  פרסום המגילה שלך
+</Button>
+
           <Snackbar
             open={openAlert}
             autoHideDuration={6000}
@@ -169,6 +206,7 @@ const ProductList = () => {
         setNoProducts(filtered.length === 0);
       }} products={products} />
     </Box>
+    </>
   );
 };
 

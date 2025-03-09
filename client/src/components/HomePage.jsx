@@ -4,6 +4,21 @@ import LoginDialog from './LoginDialog';
 import background from '../assets/Bacg.png';
 import About from './About';
 import Contact from './Contact';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+`;
+
 const HomePage = () => {
   const [openLogin, setOpenLogin] = useState(false);
   const handleOpenLogin = () => {
@@ -15,21 +30,21 @@ const HomePage = () => {
 
   return (
     <>
+      <GlobalStyle />
       <div
         className="relative"
         style={{
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundImage: `url(${background})`,
-          height: "100vh",
-          width: "103.2%",
+          minHeight: "100vh",
+          width: "100vw",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "center",
           textAlign: "center",
-          margin: 0,
-          padding: 0,
+          position: "relative",
         }}
       >
         <div
