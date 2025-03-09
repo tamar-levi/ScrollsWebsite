@@ -126,8 +126,8 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     return (
         <>
-            <div style={{ marginTop: "10px" }}>
-                <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl" }}>
+            <div style={{ marginTop: "-5px", marginRight: '80px', width: '100%' }}>
+                <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl", fontFamily: 'Heebo, sans-serif', color: 'rgba(63, 65, 78, 1)', fontWeight: 'bold', fontSize: '1.1rem' }}>
                     סכום לתשלום: {calculatePaymentAmount(productData?.price)} ₪
                 </Typography>
                 <iframe
@@ -144,7 +144,19 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         onClick={onBack}
                         startIcon={<ArrowForward style={{ marginLeft: '8px' }} />}
                         variant="outlined"
-                        sx={{ marginTop: '16px', marginRight: '16px' }}
+                        sx={{
+                            borderRadius: '25px',
+                            padding: '1px 5%',
+                            fontFamily: 'Heebo, sans-serif',
+                            fontSize: '1rem',
+                            fontWeight: 300,
+                            borderColor: 'rgba(63, 65, 78, 1)',
+                            color: 'rgba(63, 65, 78, 1)',
+                            '&:hover': {
+                                borderColor: 'rgba(63, 65, 78, 1)',
+                                backgroundColor: 'transparent',
+                            },
+                        }}
                         disabled={disableButton}
                     >
                         חזור
@@ -153,7 +165,18 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                         onClick={sendPaymentRequest}
                         endIcon={<PaymentIcon style={{ marginRight: '8px' }} />}
                         variant="contained"
-                        sx={{ marginTop: '16px' }}
+                        sx={{
+                            backgroundColor: 'rgba(63, 65, 78, 1)',
+                            borderRadius: '25px',
+                            color: 'white',
+                            padding: '1px 5%',
+                            fontFamily: 'Heebo, sans-serif',
+                            fontSize: '1rem',
+                            fontWeight: 300,
+                            '&:hover': {
+                                backgroundColor: 'rgba(63, 65, 78, 1)',
+                            },
+                        }}
                         disabled={disableButton || showAddingProductSnackbar}
                     >
                         בצע תשלום
