@@ -39,6 +39,8 @@ export default function AccountMenu() {
   const handleLogout = () => {
     setOpenSnackbar(true);
     dispatch(logout());
+    handleClose();
+    navigate('/');
   };
 
   const handleCloseSnackbar = (event, reason) => {
