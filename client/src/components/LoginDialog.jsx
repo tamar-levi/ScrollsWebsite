@@ -3,19 +3,15 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    TextField,
     Button,
     Box,
-    Divider,
     Typography,
-    Link,
     useTheme,
     useMediaQuery,
     CircularProgress,
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -71,7 +67,6 @@ const LoginDialog = ({ open, onClose }) => {
             }, 1500);
 
         } catch (error) {
-            console.log('Login Error:', error.response);
             if (error.response?.status === 401) {
                 if (error.response?.data?.includes('User not found')) {
                     setShowCreateUser(true);
@@ -106,7 +101,11 @@ const LoginDialog = ({ open, onClose }) => {
                 sx: {
                     borderRadius: '16px',
                     overflow: 'hidden',
-                    width: isMobile ? '95%' : '1000px',
+                    width: {
+                        xs: '95%',
+                        sm: '95%',
+                        md: '1000px'
+                    },
                     minHeight: '500px',
                     bgcolor: 'background.paper',
                     borderRadius: '24px',
@@ -129,23 +128,26 @@ const LoginDialog = ({ open, onClose }) => {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                <Typography
-                    sx={{
-                        background: 'rgba(230, 219, 201, 1)',
-                        borderRadius: '39px',
-                        color: 'rgba(0, 0, 0, 1)',
-                        fontFamily: 'Heebo, sans-serif',
-                        fontWeight: 'bold',
-                        padding: '5px 170px',
-                        textAlign: 'center',
-                        width: 'fit-content',
-                        margin: '0 auto',
-                        marginTop: '10%',
-                        marginBottom: '50px',
-                    }}
-                >
-                    התחברות
-                </Typography>
+            <Typography
+    sx={{
+        background: 'rgba(230, 219, 201, 1)',
+        borderRadius: '39px',
+        color: 'rgba(0, 0, 0, 1)',
+        fontFamily: 'Heebo, sans-serif',
+        fontWeight: 'bold',
+        padding: {
+            xs: '5px 80px',
+            sm: '5px 170px'
+        },
+        textAlign: 'center',
+        width: 'fit-content',
+        margin: '0 auto',
+        marginTop: '10%',
+        marginBottom: '50px',
+    }}
+>
+    התחברות
+</Typography>
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
@@ -157,7 +159,15 @@ const LoginDialog = ({ open, onClose }) => {
                         alignItems: 'center',
                     }}
                 >
-                    <div style={{ display: 'flex', gap: '20px', width: '80%', fontFamily: 'Heebo, sans-serif', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ 
+                        display: 'flex', 
+                        flexDirection: isMobile ? 'column' : 'row',
+                        gap: '20px', 
+                        width: isMobile ? '90%' : '80%',
+                        fontFamily: 'Heebo, sans-serif', 
+                        alignItems: 'center', 
+                        justifyContent: 'center' 
+                    }}>
                         <input
                             type="password"
                             placeholder="סיסמא"
@@ -177,6 +187,8 @@ const LoginDialog = ({ open, onClose }) => {
                                 paddingRight: '10px',
                                 fontFamily: 'Heebo, sans-serif',
                                 height: '20px',
+                                width: isMobile ? '100%' : undefined,
+                                height: isMobile ? '20px' : '30px',
                             }}
                         />
                         <input
@@ -198,14 +210,15 @@ const LoginDialog = ({ open, onClose }) => {
                                 paddingRight: '10px',
                                 fontFamily: 'Heebo, sans-serif',
                                 height: '20px',
-                                textTransform: 'none'
+                                width: isMobile ? '100%' : undefined,
+                                height: isMobile ? '20px' : '30px',
                             }}
                         />
                     </div>
+
                     <Button
                         type="submit"
                         variant="contained"
-                        fullWidth
                         disabled={isLoading}
                         sx={{
                             backgroundColor: 'rgba(90, 59, 65, 1)',
@@ -218,18 +231,14 @@ const LoginDialog = ({ open, onClose }) => {
                             fontFamily: 'Heebo, sans-serif',
                             fontSize: '1.1rem',
                             height: '30px',
-                            width: '80%',
+                            width: isMobile ? '90%' : '80%',
                         }}
                     >
-                        {isLoading ? (
-                            <CircularProgress size={20} color="inherit" />
-                        ) : (
-                            'התחברות'
-                        )}
+                        {isLoading ? <CircularProgress size={20} color="inherit" /> : 'התחברות'}
                     </Button>
+
                     <Button
                         variant="contained"
-                        fullWidth
                         sx={{
                             backgroundColor: 'rgba(71, 81, 90, 1)',
                             marginTop: '20px',
@@ -242,8 +251,7 @@ const LoginDialog = ({ open, onClose }) => {
                                 backgroundColor: 'rgba(71, 81, 90, 1)',
                             },
                             height: '30px',
-                            fontFamily: 'Heebo, sans-serif',
-                            width: '60%',
+                            width: isMobile ? '80%' : '60%',
                             textTransform: 'none',
                             fontWeight: 200
                         }}
@@ -258,13 +266,21 @@ const LoginDialog = ({ open, onClose }) => {
                     >
                         Google התחבר עם
                     </Button>
-                    <Typography variant="body2" sx={{ mt: 1, textAlign: 'right', paddingRight: 1, fontFamily: 'Heebo, sans-serif', fontSize: '1rem', marginTop: '10%' }}>
-                        <span> ?</span>
+
+                    <Typography variant="body2" sx={{ 
+                        mt: 1, 
+                        textAlign: 'right', 
+                        paddingRight: 1, 
+                        fontFamily: 'Heebo, sans-serif', 
+                        fontSize: '1rem', 
+                        marginTop: '10%' 
+                    }}>
+                        <span>?</span>
                         אין לך חשבון
                     </Typography>
+
                     <Button
                         variant="contained"
-                        color="primary"
                         onClick={() => setShowCreateUser(true)}
                         sx={{
                             backgroundColor: '#5A3B41',
@@ -273,14 +289,13 @@ const LoginDialog = ({ open, onClose }) => {
                             height: '25px',
                             minHeight: '30px',
                             fontWeight: 200,
-                            width: '40%',
+                            width: isMobile ? '60%' : '40%',
                         }}
                     >
                         הירשם עכשיו
                     </Button>
                 </Box>
             </DialogContent>
-
 
             {showGoogleAuth && (
                 <GoogleAuth

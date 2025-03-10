@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
@@ -17,6 +16,8 @@ import { Link } from 'react-router-dom';
 import NedarimPayment from './NedarimPayment';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import image from '../assets/Contact.png';
+import { createGlobalStyle } from 'styled-components';
 
 const steps = ['פרטי המוצר', 'תשלום', 'סיום'];
 
@@ -69,11 +70,11 @@ export default function Checkout() {
             productData.additionalImages.forEach((image) => {
                 formData.append('additionalImages', image);
             });
-            const token = localStorage.getItem('token'); 
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:5000/productsApi/addProduct', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}` 
+                    'Authorization': `Bearer ${token}`
                 },
                 body: formData,
             });
@@ -93,226 +94,282 @@ export default function Checkout() {
         }
     };
 
+    const GlobalStyle = createGlobalStyle`
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    `;
+
     return (
         <>
-            <CssBaseline enableColorScheme />
-            <Grid
-                container
-                sx={{
-                    mt: {
-                        xs: 4,
-                        sm: 8,
-                    },
-                    direction: 'rtl',
-                }}
-            >
-                <Grid
-                    item
-                    xs={12}
-                    sm={5}
-                    lg={4}
-                    sx={{
-                        order: { sm: 1 },
-                        display: { xs: 'none', md: 'flex' },
-                        flexDirection: 'column',
-                        backgroundColor: 'background.paper',
-                        borderLeft: { sm: 'none', md: '1px solid' },
-                        borderColor: { sm: 'none', md: 'divider' },
-                        alignItems: 'start',
-                        pt: 6,
-                        px: 10,
-                        gap: 4,
-                    }}
-                >
-                    <Box
-                        sx={{
+         <GlobalStyle />
+            <Box sx={{
+                position: 'relative',
+                minHeight: '100vh',
+                margin: 0,
+                padding: 0,
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+            }}>
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: `url(${image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    opacity: '0.8',
+                    zIndex: 0
+                }} />
+
+                <Box sx={{ position: 'relative', zIndex: 1, overflow: 'hidden' }}>
+                    <Grid container sx={{
+                        mt: { xs: 4, sm: 8 },
+                        direction: 'rtl',
+                        justifyContent: 'center',
+                    }}>
+                        <Grid item xs={12} sm={5} lg={4} sx={{
+                            order: { sm: 1 },
+                            display: { xs: 'none', md: 'flex' },
+                            flexDirection: 'column',
+                            alignItems: 'start',
+                            pt: 6,
+                            px: 40,
+                            gap: 4,
+                        }}>
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flexGrow: 1,
+                                width: '100%',
+                                maxWidth: 600,
+                                textAlign: 'right',
+                                '& .MuiTypography-root': {
+                                    textAlign: 'right'
+                                },
+                                '& .MuiFormControl-root': {
+                                    textAlign: 'right'
+                                }
+                            }}>
+                                <Info />
+                            </Box>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={7} lg={8} sx={{
+                            order: { sm: 2 },
                             display: 'flex',
                             flexDirection: 'column',
-                            flexGrow: 1,
-                            width: '100%',
-                            maxWidth: 500,
-                            textAlign: 'right',
-                            '& .MuiTypography-root': {
-                                textAlign: 'right'
-                            },
-                            '& .MuiFormControl-root': {
-                                textAlign: 'right'
-                            }
-                        }}
-                    >
-                        <Info />
-                    </Box>
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={7}
-                    lg={8}
-                    sx={{
-                        order: { sm: 2 },
-                        display: 'flex',
-                        flexDirection: 'column',
-                        maxWidth: '100%',
-                        width: '100%',
-                        backgroundColor: { xs: 'transparent', sm: 'background.default' },
-                        alignItems: 'start',
-                        pt: { xs: 0, sm: 6 },
-                        px: { xs: 2, sm: 10 },
-                        gap: { xs: 4, md: 8 },
-                        overflow: 'hidden',
-                    }}
-                >
-                    <Card
-                        sx={{
-                            display: { xs: 'flex', md: 'none' },
-                            width: '100%',
-                            mb: 2,
-                            mt: 3,
-                            padding: 0
-                        }}
-                    >
-                        <CardContent
-                            sx={{
-                                display: 'flex',
-                                width: '100%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-                                padding: '4px !important',
-                                '&:last-child': {
-                                    paddingBottom: '4px !important'
-                                },
-                                '& > *': {
-                                    textAlign: 'center'
-                                }
-                            }}
-                        >
-                            <InfoMobile />
-                        </CardContent>
-                    </Card>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: { sm: 'space-between', md: 'flex-end', ml: 2 },
                             alignItems: 'center',
+                            maxWidth: '100%',
                             width: '100%',
-                            maxWidth: { sm: '100%', md: 600 },
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: { xs: 'none', md: 'flex' },
+                            pt: { xs: 0, sm: 6 },
+                            px: { xs: 2, sm: 10 },
+                            gap: { xs: 4, md: 8 },
+                            overflow: 'hidden',
+                            marginRight: { 
+                                xs: 'auto',
+                                sm: 'auto',
+                                md: '450px'
+                            },
+                            marginLeft: 'auto',
+                        }}>
+                            <Card sx={{
+                                display: { xs: 'flex', md: 'none' },
+                                width: '100%',
+                                mb: 2,
+                                mt: 3,
+                                padding: 0
+                            }}>
+                                <CardContent sx={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
+                                    padding: '4px !important',
+                                    '&:last-child': {
+                                        paddingBottom: '4px !important'
+                                    },
+                                    '& > *': {
+                                        textAlign: 'center'
+                                    }
+                                }}>
+                                    <InfoMobile />
+                                </CardContent>
+                            </Card>
+
+                            <Box sx={{
+                                display: 'flex',
                                 flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-end',
-                                flexGrow: 1,
-                            }}
-                        >
-                            <Stepper
-                                id="desktop-stepper"
-                                activeStep={activeStep}
-                                sx={{ width: '100%', height: 40 }}
-                            >
-                                {steps.map((label) => (
-                                    <Step
-                                        sx={{ ':first-child': { pl: 0 }, ':last-child': { pr: 0 } }}
-                                        key={label}
-                                    >
-                                        <StepLabel sx={{
-                                            '& .MuiStepLabel-iconContainer': {
-                                                paddingLeft: '8px',
+                                alignItems: 'center',
+                                width: '100%',
+                                maxWidth: '90%',
+                                mt: -5,
+                                mb: 5,
+                            }}>
+                                <Box sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}>
+                                    <Typography sx={{
+                                        background: 'rgba(230, 219, 201, 1)',
+                                        borderRadius: '39px',
+                                        color: 'rgba(0, 0, 0, 1)',
+                                        fontFamily: 'Heebo, sans-serif',
+                                        padding: '1px 20%',
+                                        textAlign: 'center',
+                                        width: 'fit-content',
+                                        marginBottom: '40px',
+                                        fontWeight: 'bold',
+                                    }}>
+                                        פרסום מגילה
+                                    </Typography>
+
+                                    <Box sx={{ width: '110%', maxWidth: '900px' }}>
+                                        <Stepper id="desktop-stepper" activeStep={activeStep} sx={{
+                                            display: { xs: 'none', md: 'flex' },
+                                            width: '100%',
+                                            height: 40,
+                                            '& .MuiStepConnector-line': {
+                                                borderColor: 'rgba(0, 0, 0, 1)',
+                                                borderWidth: 1,
                                             },
-                                            '& .MuiStepLabel-labelContainer': {
-                                                paddingLeft: '8px',
+                                            '& .MuiStepIcon-root.Mui-completed': {
+                                                color: 'rgba(90, 59, 65, 1)',
+                                                width: 40,
+                                                height: 40,
+                                                '& .MuiStepIcon-text': {
+                                                    fill: '#ffffff'
+                                                }
+                                            },
+                                            '& .MuiStepIcon-root.Mui-active': {
+                                                color: 'rgba(90, 59, 65, 1)',
+                                                width: 40,
+                                                height: 40,
+                                                '& .MuiStepIcon-text': {
+                                                    fill: '#ffffff'
+                                                }
+                                            },
+                                            '& .MuiStepIcon-root': {
+                                                color: 'rgba(236, 233, 227, 1)',
+                                                width: 40,
+                                                height: 40,
+                                                '& .MuiStepIcon-text': {
+                                                    fill: 'rgba(0, 0, 0, 1)'
+                                                }
+                                            },
+                                        }}>
+                                            {steps.map((label) => (
+                                                <Step key={label} sx={{ ':first-child': { pl: 0 }, ':last-child': { pr: 0 } }}>
+                                                    <StepLabel sx={{
+                                                        '& .MuiStepLabel-iconContainer': {
+                                                            paddingLeft: '8px',
+                                                        },
+                                                        '& .MuiStepLabel-labelContainer': {
+                                                            paddingLeft: '8px',
+                                                        }
+                                                    }} />
+                                                </Step>
+                                            ))}
+                                        </Stepper>
+
+                                        <Stepper id="mobile-stepper" activeStep={activeStep} alternativeLabel sx={{
+                                            display: { xs: 'flex', md: 'none' },
+                                            '& .MuiStepConnector-root': {
+                                                display: 'none'
                                             }
                                         }}>
-                                            {label}
-                                        </StepLabel>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                        </Box>
-                    </Box>
+                                            {steps.map((label) => (
+                                                <Step key={label} sx={{
+                                                    ':first-child': { pl: 0 },
+                                                    ':last-child': { pr: 0 },
+                                                    '& .MuiStepConnector-root': { top: { xs: 4, sm: 12 } },
+                                                }}>
+                                                    <StepLabel sx={{ '.MuiStepLabel-labelContainer': { maxWidth: '90px' } }}>
+                                                        {label}
+                                                    </StepLabel>
+                                                </Step>
+                                            ))}
+                                        </Stepper>
+                                    </Box>
+                                </Box>
+                            </Box>
 
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flexGrow: 1,
-                            width: '100%',
-                            maxWidth: { sm: '100%', md: 600 },
-                            maxHeight: '720px',
-                            gap: { xs: 0, md: 'none' },
-                            mt: -8
-                        }}
-                    >
-                        <Stepper
-                            id="mobile-stepper"
-                            activeStep={activeStep}
-                            alternativeLabel
-                            sx={{
-                                display: { sm: 'flex', md: 'none' },
-                                '& .MuiStepConnector-root': {
-                                    display: 'none'
-                                }
-                            }}
-                        >
-                            {steps.map((label) => (
-                                <Step
-                                    sx={{
-                                        ':first-child': { pl: 0 },
-                                        ':last-child': { pr: 0 },
-                                        '& .MuiStepConnector-root': { top: { xs: 4, sm: 12 } },
-                                    }}
-                                    key={label}
-                                >
-                                    <StepLabel
-                                        sx={{ '.MuiStepLabel-labelContainer': { maxWidth: '70px' } }}
-                                    >
-                                        {label}
-                                    </StepLabel>
-                                </Step>
-                            ))}
-                        </Stepper>
-                        {activeStep === steps.length - 1 ? (
-                            <Stack spacing={2} useFlexGap >
-                                <Typography variant="h2" sx={{ mt: 4 }}>📜</Typography>
-                                <Typography variant="h5">המוצר שלך התווסף בהצלחה</Typography>
-                                <Button
-                                    component={Link}
-                                    to="/products"
-                                    variant="contained"
-                                    sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}
-                                >
-                                    מעבר לדף המוצרים
-                                </Button>
-                            </Stack>
-                        ) : (
-                            <>
-                                {getStepContent(activeStep)}
-                            </>
-                        )}
-                    </Box>
-                </Grid>
-            </Grid>
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                width: '100%',
+                                maxWidth: '600px',
+                                mt: -8,
+                                px: { xs: 2, sm: 4 },
+                            }}>
+                                {activeStep === steps.length - 1 ? (
+                                    <Stack spacing={2} useFlexGap sx={{
+                                        alignItems: 'center',
+                                        textAlign: 'center',
+                                        fontFamily: 'Heebo, sans-serif',
+                                        width: '100%',
+                                    }}>
+                                        <Typography variant="h2" sx={{ mt: 4 }}>📜</Typography>
+                                        <Typography variant="h5" sx={{ fontFamily: 'Heebo, sans-serif' }}>
+                                            המוצר שלך נוסף בהצלחה
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: 3 }}>
+                                            <Button
+                                                component={Link}
+                                                to="/products"
+                                                variant="contained"
+                                                sx={{
+                                                    backgroundColor: 'rgba(63, 65, 78, 1)',
+                                                    borderRadius: '25px',
+                                                    color: 'white',
+                                                    padding: '1px 10%',
+                                                    fontFamily: 'Heebo, sans-serif',
+                                                    fontSize: '1rem',
+                                                    fontWeight: 300,
+                                                    '&:hover': {
+                                                        backgroundColor: 'rgba(63, 65, 78, 1)',
+                                                    },
+                                                }}
+                                            >
+                                                מעבר לדף המוצרים
+                                            </Button>
+                                        </Box>
+                                    </Stack>
+                                ) : (
+                                    <Box sx={{ width: '100%' }}>
+                                        {getStepContent(activeStep)}
+                                    </Box>
+                                )}
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </Box>
 
-            <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
-                <Alert
-                    severity="error"
-                    sx={{
+                <Snackbar open={openErrorSnackbar} onClose={() => setOpenErrorSnackbar(false)} autoHideDuration={5000} sx={{ direction: 'rtl' }}>
+                    <Alert severity="error" sx={{
                         display: 'flex',
-                        alignItems: 'center', 
-                        padding: '8px 16px', 
+                        alignItems: 'center',
+                        padding: '8px 16px',
                         '& .MuiAlert-icon': {
-                            marginRight: 2, 
+                            marginRight: 2,
                         },
                         '& .MuiAlert-action': {
-                            marginLeft: 2, 
+                            marginLeft: 2,
                         }
-                    }}
-                >שגיאה בהוספת המוצר, אנא פנה למנהל המערכת לזיכוי התשלום. אנו מתנצלים על אי הנוחות .    </Alert>
-            </Snackbar>
+                    }}>
+                        שגיאה בהוספת המוצר, אנא פנה למנהל המערכת לזיכוי התשלום. אנו מתנצלים על אי הנוחות.
+                    </Alert>
+                </Snackbar>
+            </Box>
         </>
     );
 }

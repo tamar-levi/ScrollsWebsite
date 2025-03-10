@@ -9,7 +9,8 @@ import {
   Box,
   IconButton,
   CircularProgress,
-  Alert
+  Alert,
+  Typography
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -106,7 +107,7 @@ const EditProductModal = ({ open, onClose, product }) => {
       console.error('Error updating product:', error);
       alert('שגיאה בעדכון המוצר');
     } finally {
-      setIsLoading(false);  
+      setIsLoading(false);
       setAlertMessage(null);
     }
   };
@@ -122,8 +123,22 @@ const EditProductModal = ({ open, onClose, product }) => {
   });
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth sx={{ backgroundColor: '#fff' }}>
-      <DialogTitle>עריכת מוצר</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth sx={{ borderRadius: '24px', backgroundColor: '#fff', direction: 'rtl' }}>
+      <Typography sx={{
+        background: 'rgba(230, 219, 201, 1)',
+        borderRadius: '39px',
+        color: 'rgba(0, 0, 0, 1)',
+        fontFamily: 'Heebo, sans-serif',
+        padding: { xs: '1px 15%', sm: '1px 20%' },
+        textAlign: 'center',
+        width: 'fit-content',
+        fontWeight: 'bold',
+        margin: '20px auto 0',
+        fontSize: { xs: '0.9rem', sm: '1rem' },
+        display: 'block'
+      }}>
+        עריכת פרטי מגילה
+      </Typography>
       <DialogContent>
         {alertMessage && (
           <Alert severity="info" sx={{ mb: 2 }}>
@@ -147,7 +162,21 @@ const EditProductModal = ({ open, onClose, product }) => {
           <TextField name="price" label="מחיר" value={editedProduct.price} onChange={handleChange} fullWidth type="number" />
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button variant="outlined" onClick={() => openPreview(editedProduct.primaryImage)}>
+            <Button
+              variant="contained"
+              onClick={() => openPreview(editedProduct.primaryImage)}
+              sx={{
+                width: { xs: '100%', sm: '150px' },
+                gap: '6px',
+                backgroundColor: 'rgba(90, 59, 65, 1)',
+                borderRadius: '24px',
+                fontFamily: 'Heebo, sans-serif',
+                height: { xs: '35px', sm: '30px' },
+                minHeight: { xs: '35px', sm: '30px' },
+                color: '#fff',
+                fontWeight: 200
+              }}
+            >
               הצג תמונה ראשית
             </Button>
             <IconButton color="primary" component="label">
@@ -158,7 +187,19 @@ const EditProductModal = ({ open, onClose, product }) => {
 
           {editedProduct.additionalImages.map((img, index) => (
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Button variant="outlined" onClick={() => openPreview(img)}>
+              <Button variant="outlined" onClick={() => openPreview(img)} 
+              sx={{
+                width: { xs: '100%', sm: '150px' },
+                gap: '6px',
+                backgroundColor: 'rgba(90, 59, 65, 1)',
+                borderRadius: '24px',
+                fontFamily: 'Heebo, sans-serif',
+                height: { xs: '35px', sm: '30px' },
+                minHeight: { xs: '35px', sm: '30px' },
+                color: '#fff',
+                fontWeight: 200
+              }}
+            >
                 הצג תמונה
               </Button>
               <IconButton color="primary" component="label">
@@ -173,24 +214,68 @@ const EditProductModal = ({ open, onClose, product }) => {
 
           <label htmlFor="additional-images-upload">
             <input id="additional-images-upload" type="file" accept="image/*" multiple onChange={(e) => handleImageChange(e, 'additional')} style={{ display: 'none' }} />
-            <Button variant="outlined" component="span" startIcon={<CloudUploadIcon />}>
+            <Button
+              variant="contained"
+              component="span"
+              sx={{
+                width: { xs: '100%', sm: '200px' },
+                gap: '6px',
+                backgroundColor: 'rgba(90, 59, 65, 1)',
+                borderRadius: '24px',
+                fontFamily: 'Heebo, sans-serif',
+                height: { xs: '35px', sm: '30px' },
+                minHeight: { xs: '35px', sm: '30px' },
+                color: '#fff',
+                fontWeight: 200,
+                marginTop: { xs: 2, sm: 3 }
+              }}
+            >
               הוסף תמונות נוספות
             </Button>
           </label>
         </Box>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose}>ביטול</Button>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          color="primary"
-          disabled={isLoading}  
-        >
-          {isLoading ? 'שמור שינויים (בעיבוד)' : 'שמור שינויים'}
-        </Button>
-      </DialogActions>
+      <DialogActions sx={{ display: 'flex', justifyContent: 'center', gap: 2, padding: '20px' }}>
+  <Button 
+    onClick={onClose}
+    variant="contained"
+    sx={{
+      backgroundColor: 'rgba(63, 65, 78, 1)',
+      borderRadius: '25px',
+      color: 'white',
+      padding: { xs: '1px 8%', md: '1px 10%' },
+      fontFamily: 'Heebo, sans-serif',
+      fontSize: { xs: '0.95rem', md: '1rem' },
+      fontWeight: 300,
+      '&:hover': {
+        backgroundColor: 'rgba(63, 65, 78, 1)',
+      },
+    }}
+  >
+    ביטול
+  </Button>
+  <Button
+    onClick={handleSubmit}
+    variant="contained"
+    disabled={isLoading}
+    sx={{
+      backgroundColor: 'rgba(63, 65, 78, 1)',
+      borderRadius: '25px',
+      color: 'white',
+      padding: { xs: '1px 8%', md: '1px 10%' },
+      fontFamily: 'Heebo, sans-serif',
+      fontSize: { xs: '0.95rem', md: '1rem' },
+      fontWeight: 300,
+      '&:hover': {
+        backgroundColor: 'rgba(63, 65, 78, 1)',
+      },
+    }}
+  >
+    {isLoading ? 'שמור שינויים (בעיבוד)' : 'שמור שינויים'}
+  </Button>
+</DialogActions>
+
 
       <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)}>
         <DialogContent>

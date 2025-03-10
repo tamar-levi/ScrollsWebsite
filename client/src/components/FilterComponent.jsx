@@ -19,6 +19,22 @@ const FilterComponent = ({ onFilter, products }) => {
     const [cities, setCities] = useState([]);
 
     useEffect(() => {
+        const handleResize = () => {
+            const newIsMobile = window.innerWidth < 900;
+            setIsMobile(newIsMobile);
+            if (!newIsMobile) {
+                setIsFilterOpen(true);
+            } else {
+                setIsFilterOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
         const sellerNames = products.reduce((uniqueSellers, product) => {
             const sellerName = product.userId.displayName || product.userId.fullName;
             if (!uniqueSellers.includes(sellerName)) {
@@ -39,19 +55,6 @@ const FilterComponent = ({ onFilter, products }) => {
         }, []);
         setCities(cityNames);
     }, [products]);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 900);
-            if (window.innerWidth >= 900) {
-                setIsFilterOpen(true);
-            }
-        };
-        window.addEventListener('resize', handleResize);
-        handleResize();
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
 
     const handlePriceChange = (event, newValue) => {
         setPriceRange(newValue);
@@ -95,7 +98,11 @@ const FilterComponent = ({ onFilter, products }) => {
         setSelectedCity('');
         setSelectedSeller('');
         onFilter({
-            priceRange: [0, 100000], fontType: null, scrollType: null, selectedCity: null, selectedSeller: null
+            priceRange: [0, 100000],
+            fontType: null,
+            scrollType: null,
+            selectedCity: null,
+            selectedSeller: null
         });
         if (isMobile) setIsFilterOpen(false);
     };
@@ -145,6 +152,13 @@ const FilterComponent = ({ onFilter, products }) => {
                     zIndex: 1000,
                     transition: 'right 0.3s ease-in-out',
                     fontFamily: 'Heebo, sans-serif',
+                    overflow: 'auto',
+                    overflowY: 'auto',
+                    '&::-webkit-scrollbar': {
+                        display: 'none'
+                    },
+                    scrollbarWidth: 'none',
+                    '-ms-overflow-style': 'none'
                 }}
             >
                 {isMobile && (
@@ -155,12 +169,18 @@ const FilterComponent = ({ onFilter, products }) => {
                             top: '10px',
                             left: '10px',
                             minWidth: '40px',
-                            marginTop: '-15px'
+                            padding: '8px',
+                            color: '#5A3B41',
+                            '&:hover': {
+                                backgroundColor: 'rgba(90, 59, 65, 0.1)'
+                            }
                         }}
                     >
                         <CloseIcon />
                     </Button>
                 )}
+
+                {/* המשך הקוד הקיים - כל הרדיו באטנס, סלקטים וכו' נשארים זהים */}
                 <div style={{ width: '70%' }}>
                     <Typography
                         variant="subtitle2"
@@ -235,17 +255,15 @@ const FilterComponent = ({ onFilter, products }) => {
                                         style={{
                                             padding: '1px',
                                             transform: 'scale(0.5)',
-
                                         }}
                                     />
                                 }
-                                label={<span style={{ fontSize: '0.9rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif', }}>{type}</span>}
+                                label={<span style={{ fontSize: '0.9rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif' }}>{type}</span>}
                                 style={{ margin: 0 }}
                             />
                         ))}
                     </RadioGroup>
                 </div>
-
 
                 <div style={{ width: '70%' }}>
                     <Typography style={{ fontWeight: 'bold', fontSize: '1rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif', marginBottom: '8px' }}>
@@ -306,6 +324,7 @@ const FilterComponent = ({ onFilter, products }) => {
                         ))}
                     </Select>
                 </div>
+
                 <div style={{ width: '70%' }}>
                     <Typography style={{ fontWeight: 'bold', fontSize: '1rem', color: '#5A3B41', fontFamily: 'Heebo, sans-serif' }}>
                         בחר טווח מחירים:

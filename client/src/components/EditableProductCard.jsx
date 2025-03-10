@@ -6,6 +6,7 @@ import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import cardImage from '../assets/Card.png';
 
 const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -21,14 +22,14 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
   const handleConfirmDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) {  
-        console.error('לא נמצא טוקן, התחבר מחדש'); 
-        return;  
+      if (!token) {
+        console.error('לא נמצא טוקן, התחבר מחדש');
+        return;
       }
       const response = await fetch(`http://localhost:5000/productsApi/deleteProduct/${product._id}`, {
-        method: 'DELETE', 
+        method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`  
+          'Authorization': `Bearer ${token}`
         }
       });
 
@@ -45,23 +46,29 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
   };
 
   const typographyStyle = {
-    fontSize: '0.9rem',
-    marginBottom: '16px',
+    fontSize: { xs: '0.9rem', sm: '0.9rem' },
+    marginBottom: '12px',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
+    gap: '8px',
+    textAlign: 'right',
+    transition: 'all 0.3s ease',
+    color: product.isPremiumAd ? '#E6DBC9' : 'white',
+    fontFamily: 'Heebo, sans-serif',
+    fontWeight: 200,
   };
 
   const iconStyle = {
-    fontSize: '1rem',
-    strokeWidth: 1
+    fontSize: { xs: '0.9rem', sm: '1rem' },
+    strokeWidth: 1,
+    color: product.isPremiumAd ? '#E6DBC9' : 'white',
   };
 
   return (
     <>
       <Card
         sx={{
-          width: { xs: '100%', sm: '300px' },
+          width: { xs: '90%', sm: '300px' },
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
           borderRadius: '16px',
           overflow: 'hidden',
@@ -69,13 +76,14 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
           flexDirection: 'column',
           mx: 'auto',
           direction: 'rtl',
-          border: product.isPremiumAd ? '2px solid transparent' : 'none',
-          boxShadow: product.isPremiumAd ? '0 0 15px 3px rgba(30, 144, 255, 0.8)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
+          backgroundColor: product.isPremiumAd ? '#5A3B41' : '#3F414E',
+          color: 'white',
+          height: { xs: '440px', md: '460px' }
         }}
       >
         <Box
           component="img"
-          src={`data:image/jpeg;base64,${product.primaryImage}`}
+          src={cardImage}
           alt={product.scriptType}
           sx={{
             width: '100%',
@@ -83,51 +91,77 @@ const EditableProductCard = ({ product, onOpenEditModal, onDelete }) => {
             objectFit: 'cover',
           }}
         />
-        <CardContent sx={{
-          p: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1.5,
-          backgroundColor: '#ffffff'
-        }}>
-          <Typography style={typographyStyle}>
+        <CardContent
+          sx={{
+            p: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1.15,
+            backgroundColor: 'inherit',
+            position: 'relative',
+          }}
+        >
+          <Typography sx={typographyStyle}>
             <ArticleOutlinedIcon sx={iconStyle} />
-            <strong>סוג המגילה:</strong> {product.scrollType}
+            <span style={{ fontWeight: 600 }}>סוג המגילה:</span> {product.scrollType}
           </Typography>
-          <Typography style={typographyStyle}>
+          <Typography sx={typographyStyle}>
             <DriveFileRenameOutlineIcon sx={iconStyle} />
-            <strong>סוג הכתב:</strong> {product.scriptType}
+            <span style={{ fontWeight: 600 }}>סוג הכתב:</span> {product.scriptType}
           </Typography>
-          <Typography style={typographyStyle}>
-            <StickyNote2OutlinedIcon sx={iconStyle} />
-            <strong>הערות:</strong> {product.note || 'אין הערות'}
-          </Typography>
-          <Typography style={typographyStyle}>
+          <Typography sx={typographyStyle}>
             <SellOutlinedIcon sx={iconStyle} />
-            <strong>מחיר:</strong> {product.price} ₪
+            <span style={{ fontWeight: 600 }}>מחיר:</span> {product.price ? `${product.price} ₪` : 'לא צוין'}
           </Typography>
-          <Box display="flex" gap={2}>
+          <Box display="flex" gap={1} sx={{
+            position: 'absolute',
+            bottom: { xs: '-45px', sm: '-25px', md: '-25px' },
+            left: '50%',
+            transform: 'translateX(-50%)',
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: 'center',
+            width: { xs: '50%', sm: 'auto' },
+            padding: { xs: '0 20px', sm: 0 }
+          }}>
             <Button
-              className="edit-button"
               onClick={() => onOpenEditModal(product)}
               variant="outlined"
               color="primary"
               endIcon={<EditIcon />}
-              sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
+              sx={{
+                width: { xs: '100%', sm: '150px' },
+                height: '25px',
+                background: '#E6DBC9',
+                borderRadius: '50px',
+                color: product.isPremiumAd ? '#5A3B41' : '#3F414E',
+                borderColor: 'white',
+                '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 },
+                mb: { xs: 1, sm: 0 }
+              }}
             >
               עריכת פרטים
             </Button>
             <Button
               className="delete-button"
               onClick={handleDeleteClick}
-              variant="outlined"
-              color="error"
               endIcon={<DeleteIcon />}
-              sx={{ '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 } }}
+              variant="outlined"
+              color="primary"
+              sx={{
+                width: { xs: '100%', sm: '100px' },
+                height: '25px',
+                background: '#E6DBC9',
+                borderRadius: '50px',
+                color: product.isPremiumAd ? '#5A3B41' : '#3F414E',
+                borderColor: 'white',
+                '& .MuiButton-endIcon': { marginRight: '8px', marginLeft: 0 }
+              }}
             >
               מחיקה
             </Button>
           </Box>
+
+
         </CardContent>
       </Card>
       <Dialog

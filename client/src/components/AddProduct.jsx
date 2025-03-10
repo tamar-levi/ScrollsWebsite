@@ -14,8 +14,6 @@ import {
     MenuItem,
     Alert,
 } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
-
 
 const AddProduct = ({ onNext, onFormSubmit, productData }) => {
     const [formData, setFormData] = useState({
@@ -94,256 +92,297 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
             return;
         }
         onNext();
-        console.log("Form data before sending:", formData);
         onFormSubmit(formData);
     };
 
     return (
         <>
-        <Box sx={{
-            padding: 3,
-            direction: 'rtl',
-            fontFamily: 'Roboto, sans-serif',
-            width: '100%',
-            maxWidth: 600,
-            '@media (max-width: 960px)': {
-                transform: 'scale(0.9)',
-                padding: 2,
-            }
-        }}>
-            {showAlert && (
+            <style>
+                {`
+                    input::placeholder {
+                        color: white;
+                        opacity: 1;
+                    }
+                    textarea::placeholder {
+                        color: white;
+                        opacity: 1; 
+                    }
+                `}
+            </style>
+            <Box sx={{
+                padding: { xs: 2, md: 0 },
+                marginTop: { xs: 2, md: 4 },
+                direction: 'rtl',
+                fontFamily: 'Heebo, sans-serif',
+                margin: '0 auto',
+                '@media (max-width: 960px)': {
+                    transform: 'scale(0.95)',
+                }
+            }}>
+                {showAlert && (
+                    <Alert severity="error" sx={{ marginBottom: 2, '& .MuiAlert-icon': { marginLeft: 2 } }}>
+                        יש למלא את כל פרטי המוצר
+                    </Alert>
+                )}
+
+                <Grid container spacing={{ xs: 2, md: 3 }} sx={{
+                    justifyContent: 'space-around',
+                    '& .MuiGrid-item': {
+                        width: { xs: '100%', md: '48%' },
+                        maxWidth: { xs: '100%', md: '48%' }
+                    }
+                }}>
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <Select
+                                displayEmpty
+                                name="scriptType"
+                                value={formData.scriptType}
+                                onChange={handleChange}
+                                required
+                                sx={{
+                                    fontFamily: 'Heebo, sans-serif',
+                                    fontSize: { xs: '0.95rem', md: '1rem' },
+                                    height: '35px',
+                                    borderRadius: '25px',
+                                    backgroundColor: 'rgba(90, 59, 65, 1)',
+                                    color: 'white',
+                                    border: 'none',
+                                    width: '110%',
+                                    '& .MuiSelect-icon': { color: 'white' },
+                                    '& .MuiSelect-select': { paddingLeft: '10px' },
+                                    '&:focus': { borderColor: 'none' },
+                                }}
+                            >
+                                <MenuItem value="" disabled>סוג כתב</MenuItem>
+                                {scriptTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <Select
+                                displayEmpty
+                                name="scrollType"
+                                value={formData.scrollType}
+                                onChange={handleChange}
+                                required
+                                sx={{
+                                    fontFamily: 'Heebo, sans-serif',
+                                    fontSize: { xs: '0.95rem', md: '1rem' },
+                                    height: '35px',
+                                    borderRadius: '25px',
+                                    backgroundColor: 'rgba(90, 59, 65, 1)',
+                                    color: 'white',
+                                    border: 'none',
+                                    width: '110%',
+                                    '& .MuiSelect-icon': { color: 'white' },
+                                    '& .MuiSelect-select': { paddingLeft: '10px' },
+                                    '&:focus': { borderColor: 'none' },
+                                }}
+                            >
+                                <MenuItem value="" disabled>סוג המגילה</MenuItem>
+                                {scrollTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        <input
+                            type="number"
+                            name="price"
+                            value={formData.price}
+                            onChange={handleChange}
+                            placeholder="מחיר"
+                            min="100"
+                            style={{
+                                fontFamily: 'Heebo, sans-serif',
+                                fontSize: '1rem',
+                                height: '35px',
+                                backgroundColor: 'rgba(90, 59, 65, 1)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '25px',
+                                paddingLeft: '10px',
+                                width: '110%',
+                                boxSizing: 'border-box',
+                                textIndent: '10px'
+                            }}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        <textarea
+                            name="note"
+                            value={formData.note}
+                            onChange={handleChange}
+                            placeholder="הערות"
+                            rows={1}
+                            style={{
+                                fontFamily: 'Heebo, sans-serif',
+                                fontSize: '1rem',
+                                height: '35px',
+                                backgroundColor: 'rgba(90, 59, 65, 1)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '25px',
+                                padding: '8px 10px',
+                                width: '110%',
+                                boxSizing: 'border-box',
+                                resize: 'none',
+                                overflow: 'hidden',
+                                lineHeight: '1.2',
+                            }}
+                        />
+                    </Grid>
+
+                    <Grid container sx={{
+                        marginTop: 2,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '8px'
+                    }}>
+                        <Grid item xs={12} sm={5} sx={{ marginTop: 2 }}>
+                            <label htmlFor="primary-image-upload">
+                                <input
+                                    id="primary-image-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handlePrimaryImageChange}
+                                    required
+                                    style={{ display: 'none' }}
+                                />
+                                <Button
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: 'rgba(90, 59, 65, 1)',
+                                        color: 'white',
+                                        border: 1,
+                                        borderRadius: '25px',
+                                        backgroundColor: 'rgba(90, 59, 65, 1)',
+                                        margin: 0,
+                                        fontFamily: 'Heebo, sans-serif',
+                                        fontSize: { xs: '0.9rem', sm: '0.9rem' },
+                                        padding: '6px 12px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        width: '100%',
+                                        fontWeight: 300
+                                    }}
+                                    startIcon={<CloudUploadIcon />}
+                                    component="span"
+                                >
+                                    העלאת תמונה ראשית
+                                </Button>
+                            </label>
+                        </Grid>
+
+                        <Grid item xs={12} sm={5} sx={{ marginTop: 2 }}>
+                            <label htmlFor="additional-images-upload">
+                                <input
+                                    id="additional-images-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleAdditionalImagesChange}
+                                    style={{ display: 'none' }}
+                                />
+                                <Button
+                                    variant="outlined"
+                                    sx={{
+                                        borderColor: 'rgba(90, 59, 65, 1)',
+                                        color: 'white',
+                                        border: 1,
+                                        borderRadius: '25px',
+                                        backgroundColor: 'rgba(90, 59, 65, 1)',
+                                        margin: 0,
+                                        fontFamily: 'Heebo, sans-serif',
+                                        fontSize: { xs: '0.8rem', sm: '0.9rem' },
+                                        padding: '6px 12px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        width: '100%',
+                                        fontWeight: 300
+                                    }}
+                                    startIcon={<CloudUploadIcon />}
+                                    component="span"
+                                >
+                                    העלאת תמונות נוספות
+                                </Button>
+                            </label>
+                        </Grid>
+                    </Grid>
+
+                    <Grid item xs={12} sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        fontSize: '0.9rem',
+                        fontFamily: 'Heebo, sans-serif',
+                        color: 'rgba(63, 65, 78, 1)',
+                        fontWeight: 300
+                    }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    name="isPremiumAd"
+                                    checked={formData.isPremiumAd}
+                                    onChange={handleChange}
+                                    size="small"
+                                />
+                            }
+                            label="מודעת פרימיום"
+                            sx={{
+                                fontSize: '0.9rem',
+                                margin: '0',
+                                marginTop: '5px',
+                            }}
+                        />
+                    </Grid>
+                </Grid>
+
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                    marginTop: { xs: 2, md: 3 }
+                }}>
+                    <Button
+                        variant="contained"
+                        onClick={handleSubmit}
+                        sx={{
+                            backgroundColor: 'rgba(63, 65, 78, 1)',
+                            borderRadius: '25px',
+                            color: 'white',
+                            padding: { xs: '1px 8%', md: '1px 10%' },
+                            fontFamily: 'Heebo, sans-serif',
+                            fontSize: { xs: '0.95rem', md: '1rem' },
+                            fontWeight: 300,
+                            '&:hover': {
+                                backgroundColor: 'rgba(63, 65, 78, 1)',
+                            },
+                        }}
+                    >
+                        המשך
+                    </Button>
+                </Box>
+            </Box>
+
+            {imageLimitAlert && (
                 <Alert
                     severity="error"
-                    sx={{
-                        marginBottom: 2,
-                        '& .MuiAlert-icon': {
-                            marginLeft: 2
-                        }
-                    }}
+                    sx={{ marginBottom: 2 }}
+                    onClose={() => setImageLimitAlert(false)}
                 >
-                    יש למלא את כל פרטי המוצר
+                    לא ניתן להעלות יותר מ-4 תמונות
                 </Alert>
             )}
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <FormControl fullWidth>
-                        <InputLabel
-                            shrink
-                            sx={{
-                                color: 'black',
-                                backgroundColor: 'white',
-                                padding: '0 4px',
-                            }}
-                        >
-                            סוג כתב
-                        </InputLabel>
-                        <Select
-                            name="scriptType"
-                            value={formData.scriptType}
-                            onChange={handleChange}
-                            required
-                            sx={{
-                                fontFamily: 'Roboto, sans-serif',
-                                fontSize: '1rem',
-                                height: '45px',
-                            }}
-                        >
-                            {scriptTypes.map((type) => (
-                                <MenuItem key={type} value={type}>
-                                    {type}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <FormControl fullWidth>
-                        <InputLabel
-                            shrink
-                            sx={{
-                                color: 'black',
-                                backgroundColor: 'white',
-                                padding: '0 4px',
-                            }}
-                        >
-                            סוג המגילה
-                        </InputLabel>
-                        <Select
-                            name="scrollType"
-                            value={formData.scrollType}
-                            onChange={handleChange}
-                            required
-                            sx={{
-                                fontFamily: 'Roboto, sans-serif',
-                                fontSize: '1rem',
-                                height: '45px',
-                            }}
-                        >
-                            {scrollTypes.map((type) => (
-                                <MenuItem key={type} value={type}>
-                                    {type}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <TextField
-                        label="מחיר"
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleChange}
-                        fullWidth
-
-                        InputLabelProps={{
-                            style: { color: 'black' },
-                            shrink: true,
-                        }}
-                        sx={{
-                            fontSize: '1rem',
-                            height: '45px',
-                        }}
-                        inputProps={{
-                            min: 100,
-                        }}
-                    />
-                </Grid>
-
-                <Grid item xs={12}>
-                    <TextField
-                        label="הערות"
-                        name="note"
-                        value={formData.note}
-                        onChange={handleChange}
-                        fullWidth
-                        multiline
-                        rows={1.2}
-                        InputLabelProps={{
-                            style: { color: 'black' },
-                            shrink: true,
-                        }}
-                        sx={{
-                            fontFamily: 'Roboto, sans-serif',
-                            fontSize: '1rem',
-                            height: '100px',
-                        }}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '-45px',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    alignItems: 'center',
-                    gap: { xs: 2, sm: 1 }
-                }}>
-                    <label htmlFor="primary-image-upload">
-                        <input
-                            id="primary-image-upload"
-                            type="file"
-                            accept="image/*"
-                            onChange={handlePrimaryImageChange}
-                            required
-                            style={{ display: 'none' }}
-                        />
-                        <Button
-                            variant="outlined"
-                            sx={{
-                                borderColor: '#1976d2',
-                                color: '#1976d2',
-                                border: 1,
-                                margin: { xs: '4px 0', sm: '0 8px' },
-                                fontFamily: 'Roboto, sans-serif',
-                                fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                                padding: '6px 12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                width: { xs: '250px', sm: 'auto' }
-                            }}
-                            startIcon={<CloudUploadIcon />}
-                            component="span"
-                        >
-                            הוסף תמונה ראשית
-                        </Button>
-                    </label>
-
-                    <label htmlFor="additional-images-upload">
-                        <input
-                            id="additional-images-upload"
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            onChange={handleAdditionalImagesChange}
-                            style={{ display: 'none' }}
-                        />
-                        <Button
-                            variant="outlined"
-                            sx={{
-                                borderColor: '#1976d2',
-                                color: '#1976d2',
-                                border: 1,
-                                margin: { xs: '4px 0', sm: '0 8px' },
-                                fontFamily: 'Roboto, sans-serif',
-                                fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                                padding: '6px 12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                width: { xs: '250px', sm: 'auto' }
-                            }}
-                            startIcon={<CloudUploadIcon />}
-                            component="span"
-                        >
-                            העלה תמונות נוספות
-                        </Button>
-                    </label>
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', fontSize: '0.9rem' }}>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                name="isPremiumAd"
-                                checked={formData.isPremiumAd}
-                                onChange={handleChange}
-                                size="small"
-                                sx={{ fontFamily: 'Roboto, sans-serif' }}
-                            />
-                        }
-                        label="מודעת פרימיום"
-                        sx={{
-                            fontFamily: 'Roboto, sans-serif',
-                            fontSize: '0.9rem',
-                            margin: '0',
-                            marginTop: '-15px',
-                        }}
-                    />
-                </Grid>
-            </Grid>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                <Button
-                    variant="contained"
-                    onClick={handleSubmit}
-                    endIcon={<ArrowBack sx={{ marginRight: '10px' }} />}
-                >
-                    הבא
-                </Button>
-            </Box>
-        </Box>
-          {imageLimitAlert && (
-            <Alert 
-                severity="error" 
-                sx={{ marginBottom: 2 }}
-                onClose={() => setImageLimitAlert(false)}
-            >
-                לא ניתן להעלות יותר מ-4 תמונות 
-            </Alert>
-        )}
         </>
     );
 };

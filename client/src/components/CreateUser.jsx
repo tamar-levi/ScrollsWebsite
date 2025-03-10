@@ -10,47 +10,40 @@ import {
   Snackbar,
   Alert,
   IconButton,
-  Typography
+  Typography,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { setUser } from '../redux/userSlice';
 import { useDispatch } from 'react-redux';
 
-
 const CreateUser = ({ open, onClose }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const inputStyle = {
     flex: 1,
-    padding: '10px',
+    padding: isMobile ? '8px' : '10px',
     paddingRight: '10px',
     borderRadius: '50px',
     border: 'none',
     background: '#47515A',
     color: 'white',
-    fontSize: '0.9rem',
+    fontSize: isMobile ? '0.8rem' : '0.9rem',
     textAlign: 'right',
     outline: 'none',
     fontFamily: 'Heebo, sans-serif',
-    height: '30px',
+    height: isMobile ? '25px' : '30px',
     width: '100%',
     boxSizing: 'border-box',
     fontWeight: 200,
   };
 
-  const submitButtonStyle = {
-    background: '#3A4750',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50px',
-    padding: '10px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    fontFamily: 'Heebo, sans-serif',
-    marginTop: '10px',
-  };
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: '',
     displayName: '',
@@ -138,7 +131,20 @@ const CreateUser = ({ open, onClose }) => {
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth sx={{ direction: 'rtl', borderRadius: '24px' }}>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="md"
+        fullWidth
+        sx={{
+          direction: 'rtl',
+          '& .MuiDialog-paper': {
+            borderRadius: '24px',
+            width: isMobile ? '95%' : isTablet ? '80%' : '70%',
+            margin: isMobile ? '10px' : 'auto',
+          }
+        }}
+      >
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pl: 2 }}>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -151,7 +157,7 @@ const CreateUser = ({ open, onClose }) => {
             color: 'rgba(0, 0, 0, 1)',
             fontFamily: 'Heebo, sans-serif',
             fontWeight: 'bold',
-            padding: '5px 160px',
+            padding: isMobile ? '5px 40px' : isTablet ? '5px 100px' : '5px 160px',
             textAlign: 'center',
             width: 'fit-content',
             marginBottom: '20px',
@@ -164,9 +170,15 @@ const CreateUser = ({ open, onClose }) => {
           יצירת משתמש חדש
         </Typography>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-          <form onSubmit={handleCreateUserSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '10px', width: '60%' }}>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <div style={{ flex: 1, position: 'relative' }}>
+          <form onSubmit={handleCreateUserSubmit} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+            marginTop: '10px',
+            width: isMobile ? '95%' : isTablet ? '80%' : '60%'
+          }}>
+            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '10px' }}>
+              <div style={{ flex: 1 }}>
                 <input
                   type="text"
                   name="fullName"
@@ -177,7 +189,7 @@ const CreateUser = ({ open, onClose }) => {
                   style={inputStyle}
                 />
               </div>
-              <div style={{ flex: 1, position: 'relative' }}>
+              <div style={{ flex: 1 }}>
                 <input
                   type="text"
                   name="displayName"
@@ -189,8 +201,9 @@ const CreateUser = ({ open, onClose }) => {
                 />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <div style={{ flex: 1, position: 'relative' }}>
+
+            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '10px' }}>
+              <div style={{ flex: 1 }}>
                 <input
                   type="tel"
                   name="phoneNumber"
@@ -201,7 +214,7 @@ const CreateUser = ({ open, onClose }) => {
                   style={inputStyle}
                 />
               </div>
-              <div style={{ flex: 1, position: 'relative' }}>
+              <div style={{ flex: 1 }}>
                 <input
                   type="tel"
                   name="additionalPhone"
@@ -212,8 +225,9 @@ const CreateUser = ({ open, onClose }) => {
                 />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <div style={{ flex: 1, position: 'relative' }}>
+
+            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '10px' }}>
+              <div style={{ flex: 1 }}>
                 <input
                   type="email"
                   name="email"
@@ -224,7 +238,7 @@ const CreateUser = ({ open, onClose }) => {
                   style={inputStyle}
                 />
               </div>
-              <div style={{ flex: 1, position: 'relative' }}>
+              <div style={{ flex: 1 }}>
                 <input
                   type="text"
                   name="city"
@@ -236,6 +250,7 @@ const CreateUser = ({ open, onClose }) => {
                 />
               </div>
             </div>
+
             <div style={{ position: 'relative' }}>
               <input
                 type="password"
@@ -249,7 +264,9 @@ const CreateUser = ({ open, onClose }) => {
               />
             </div>
           </form>
-          <FormControlLabel sx={{ marginTop: '25px' }}
+
+          <FormControlLabel
+            sx={{ marginTop: '25px' }}
             control={
               <Checkbox
                 checked={termsAccepted}
@@ -266,29 +283,31 @@ const CreateUser = ({ open, onClose }) => {
               <Typography
                 sx={{
                   fontFamily: 'Heebo, sans-serif',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '12px' : '14px',
                   fontWeight: 'normal',
                   color: '#333',
                   display: 'inline-block',
                   marginLeft: '8px'
                 }}
               >
-                אני מסכים לתקנון האתר וקבלת דיוור
+                אני מסכים לתקנון האתר וקבלת דיוור&nbsp;
+                <a href="/terms.pdf" target="_blank" rel="noopener noreferrer">צפייה בתקנון</a>
               </Typography>
             }
           />
+
           <Button
             onClick={handleCreateUserSubmit}
             variant="contained"
             disabled={!termsAccepted}
             sx={{
-              width: '150px',
+              width: isMobile ? '130px' : '150px',
               gap: '6px',
               backgroundColor: 'rgba(90, 59, 65, 1)',
               borderRadius: '24px',
               fontFamily: 'Heebo, sans-serif',
-              height: '30px',
-              minHeight: '30px',
+              height: isMobile ? '25px' : '30px',
+              minHeight: isMobile ? '25px' : '30px',
               color: '#fff',
               fontWeight: 200,
               alignSelf: 'center',
@@ -300,7 +319,12 @@ const CreateUser = ({ open, onClose }) => {
         </DialogContent>
       </Dialog>
 
-      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
@@ -308,5 +332,6 @@ const CreateUser = ({ open, onClose }) => {
     </>
   );
 };
+
 
 export default CreateUser;
