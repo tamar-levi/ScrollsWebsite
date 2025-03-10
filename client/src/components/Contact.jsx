@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import backgroundImage from '../assets/Contact.png';
-import { Typography } from '@mui/material';
+import { Typography, Snackbar, Alert } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -12,6 +12,65 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default function Contact() {
+    const [openAlert, setOpenAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState('success');
+    const [formData, setFormData] = useState({
+        email: '',
+        name: '',
+        message: ''
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);  // מצב השליחה
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        // בדיקה אם כל השדות מלאים
+        if (!formData.email || !formData.name || !formData.message) {
+            setAlertMessage('אנא מלא את כל השדות');
+            setAlertSeverity('warning');
+            setOpenAlert(true);  // פותחים את האלרט
+            return;  // אם יש שדה חסר, לא נמשיך לשלוח
+        }
+
+        setIsSubmitting(true);  // מתחילים לשלוח, כפתור יהיה דיסאייבל
+        console.log(formData);
+        try {
+            const response = await fetch('http://localhost:5000/usersApi/contactUs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                setFormData({ email: '', name: '', message: '' });
+                setAlertMessage('ההודעה נשלחה בהצלחה!');
+                setAlertSeverity('success');
+            } else {
+                setAlertMessage('שגיאה בשליחת ההודעה, אנא נסו שוב');
+                setAlertSeverity('error');
+            }
+            setOpenAlert(true); // Open the alert
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setAlertMessage('שגיאה בשליחת ההודעה, אנא נסו שוב');
+            setAlertSeverity('error');
+            setOpenAlert(true); // Open the alert
+        } finally {
+            setIsSubmitting(false);  // בסיום, כפתור יחזור להיות פעיל
+        }
+    };
+
     return (
         <>
             <GlobalStyle />
@@ -64,120 +123,135 @@ export default function Contact() {
                 }
                 `}
             </style>
-            <div
-                className="contact-container"
-                style={{
-                    width: '100vw',
-                    height: '90vh',
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
+            <div className="contact-container" style={{
+                width: '100vw',
+                height: '90vh',
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                display: 'flex',
+                fontFamily: 'Heebo, sans-serif',
+                margin: 0,
+                padding: 0,
+            }}>
+                <div className="form-section" style={{
+                    width: '70%',
                     display: 'flex',
-                    fontFamily: 'Heebo, sans-serif',
-                    margin: 0,
-                    padding: 0,
-                }}
-            >
-                <div
-                    className="form-section"
-                    style={{
-                        width: '70%',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '20px',
+                    marginLeft: '7%',
+                }}>
+                    <form onSubmit={handleSubmit} style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '20px',
-                        marginLeft: '7%',
-                    }}
-                >
-                    <div className="input-group" style={{ display: 'flex', gap: '10px', width: '65%' }}>
-                        <input
-                            type="email"
-                            placeholder="מייל"
+                        width: '100%',
+                        gap: '20px'
+                    }}>
+                        <div className="input-group" style={{ display: 'flex', gap: '10px', width: '65%' }}>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                placeholder="מייל"
+                                style={{
+                                    flex: 1,
+                                    padding: '6px',
+                                    borderRadius: '50px',
+                                    border: 'none',
+                                    background: '#47515A',
+                                    color: 'white',
+                                    fontSize: '1rem',
+                                    textAlign: 'right',
+                                    outline: 'none',
+                                    paddingRight: '10px',
+                                    fontFamily: 'Heebo, sans-serif',
+                                    direction: 'rtl',
+                                }}
+                            />
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                placeholder="נושא"
+                                style={{
+                                    flex: 1,
+                                    padding: '5px',
+                                    borderRadius: '50px',
+                                    border: 'none',
+                                    background: '#47515A',
+                                    color: 'white',
+                                    fontSize: '1rem',
+                                    textAlign: 'right',
+                                    outline: 'none',
+                                    paddingRight: '10px',
+                                    fontFamily: 'Heebo, sans-serif',
+                                    direction: 'rtl',
+                                }}
+                            />
+                        </div>
+                        <textarea
+                            name="message"
+                            value={formData.message}
+                            onChange={handleInputChange}
+                            className="message-input"
+                            placeholder="הודעה"
+                            rows="2"
                             style={{
-                                flex: 1,
-                                padding: '6px',
-                                borderRadius: '50px',
+                                width: '63%',
+                                borderRadius: '60px',
+                                textAlign: 'right',
                                 border: 'none',
                                 background: '#47515A',
                                 color: 'white',
                                 fontSize: '1rem',
-                                textAlign: 'right',
                                 outline: 'none',
-                                paddingRight: '10px',
-                            }}
-                        />
-                        <input
-                            type="text"
-                            placeholder="שם"
-                            style={{
-                                flex: 1,
+                                resize: 'none',
                                 padding: '5px',
-                                borderRadius: '50px',
-                                border: 'none',
-                                background: '#47515A',
-                                color: 'white',
-                                fontSize: '1rem',
-                                textAlign: 'right',
-                                outline: 'none',
-                                paddingRight: '10px',
+                                paddingRight: '25px',
+                                fontFamily: 'Heebo, sans-serif',
+                                direction: 'rtl',
                             }}
-                        />
-                    </div>
-                    <textarea
-                        className="message-input"
-                        placeholder="הודעה"
-                        rows="2"
-                        style={{
-                            width: '63%',
-                            borderRadius: '60px',
-                            textAlign: 'right',
-                            border: 'none',
-                            background: '#47515A',
-                            color: 'white',
-                            fontSize: '1rem',
-                            outline: 'none',
-                            resize: 'none',
-                            padding: '5px',
-                            paddingRight: '25px',
-                            fontFamily: 'Heebo, sans-serif',
-                        }}
-                    ></textarea>
-                    <button
-                        className="submit-button"
-                        style={{
-                            backgroundColor: 'rgba(90, 59, 65, 1)',
-                            color: 'white',
-                            fontWeight: 'bold',
-                            padding: '0.8% 30%',
-                            borderRadius: '50px',
-                            fontSize: '1.1rem',
-                            border: 'none',
-                            cursor: 'pointer',
-                            marginTop: '10px',
-                            outline: 'none',
-                        }}
-                    >
-                        שלח
-                    </button>
+                        ></textarea>
+                        <button
+                            type="submit"
+                            className="submit-button"
+                            style={{
+                                backgroundColor: 'rgba(90, 59, 65, 1)',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                padding: '0.8% 30%',
+                                borderRadius: '50px',
+                                fontSize: '1.1rem',
+                                border: 'none',
+                                cursor: isSubmitting ? 'not-allowed' : 'pointer', // אם אנחנו בשלב של שליחה, הכפתור יהיה דיסאייבל
+                                marginTop: '10px',
+                                outline: 'none',
+                            }}
+                            disabled={isSubmitting}  // אם אנחנו בשלב של שליחה, הכפתור יהיה דיסאייבל
+                        >
+                            {isSubmitting ? 'שליחה...' : 'שלח'}
+                        </button>
+                    </form>
                 </div>
-                <div
-                    className="info-section"
-                    style={{
-                        width: '40%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                        color: 'rgba(90, 59, 65, 1)',
-                        fontSize: '1.1rem',
-                        gap: '10px',
-                        marginRight: '10%',
-                        marginLeft: '-5%',
-                    }}
-                >
+                <div className="info-section" style={{
+                    width: '40%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: 'rgba(90, 59, 65, 1)',
+                    fontSize: '1.1rem',
+                    gap: '10px',
+                    marginRight: '10%',
+                    marginLeft: '-5%',
+                }}>
                     <Typography
                         className="title-text"
                         sx={{
@@ -196,19 +270,26 @@ export default function Contact() {
                     </Typography>
                     <div className="contact-info" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', textAlign: 'right', fontSize: '1.05rem' }}>
                         <div style={{ marginBottom: '5%', fontWeight: 600 }}>נשמח לעמוד לשירותכם, לייעץ, להמליץ ולתמוך</div>
-                        <div
-                            style={{
-                                width: '80%',
-                                height: '3px',
-                                backgroundColor: 'rgba(230, 219, 201, 1)',
-                                marginBottom: '5%',
-                            }}
-                        ></div>
+                        <div style={{
+                            width: '80%',
+                            height: '3px',
+                            backgroundColor: 'rgba(230, 219, 201, 1)',
+                            marginBottom: '5%',
+                        }}></div>
                         <div style={{ fontWeight: 600 }}>ScrollsSite@gmail.com :מייל</div>
                         <div style={{ fontWeight: 600 }}>טלפון: 052-7672693</div>
                     </div>
                 </div>
             </div>
+            <Snackbar
+                open={openAlert}
+                autoHideDuration={6000}
+                onClose={() => setOpenAlert(false)}
+            >
+                <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity} sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 }

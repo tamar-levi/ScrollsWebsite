@@ -3,7 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 const bcrypt = require('bcryptjs');
-const { sendWelcomeEmail, authorize } = require('../services/emailService');
+const { sendWelcomeEmail, authorize, sendContactEmail } = require('../services/emailService');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID_TAMAR);
 const Product = require('../models/productModel');
@@ -21,7 +21,7 @@ const getAllUsers = async (req, res) => {
 const getCurrentUser = async (req, res) => {
     try {
         const userId = req.user.id;
-        const user = await User.findById(userId).select('-password'); 
+        const user = await User.findById(userId).select('-password');
         if (!user) {
             return res.status(404).send('User not found');
         }
@@ -46,8 +46,7 @@ const addUser = async (req, res) => {
         if (existingPhone) {
             return res.status(400).json({ message: 'מספר הטלפון כבר קיים במערכת' });
         }
-
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({ message: 'הסיסמה לא עומדת בדרישות' });
         }
@@ -223,4 +222,21 @@ const addUserFromForm = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm };
+const contactUs = async (req, res) => {
+    const { name, email, message } = req.body;
+    try {
+        const auth = await authorize();
+        await sendContactEmail(
+            auth,
+            email,
+            name,
+            message
+        );
+        res.status(200).send('Message sent successfully');
+    } catch (err) {
+        console.error('Error sending message', err);
+        res.status(500).send('Database error');
+    }
+}
+
+module.exports = { getAllUsers, getCurrentUser, addUser, updateUserDetails, loginUser, deleteUser, handleGoogleLogin, getUserById, addUserFromForm, contactUs };

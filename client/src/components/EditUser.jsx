@@ -58,9 +58,6 @@ export default function EditUser({ open, onClose }) {
         dispatch(updateUser(response.data));
         localStorage.setItem('user', JSON.stringify(response.data));
         setSnackbar({ open: true, message: 'הפרטים עודכנו בהצלחה', severity: 'success' });
-        setTimeout(() => {
-          navigate('/account');
-        }, 1500);
       }
     } catch (err) {
       console.error('Error updating user:', err);
@@ -104,10 +101,6 @@ export default function EditUser({ open, onClose }) {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const handleGoBack = () => {
-    navigate('/account');
-    onClose();
-  };
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="edit-user-modal">
       <Box
@@ -123,7 +116,7 @@ export default function EditUser({ open, onClose }) {
           sx={{
             position: 'absolute',
             width: '600px',
-            height: '500px',  // עדכנתי את הגובה בהתאם כדי לתת מקום לשדות
+            height: '500px',  
             left: 'calc(50% - 600px/2 - 0.4px)',
             top: 'calc(50% - 500px/2)',
             backgroundColor: '#FFFFFF',
@@ -153,16 +146,24 @@ export default function EditUser({ open, onClose }) {
               color: 'rgba(0, 0, 0, 1)',
               fontFamily: 'Heebo, sans-serif',
               fontWeight: 'bold',
-              padding: '5px 170px',
+              padding: {
+                xs: '5px 40px',  
+                sm: '5px 80px',  
+                md: '5px 170px', 
+              },
               textAlign: 'center',
               width: 'fit-content',
               margin: '0 auto',
               marginBottom: '50px',
+              fontSize: {
+                xs: '1rem',  
+                sm: '1rem',   
+                md: '1rem',
+              }
             }}
           >
             עריכת פרטי חשבון
           </Typography>
-
           <input
             type="text"
             placeholder="שם מלא"
@@ -177,6 +178,8 @@ export default function EditUser({ open, onClose }) {
               color: 'white',
               outline: 'none',
               marginBottom: '10px',
+              fontWeight: 300,
+              fontFamily: 'Heebo, sans-serif',
             }}
           />
           <input
@@ -193,6 +196,8 @@ export default function EditUser({ open, onClose }) {
               color: 'white',
               outline: 'none',
               marginBottom: '10px',
+              fontWeight: 300,
+              fontFamily: 'Heebo, sans-serif',
             }}
           />
           <input
@@ -209,6 +214,8 @@ export default function EditUser({ open, onClose }) {
               color: 'white',
               outline: 'none',
               marginBottom: '10px',
+              fontWeight: 300,
+              fontFamily: 'Heebo, sans-serif',
             }}
           />
           <input
@@ -225,6 +232,8 @@ export default function EditUser({ open, onClose }) {
               color: 'white',
               outline: 'none',
               marginBottom: '10px',
+              fontWeight: 300,
+              fontFamily: 'Heebo, sans-serif',
             }}
           />
           <input
@@ -241,6 +250,8 @@ export default function EditUser({ open, onClose }) {
               color: 'white',
               outline: 'none',
               marginBottom: '10px',
+              fontWeight: 300,
+              fontFamily: 'Heebo, sans-serif',
             }}
           />
 
@@ -248,10 +259,10 @@ export default function EditUser({ open, onClose }) {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-evenly', width: '100%', marginTop: '50px' }}>
             <Button
-              onClick={onClose}  // שינוי הקריאה לפונקציה שסוגרת את ה-Modal
+              onClick={onClose}
               sx={{
                 width: '170px',
-                height: '30px',
+                height: '25px',
                 background: '#47515A',
                 borderRadius: '50.05px',
                 color: 'white',
@@ -263,17 +274,18 @@ export default function EditUser({ open, onClose }) {
                 outline: 'none',
                 cursor: 'pointer',
                 marginRight: '-50px',
+                fontWeight: 300,
+                fontFamily: 'Heebo, sans-serif',
               }}
             >
               חזרה
             </Button>
-
             <Button
               onClick={handleSave}
               disabled={loading}
               sx={{
                 width: '170px',
-                height: '30px',
+                height: '25px',
                 background: '#47515A',
                 borderRadius: '50.05px',
                 color: 'white',
@@ -284,13 +296,13 @@ export default function EditUser({ open, onClose }) {
                 border: 'none',
                 outline: 'none',
                 cursor: loading ? 'not-allowed' : 'pointer',
+                fontWeight: 300,
+                fontFamily: 'Heebo, sans-serif',
               }}
             >
               {loading ? 'שומר...' : 'שמירה'}
             </Button>
           </Box>
-
-          {/* כפתור מחיקת משתמש */}
           <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '20px' }}>
             <Button
               variant="outlined"
@@ -298,7 +310,7 @@ export default function EditUser({ open, onClose }) {
               onClick={handleDelete}
               sx={{
                 width: '170px',
-                height: '30px',
+                height: '25px',
                 background: '#47515A',
                 borderRadius: '50.05px',
                 color: 'white',
@@ -308,14 +320,13 @@ export default function EditUser({ open, onClose }) {
                 outline: 'none',
                 padding: '0 10px',
                 cursor: 'pointer',
+                fontWeight: 300,
+                fontFamily: 'Heebo, sans-serif',
               }}
             >
               מחיקת משתמש
             </Button>
           </Box>
-
-
-
           <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
             <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
               {snackbar.message}

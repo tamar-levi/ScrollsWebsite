@@ -9,7 +9,6 @@ import { useTheme } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import ContactUs from './ContactUs';
 import logo from '../assets/Logo.png';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -140,7 +139,6 @@ export default function NavBar() {
           </Box>
         </Toolbar>
       </AppBar>
-      <ContactUs open={openContact} onClose={() => setOpenContact(false)} />
     </>
   );
 }

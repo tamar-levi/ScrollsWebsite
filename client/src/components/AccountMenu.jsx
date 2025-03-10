@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import UserAccount from './UserAccount';  // ייבוא הקומפוננטה של החלונית
+import UserAccount from './UserAccount'; 
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -97,7 +97,7 @@ export default function AccountMenu() {
               </MenuItem>
               <MenuItem onClick={() => {
                 handleClose();
-                navigate('/products');
+                navigate('/myProducts');
               }} dir="rtl">
                 <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
                   <Scroll />

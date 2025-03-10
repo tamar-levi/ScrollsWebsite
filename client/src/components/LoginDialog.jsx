@@ -46,25 +46,11 @@ const LoginDialog = ({ open, onClose }) => {
             const newToken = response.data.token;
             localStorage.setItem('token', newToken);
             dispatch(setUser(response.data.user));
-            const successMessage = document.createElement('div');
-            successMessage.innerHTML = '✓ התחברת בהצלחה';
-            successMessage.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4CAF50;
-                color: white;
-                padding: 16px;
-                border-radius: 8px;
-                z-index: 9999;
-            `;
-            document.body.appendChild(successMessage);
 
             setTimeout(() => {
-                successMessage.remove();
                 handleClose();
                 navigate('/products');
-            }, 1500);
+            }, 500);
 
         } catch (error) {
             if (error.response?.status === 401) {

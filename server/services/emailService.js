@@ -256,10 +256,48 @@ async function sendWelcomeEmail(auth, email) {
     }
 }
 
+async function sendContactEmail(auth, fromEmail, subject = 'אין נושא', content = 'אין תוכן') {
+    console.log(fromEmail, subject, content);
+    const htmlBody = `
+    <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">
+        <h4>הודעה חדשה מ: ${fromEmail}</h4>
+        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
+            <p><strong>תוכן ההודעה:</strong></p>
+            <p>${content}</p>
+        </div>
+    </div>`;
+
+    const rawMessage = [
+        'From: "Scrolls Site" <scrollssite@gmail.com>',
+        'To: "Scrolls Site" <scrollssite@gmail.com>',
+        `Reply-To: ${fromEmail}`,
+        `Subject: =?UTF-8?B?${Buffer.from(subject, 'utf-8').toString('base64')}?=`,
+        'MIME-Version: 1.0',
+        'Content-Type: text/html; charset=UTF-8',
+        '',
+        htmlBody
+    ].join('\r\n');
+
+    const gmail = google.gmail({ version: 'v1', auth });
+    try {
+        const res = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: Buffer.from(rawMessage).toString('base64')
+            }
+        });
+        console.log('✅ המייל נשלח בהצלחה:', res.data);
+        return true;
+    } catch (err) {
+        console.error('❌ שגיאה בשליחת המייל:', err);
+        throw err;
+    }
+}
+
 async function sendExampleEmail() {
     const auth = await authorize();
     const email = 'had4059@gmail.com';
     sendWelcomeEmail(auth, email);
 }
 
-module.exports = { sendEmail, sendReceiptEmail, sendWelcomeEmail, authorize };
+module.exports = { sendEmail, sendReceiptEmail, sendWelcomeEmail, authorize, sendContactEmail };

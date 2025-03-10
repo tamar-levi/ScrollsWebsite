@@ -12,5 +12,6 @@ router.post('/loginUser', userController.loginUser);
 router.delete('/deleteUser', authenticateToken, userController.deleteUser);
 router.post('/google-login', userController.handleGoogleLogin);
 router.post('/addUserFromForm',userController.addUserFromForm);
+router.post('/contactUs',userController.contactUs);
 
 module.exports = router;

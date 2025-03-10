@@ -28,18 +28,6 @@ export default function UserAccount({ open, onClose }) {
   const handleDialogClose = () => setOpenDialog(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";  
-    };
-  }, [open]);
-
   const handleDelete = async () => {
     handleDialogClose();
     try {
@@ -110,25 +98,26 @@ export default function UserAccount({ open, onClose }) {
                 width: 'fit-content',
                 margin: '0 auto',
                 marginBottom: '40px',
+                marginTop: '20px',
               }}
             >
               החשבון שלי
             </Typography>
             <PersonOutlineIcon sx={{ fontSize: '80px', color: '#757575' }} />
 
-            <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>
+            <Typography variant="h6" sx={{ mt: 1, fontFamily: 'Heebo, sans-serif', color: '#47515A' }}>
               {user?.fullName || 'שם לא זמין'}
             </Typography>
-            <Typography variant="body2" sx={{ mt: 1, fontFamily: 'Rubik, sans-serif' }}>
+            <Typography variant="body2" sx={{ mt: 1, fontFamily: 'Heebo, sans-serif' }}>
               {user?.displayName || 'שם תצוגה לא זמין'}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontFamily: 'Heebo, sans-serif' }}>
               {user?.email || 'אימייל לא זמין'}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontFamily: 'Heebo, sans-serif' }}>
               {user?.city || 'כתובת לא זמינה'}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontFamily: 'Heebo, sans-serif' }}>
               {user?.phoneNumber != 0 ? user?.phoneNumber : 'מספר טלפון לא צוין'}
             </Typography>
             <Box
@@ -137,6 +126,7 @@ export default function UserAccount({ open, onClose }) {
                 justifyContent: 'center',
                 mt: 3,
                 gap: 1.5,
+                marginBottom: '20px',
                 flexDirection: isMobile ? 'column' : 'row'
               }}
             >
@@ -149,6 +139,8 @@ export default function UserAccount({ open, onClose }) {
                   color: 'white',
                   height: '26px',
                   fontSize: '14px',
+                  fontWeight: 300,
+                  fontFamily: 'Heebo, sans-serif',
                   '&:hover': {
                     background: '#3B454E'
                   }
@@ -165,6 +157,8 @@ export default function UserAccount({ open, onClose }) {
                   color: 'white',
                   height: '26px',
                   fontSize: '14px',
+                  fontWeight: 300,
+                  fontFamily: 'Heebo, sans-serif',
                   '&:hover': {
                     background: '#3B454E'
                   }
@@ -179,7 +173,10 @@ export default function UserAccount({ open, onClose }) {
         </Box>
       </Modal>
 
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog open={openDialog} onClose={handleDialogClose} sx={{
+        fontWeight: 300,
+        fontFamily: 'Heebo, sans-serif', direction: 'rtl',
+      }}>
         <DialogTitle>אישור מחיקה</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -197,4 +194,5 @@ export default function UserAccount({ open, onClose }) {
         </DialogActions>
       </Dialog>
     </>
-  )};
+  )
+};

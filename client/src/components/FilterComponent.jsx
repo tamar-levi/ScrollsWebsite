@@ -180,7 +180,6 @@ const FilterComponent = ({ onFilter, products }) => {
                     </Button>
                 )}
 
-                {/* המשך הקוד הקיים - כל הרדיו באטנס, סלקטים וכו' נשארים זהים */}
                 <div style={{ width: '70%' }}>
                     <Typography
                         variant="subtitle2"
@@ -203,7 +202,7 @@ const FilterComponent = ({ onFilter, products }) => {
                             gap: '-10px',
                         }}
                     >
-                        {['בית יוסף', 'האר"י', 'ספרדי', 'חב"ד', 'תימני', 'אחר'].map((type) => (
+                        {['בית יוסף', 'האר"י', 'ספרדי (וועליש)', 'חב"ד', 'תימני', 'אחר'].map((type) => (
                             <FormControlLabel
                                 key={type}
                                 value={type}

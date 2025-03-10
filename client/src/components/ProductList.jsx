@@ -12,10 +12,12 @@ import background from '../assets/About.png';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  body {
+  body, html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
   }
 `;
 
@@ -68,10 +70,10 @@ const ProductList = () => {
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
           position: 'relative',
-          left: 0,
-          right: 0,
+          overflow: 'hidden', 
         }}
       >
+
         <Box sx={{
           position: 'fixed',
           top: 0,

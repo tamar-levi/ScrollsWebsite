@@ -13,22 +13,6 @@ const ProductModal = ({ product, onClose }) => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const buttonStyle = {
-    border: '1px solid #1976d2',
-    color: '#1976d2',
-    backgroundColor: 'transparent',
-    '&:hover': {
-      backgroundColor: 'rgba(25, 118, 210, 0.04)',
-      border: '1px solid #1976d2',
-    },
-    marginLeft: '16px',
-    fontFamily: 'Rubik, sans-serif',
-    fontWeight: 500,
-    '& .MuiButton-endIcon': {
-      marginRight: '4px',
-      marginLeft: '-4px',
-    },
-  };
 
   const handleSellerDetailsClick = () => {
     setIsSellerModalOpen(true);
@@ -104,7 +88,6 @@ const ProductModal = ({ product, onClose }) => {
         </DialogContent>
         <DialogActions sx={{ padding: 2, gap: 2 }}>
         <Button
-            variant="contained"
             color="primary"
             onClick={handleSellerDetailsClick}
             endIcon={<PersonIcon />}
@@ -113,7 +96,7 @@ const ProductModal = ({ product, onClose }) => {
               backgroundColor: 'rgba(230, 219, 201, 1)',
               borderRadius: '20px',
               fontFamily: 'Heebo, sans-serif',
-              height: '34px',
+              height: '32px',
               minHeight: '30px',
               minWidth: '120px', 
               color: 'rgba(90, 59, 65, 1)',
@@ -123,7 +106,6 @@ const ProductModal = ({ product, onClose }) => {
           </Button>
           <Button
             onClick={onClose}
-            variant="contained"
             color="primary"
             endIcon={<CloseIcon />}
             sx={{
@@ -132,7 +114,7 @@ const ProductModal = ({ product, onClose }) => {
               backgroundColor: 'rgba(230, 219, 201, 1)',
               borderRadius: '20px',
               fontFamily: 'Heebo, sans-serif',
-              height: '34px',
+              height: '32px',
               minHeight: '30px',
               minWidth: '100px', 
             }}

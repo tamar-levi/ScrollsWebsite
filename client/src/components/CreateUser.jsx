@@ -80,12 +80,38 @@ const CreateUser = ({ open, onClose }) => {
   };
 
   const validatePassword = (password) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
 
   const handleCreateUserSubmit = async (event) => {
     event.preventDefault();
+    console.log(validatePassword("ZrEx2fi24c@@NKt"));
+
+    if (!formData.fullName.trim()) {
+      setSnackbar({ open: true, message: 'נא למלא שם מלא', severity: 'error' });
+      return;
+    }
+
+    if (!formData.phoneNumber.trim()) {
+      setSnackbar({ open: true, message: 'נא למלא מספר טלפון', severity: 'error' });
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setSnackbar({ open: true, message: 'נא למלא דואר אלקטרוני', severity: 'error' });
+      return;
+    }
+
+    if (!formData.city.trim()) {
+      setSnackbar({ open: true, message: 'נא למלא עיר', severity: 'error' });
+      return;
+    }
+
+    if (!formData.password.trim()) {
+      setSnackbar({ open: true, message: 'נא למלא סיסמא', severity: 'error' });
+      return;
+    }
 
     if (!validateEmail(formData.email)) {
       setSnackbar({ open: true, message: 'כתובת הדואר האלקטרוני לא תקינה', severity: 'error' });
@@ -317,18 +343,37 @@ const CreateUser = ({ open, onClose }) => {
             צור משתמש
           </Button>
         </DialogContent>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          sx={{ zIndex: 10000 }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbar.severity}
+            sx={{
+              width: '100%',
+              fontFamily: 'Heebo, sans-serif',
+              marginLeft: '10px',
+              marginRight: '10px',
+              '& .MuiAlert-message': {
+                padding: '8px 0',
+                marginRight: '8px',
+                marginLeft: '8px'
+              },
+              '& .MuiAlert-icon': {
+                marginRight: '8px'
+              }
+            }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Dialog>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+
     </>
   );
 };

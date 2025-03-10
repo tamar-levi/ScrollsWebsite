@@ -15,7 +15,6 @@ import Checkout from './components/Checkout';
 import UserProducts from './components/UserProducts';
 import UserAccount from './components/UserAccount';
 import EditUser from './components/EditUser';
-import ContactUs from './components/ContactUs';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,7 +60,6 @@ function App() {
                 <Route path="/myProducts" element={<UserProducts />} />
                 <Route path="/account" element={<UserAccount />} />
                 <Route path="/editUser" element={<EditUser />} />
-                <Route path="/contactUs" element={<ContactUs />} />
               </Routes>
             </Box>
           </Box>

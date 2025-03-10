@@ -30,7 +30,7 @@ export default function About() {
         direction: 'rtl',
         padding: isMobile ? '20px 0' : '30px 0',
         position: 'relative',
-        minHeight: "90vh",
+        minHeight: "100vh",
         width: "100vw",
         display: 'flex',
         alignItems: 'center',
