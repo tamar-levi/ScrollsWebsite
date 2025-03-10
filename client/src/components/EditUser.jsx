@@ -135,7 +135,7 @@ export default function EditUser({ open, onClose }) {
             alignItems: 'center',
           }}
         >
-           <IconButton
+          <IconButton
             sx={{
               position: 'absolute',
               top: '10px',
@@ -248,7 +248,7 @@ export default function EditUser({ open, onClose }) {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-evenly', width: '100%', marginTop: '50px' }}>
             <Button
-              onClick={handleGoBack}
+              onClick={onClose}  // שינוי הקריאה לפונקציה שסוגרת את ה-Modal
               sx={{
                 width: '170px',
                 height: '30px',

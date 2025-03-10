@@ -7,11 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../redux/userSlice';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -25,11 +21,12 @@ import UserAccount from './UserAccount';  // ייבוא הקומפוננטה ש�
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [openAccount, setOpenAccount] = useState(false); // סטייט לפתיחת החלונית
+  const [openAccount, setOpenAccount] = useState(false);
   const user = useSelector((state) => state.user.currentUser);
   const firstLetter = user?.fullName ? user.fullName.charAt(0) : 'א';
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -98,7 +95,10 @@ export default function AccountMenu() {
                 </ListItemIcon>
                 החשבון שלי
               </MenuItem>
-              <MenuItem dir="rtl">
+              <MenuItem onClick={() => {
+                handleClose();
+                navigate('/products');
+              }} dir="rtl">
                 <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
                   <Scroll />
                 </ListItemIcon>
@@ -126,7 +126,7 @@ export default function AccountMenu() {
         </Alert>
       </Snackbar>
 
-      {/* חלונית "החשבון שלי" */}
+
       <UserAccount open={openAccount} onClose={() => setOpenAccount(false)} />
     </>
   );

@@ -30,11 +30,15 @@ export default function UserAccount({ open, onClose }) {
 
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
       document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";  
     };
-  }, []);
+  }, [open]);
 
   const handleDelete = async () => {
     handleDialogClose();
