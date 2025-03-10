@@ -158,7 +158,7 @@ const UserProducts = () => {
                         .ניתן לערוך את פרטי המגילה, את המחיר ניתן לשנות עד תקרת הסכום של עלות פרסום המודעה
                     </Typography>
                     {products.length === 0 && (
-                        <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', mb: 4 }}>
+                        <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', mb: 4, fontFamily: 'Heebo, sans-serif', color: '#fff' }}>
                             עדיין לא הוספת מגילות
                         </Typography>
                     )}
