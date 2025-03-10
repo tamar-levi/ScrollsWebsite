@@ -104,7 +104,7 @@ export default function Checkout() {
 
     return (
         <>
-            <GlobalStyle />
+         <GlobalStyle />
             <Box sx={{
                 position: 'relative',
                 minHeight: '100vh',
@@ -114,7 +114,7 @@ export default function Checkout() {
                 boxSizing: 'border-box'
             }}>
                 <Box sx={{
-                    position: 'fixed',  
+                    position: 'fixed',
                     top: 0,
                     left: 0,
                     right: 0,
@@ -131,6 +131,7 @@ export default function Checkout() {
                     <Grid container sx={{
                         mt: { xs: 4, sm: 8 },
                         direction: 'rtl',
+                        justifyContent: 'center',
                     }}>
                         <Grid item xs={12} sm={5} lg={4} sx={{
                             order: { sm: 1 },
@@ -163,18 +164,20 @@ export default function Checkout() {
                             order: { sm: 2 },
                             display: 'flex',
                             flexDirection: 'column',
+                            alignItems: 'center',
                             maxWidth: '100%',
                             width: '100%',
-                            alignItems: 'start',
                             pt: { xs: 0, sm: 6 },
                             px: { xs: 2, sm: 10 },
                             gap: { xs: 4, md: 8 },
                             overflow: 'hidden',
                             marginRight: { 
-                                xs: '0',
-                                sm: '0',
+                                xs: 'auto',
+                                sm: 'auto',
                                 md: '450px'
-                            },                        }}>
+                            },
+                            marginLeft: 'auto',
+                        }}>
                             <Card sx={{
                                 display: { xs: 'flex', md: 'none' },
                                 width: '100%',
@@ -202,155 +205,149 @@ export default function Checkout() {
 
                             <Box sx={{
                                 display: 'flex',
-                                justifyContent: { sm: 'center' },
+                                flexDirection: 'column',
                                 alignItems: 'center',
-                                width: '90%',
+                                width: '100%',
+                                maxWidth: '90%',
                                 mt: -5,
                                 mb: 5,
                             }}>
                                 <Box sx={{
-                                    display: { xs: 'none', md: 'flex' },
+                                    width: '100%',
+                                    display: 'flex',
                                     flexDirection: 'column',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'flex-end',
-                                    flexGrow: 1,
+                                    alignItems: 'center',
                                 }}>
-                                    <Typography
-                                        sx={{
-                                            background: 'rgba(230, 219, 201, 1)',
-                                            borderRadius: '39px',
-                                            color: 'rgba(0, 0, 0, 1)',
-                                            fontFamily: 'Heebo, sans-serif',
-                                            padding: '1px 20%',
-                                            textAlign: 'center',
-                                            width: 'fit-content',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            margin: '0 auto',
-                                            marginBottom: '40px',
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
+                                    <Typography sx={{
+                                        background: 'rgba(230, 219, 201, 1)',
+                                        borderRadius: '39px',
+                                        color: 'rgba(0, 0, 0, 1)',
+                                        fontFamily: 'Heebo, sans-serif',
+                                        padding: '1px 20%',
+                                        textAlign: 'center',
+                                        width: 'fit-content',
+                                        marginBottom: '40px',
+                                        fontWeight: 'bold',
+                                    }}>
                                         פרסום מגילה
                                     </Typography>
-                                    <Stepper id="desktop-stepper" activeStep={activeStep} sx={{
-                                        width: '100%',
-                                        height: 40,
-                                        '& .MuiStepConnector-line': {
-                                            borderColor: 'rgba(0, 0, 0, 1)',
-                                            borderWidth: 1,
 
-                                        },
-                                        '& .MuiStepIcon-root.Mui-completed': {
-                                            color: 'rgba(90, 59, 65, 1)',
-                                            width: 40,
+                                    <Box sx={{ width: '110%', maxWidth: '900px' }}>
+                                        <Stepper id="desktop-stepper" activeStep={activeStep} sx={{
+                                            display: { xs: 'none', md: 'flex' },
+                                            width: '100%',
                                             height: 40,
-                                            '& .MuiStepIcon-text': {
-                                                fill: '#ffffff'
+                                            '& .MuiStepConnector-line': {
+                                                borderColor: 'rgba(0, 0, 0, 1)',
+                                                borderWidth: 1,
+                                            },
+                                            '& .MuiStepIcon-root.Mui-completed': {
+                                                color: 'rgba(90, 59, 65, 1)',
+                                                width: 40,
+                                                height: 40,
+                                                '& .MuiStepIcon-text': {
+                                                    fill: '#ffffff'
+                                                }
+                                            },
+                                            '& .MuiStepIcon-root.Mui-active': {
+                                                color: 'rgba(90, 59, 65, 1)',
+                                                width: 40,
+                                                height: 40,
+                                                '& .MuiStepIcon-text': {
+                                                    fill: '#ffffff'
+                                                }
+                                            },
+                                            '& .MuiStepIcon-root': {
+                                                color: 'rgba(236, 233, 227, 1)',
+                                                width: 40,
+                                                height: 40,
+                                                '& .MuiStepIcon-text': {
+                                                    fill: 'rgba(0, 0, 0, 1)'
+                                                }
+                                            },
+                                        }}>
+                                            {steps.map((label) => (
+                                                <Step key={label} sx={{ ':first-child': { pl: 0 }, ':last-child': { pr: 0 } }}>
+                                                    <StepLabel sx={{
+                                                        '& .MuiStepLabel-iconContainer': {
+                                                            paddingLeft: '8px',
+                                                        },
+                                                        '& .MuiStepLabel-labelContainer': {
+                                                            paddingLeft: '8px',
+                                                        }
+                                                    }} />
+                                                </Step>
+                                            ))}
+                                        </Stepper>
+
+                                        <Stepper id="mobile-stepper" activeStep={activeStep} alternativeLabel sx={{
+                                            display: { xs: 'flex', md: 'none' },
+                                            '& .MuiStepConnector-root': {
+                                                display: 'none'
                                             }
-                                        },
-                                        '& .MuiStepIcon-root.Mui-active': {
-                                            color: 'rgba(90, 59, 65, 1)',
-                                            width: 40,
-                                            height: 40,
-                                            '& .MuiStepIcon-text': {
-                                                fill: '#ffffff'
-                                            }
-                                        },
-                                        '& .MuiStepIcon-root': {
-                                            color: 'rgba(236, 233, 227, 1)',
-                                            width: 40,
-                                            height: 40,
-                                            '& .MuiStepIcon-text': {
-                                                fill: 'rgba(0, 0, 0, 1)'
-                                            }
-                                        },
-                                    }}>
-                                        {steps.map((label) => (
-                                            <Step sx={{ ':first-child': { pl: 0 }, ':last-child': { pr: 0 } }} key={label}>
-                                                <StepLabel sx={{
-                                                    '& .MuiStepLabel-iconContainer': {
-                                                        paddingLeft: '8px',
-                                                    },
-                                                    '& .MuiStepLabel-labelContainer': {
-                                                        paddingLeft: '8px',
-                                                    }
-                                                }} />
-                                            </Step>
-                                        ))}
-                                    </Stepper>
+                                        }}>
+                                            {steps.map((label) => (
+                                                <Step key={label} sx={{
+                                                    ':first-child': { pl: 0 },
+                                                    ':last-child': { pr: 0 },
+                                                    '& .MuiStepConnector-root': { top: { xs: 4, sm: 12 } },
+                                                }}>
+                                                    <StepLabel sx={{ '.MuiStepLabel-labelContainer': { maxWidth: '90px' } }}>
+                                                        {label}
+                                                    </StepLabel>
+                                                </Step>
+                                            ))}
+                                        </Stepper>
+                                    </Box>
                                 </Box>
                             </Box>
 
                             <Box sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                flexGrow: 1,
+                                alignItems: 'center',
                                 width: '100%',
-                                maxWidth: { sm: '100%', md: 600 },
-                                maxHeight: '720px',
-                                gap: { xs: 0, md: 'none' },
-                                mt: -8
+                                maxWidth: '600px',
+                                mt: -8,
+                                px: { xs: 2, sm: 4 },
                             }}>
-                                <Stepper id="mobile-stepper" activeStep={activeStep} alternativeLabel sx={{
-                                    display: { sm: 'flex', md: 'none' },
-                                    '& .MuiStepConnector-root': {
-                                        display: 'none'
-                                    }
-                                }}>
-                                    {steps.map((label) => (
-                                        <Step sx={{
-                                            ':first-child': { pl: 0 },
-                                            ':last-child': { pr: 0 },
-                                            '& .MuiStepConnector-root': { top: { xs: 4, sm: 12 } },
-                                        }} key={label}>
-                                            <StepLabel sx={{ '.MuiStepLabel-labelContainer': { maxWidth: '70px' } }}>
-                                                {label}
-                                            </StepLabel>
-                                        </Step>
-                                    ))}
-                                </Stepper>
                                 {activeStep === steps.length - 1 ? (
-                                    <Stack 
-                                    spacing={2} 
-                                    useFlexGap 
-                                    sx={{ 
+                                    <Stack spacing={2} useFlexGap sx={{
                                         alignItems: 'center',
                                         textAlign: 'center',
                                         fontFamily: 'Heebo, sans-serif',
-                                        marginRight: '120px'
-                                    }}
-                                >
-                                    <Typography variant="h2" sx={{ mt: 4 }}>📜</Typography>
-                                    <Typography variant="h5" sx={{ fontFamily: 'Heebo, sans-serif' }}>
-                                        המוצר שלך נוסף בהצלחה
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: 3 }}>
-                                        <Button
-                                            component={Link}
-                                            to="/products"
-                                            variant="contained"
-                                            sx={{
-                                                backgroundColor: 'rgba(63, 65, 78, 1)',
-                                                borderRadius: '25px',
-                                                color: 'white',
-                                                padding: '1px 10%',
-                                                fontFamily: 'Heebo, sans-serif',
-                                                fontSize: '1rem',
-                                                fontWeight: 300,
-                                                '&:hover': {
+                                        width: '100%',
+                                    }}>
+                                        <Typography variant="h2" sx={{ mt: 4 }}>📜</Typography>
+                                        <Typography variant="h5" sx={{ fontFamily: 'Heebo, sans-serif' }}>
+                                            המוצר שלך נוסף בהצלחה
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: 3 }}>
+                                            <Button
+                                                component={Link}
+                                                to="/products"
+                                                variant="contained"
+                                                sx={{
                                                     backgroundColor: 'rgba(63, 65, 78, 1)',
-                                                },
-                                            }}
-                                        >
-                                            מעבר לדף המוצרים
-                                        </Button>
-                                    </Box>
-                                </Stack>
-                                
+                                                    borderRadius: '25px',
+                                                    color: 'white',
+                                                    padding: '1px 10%',
+                                                    fontFamily: 'Heebo, sans-serif',
+                                                    fontSize: '1rem',
+                                                    fontWeight: 300,
+                                                    '&:hover': {
+                                                        backgroundColor: 'rgba(63, 65, 78, 1)',
+                                                    },
+                                                }}
+                                            >
+                                                מעבר לדף המוצרים
+                                            </Button>
+                                        </Box>
+                                    </Stack>
                                 ) : (
-                                    <>{getStepContent(activeStep)}</>
+                                    <Box sx={{ width: '100%' }}>
+                                        {getStepContent(activeStep)}
+                                    </Box>
                                 )}
                             </Box>
                         </Grid>

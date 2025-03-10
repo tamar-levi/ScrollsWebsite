@@ -126,7 +126,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
 
     return (
         <>
-            <div style={{ marginTop: "-5px", marginRight: '80px', width: '100%' }}>
+            <div style={{ marginTop: "-5px", width: '100%' }}>
                 <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', direction: "rtl", fontFamily: 'Heebo, sans-serif', color: 'rgba(63, 65, 78, 1)', fontWeight: 'bold', fontSize: '1.1rem' }}>
                     סכום לתשלום: {calculatePaymentAmount(productData?.price)} ₪
                 </Typography>

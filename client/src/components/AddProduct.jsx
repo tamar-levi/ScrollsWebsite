@@ -14,8 +14,6 @@ import {
     MenuItem,
     Alert,
 } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
-
 
 const AddProduct = ({ onNext, onFormSubmit, productData }) => {
     const [formData, setFormData] = useState({
@@ -94,7 +92,6 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
             return;
         }
         onNext();
-        console.log("Form data before sending:", formData);
         onFormSubmit(formData);
     };
 
@@ -113,16 +110,13 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                 `}
             </style>
             <Box sx={{
-                padding: 3,
-                marginTop: 4,
+                padding: { xs: 2, md: 0 },
+                marginTop: { xs: 2, md: 4 },
                 direction: 'rtl',
                 fontFamily: 'Heebo, sans-serif',
-                width: '110%',
-                maxWidth: 1500,
                 margin: '0 auto',
                 '@media (max-width: 960px)': {
-                    transform: 'scale(0.9)',
-                    padding: 2,
+                    transform: 'scale(0.95)',
                 }
             }}>
                 {showAlert && (
@@ -131,14 +125,14 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                     </Alert>
                 )}
 
-                <Grid container spacing={3} sx={{
-                    justifyContent: 'space-around',  // מוסיף רווח בין האלמנטים באותה שורה
+                <Grid container spacing={{ xs: 2, md: 3 }} sx={{
+                    justifyContent: 'space-around',
                     '& .MuiGrid-item': {
-                        width: '48%',  // מגדיר רוחב קבוע לכל פריט
-                        maxWidth: '48%'
+                        width: { xs: '100%', md: '48%' },
+                        maxWidth: { xs: '100%', md: '48%' }
                     }
                 }}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
                             <Select
                                 displayEmpty
@@ -148,13 +142,13 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                                 required
                                 sx={{
                                     fontFamily: 'Heebo, sans-serif',
-                                    fontSize: '1rem',
-                                    height: '35px', // הקטנת הגובה
+                                    fontSize: { xs: '0.95rem', md: '1rem' },
+                                    height: '35px',
                                     borderRadius: '25px',
                                     backgroundColor: 'rgba(90, 59, 65, 1)',
                                     color: 'white',
                                     border: 'none',
-                                    width: '110%', // הגדלת הרוחב
+                                    width: '110%',
                                     '& .MuiSelect-icon': { color: 'white' },
                                     '& .MuiSelect-select': { paddingLeft: '10px' },
                                     '&:focus': { borderColor: 'none' },
@@ -168,7 +162,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
                             <Select
                                 displayEmpty
@@ -178,13 +172,13 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                                 required
                                 sx={{
                                     fontFamily: 'Heebo, sans-serif',
-                                    fontSize: '1rem',
-                                    height: '35px', // הקטנת הגובה
+                                    fontSize: { xs: '0.95rem', md: '1rem' },
+                                    height: '35px',
                                     borderRadius: '25px',
                                     backgroundColor: 'rgba(90, 59, 65, 1)',
                                     color: 'white',
                                     border: 'none',
-                                    width: '110%', // הגדלת הרוחב
+                                    width: '110%',
                                     '& .MuiSelect-icon': { color: 'white' },
                                     '& .MuiSelect-select': { paddingLeft: '10px' },
                                     '&:focus': { borderColor: 'none' },
@@ -198,7 +192,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                         <input
                             type="number"
                             name="price"
@@ -209,20 +203,20 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                             style={{
                                 fontFamily: 'Heebo, sans-serif',
                                 fontSize: '1rem',
-                                height: '35px', // הקטנת הגובה
+                                height: '35px',
                                 backgroundColor: 'rgba(90, 59, 65, 1)',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '25px',
                                 paddingLeft: '10px',
-                                width: '110%', // הגדלת הרוחב
+                                width: '110%',
                                 boxSizing: 'border-box',
                                 textIndent: '10px'
                             }}
                         />
                     </Grid>
 
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                         <textarea
                             name="note"
                             value={formData.note}
@@ -232,30 +226,28 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                             style={{
                                 fontFamily: 'Heebo, sans-serif',
                                 fontSize: '1rem',
-                                height: '35px', // הקטנת הגובה
+                                height: '35px',
                                 backgroundColor: 'rgba(90, 59, 65, 1)',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '25px',
                                 padding: '8px 10px',
-                                width: '110%', // הגדלת הרוחב
+                                width: '110%',
                                 boxSizing: 'border-box',
                                 resize: 'none',
-                                overflow: 'hidden', // מונע את הגלילה
+                                overflow: 'hidden',
                                 lineHeight: '1.2',
                             }}
                         />
                     </Grid>
-                    <Grid
-                        container
-                        sx={{
-                            marginTop: 2,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: '8px'  // רווח קטן יותר בין הכפתורים
-                        }}
-                    >
-                        <Grid item xs={5} sx={{ marginTop: 2 }}>
+
+                    <Grid container sx={{
+                        marginTop: 2,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '8px'
+                    }}>
+                        <Grid item xs={12} sm={5} sx={{ marginTop: 2 }}>
                             <label htmlFor="primary-image-upload">
                                 <input
                                     id="primary-image-upload"
@@ -291,7 +283,7 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                             </label>
                         </Grid>
 
-                        <Grid item xs={5} sx={{ marginTop: 2 }}>
+                        <Grid item xs={12} sm={5} sx={{ marginTop: 2 }}>
                             <label htmlFor="additional-images-upload">
                                 <input
                                     id="additional-images-upload"
@@ -328,7 +320,14 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', fontSize: '0.9rem', fontFamily: 'Heebo, sans-serif', color: 'rgba(63, 65, 78, 1)', fontWeight: 300 }}>
+                    <Grid item xs={12} sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        fontSize: '0.9rem',
+                        fontFamily: 'Heebo, sans-serif',
+                        color: 'rgba(63, 65, 78, 1)',
+                        fontWeight: 300
+                    }}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -340,7 +339,6 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                             }
                             label="מודעת פרימיום"
                             sx={{
-                                
                                 fontSize: '0.9rem',
                                 margin: '0',
                                 marginTop: '5px',
@@ -349,7 +347,12 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                     </Grid>
                 </Grid>
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginTop: 3 }}>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                    marginTop: { xs: 2, md: 3 }
+                }}>
                     <Button
                         variant="contained"
                         onClick={handleSubmit}
@@ -357,9 +360,9 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
                             backgroundColor: 'rgba(63, 65, 78, 1)',
                             borderRadius: '25px',
                             color: 'white',
-                            padding: '1px 10%',
+                            padding: { xs: '1px 8%', md: '1px 10%' },
                             fontFamily: 'Heebo, sans-serif',
-                            fontSize: '1rem',
+                            fontSize: { xs: '0.95rem', md: '1rem' },
                             fontWeight: 300,
                             '&:hover': {
                                 backgroundColor: 'rgba(63, 65, 78, 1)',
@@ -382,7 +385,6 @@ const AddProduct = ({ onNext, onFormSubmit, productData }) => {
             )}
         </>
     );
-
 };
 
 export default AddProduct;

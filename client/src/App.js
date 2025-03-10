@@ -5,6 +5,7 @@ import theme from './theme';
 import { Box, Snackbar, Alert } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData, clearError } from './redux/userSlice';
+import { ScrollProvider } from './context/ScrollContext';
 import CreateUser from './components/CreateUser';
 import ProductList from './components/ProductList';
 import NavBar from './components/NavBar';
@@ -37,43 +38,45 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}> 
-      <Router>
-        <Box sx={{ width: '100%', height: '100vh' }}>
-          <NavBar />
-          <Box sx={{
-            p: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            paddingTop: '2rem',
-            minHeight: 'calc(100vh - 64px)'
-          }}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/products" element={<ProductList />} />
-              <Route path="/add-product" element={<Checkout />} />
-              <Route path="/create-user" element={<CreateUser />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/myProducts" element={<UserProducts />} />
-              <Route path="/account" element={<UserAccount />} />
-              <Route path="/editUser" element={<EditUser />} />
-              <Route path="/contactUs" element={<ContactUs />} />
-            </Routes>
+    <ScrollProvider>
+      <ThemeProvider theme={theme}> 
+        <Router>
+          <Box sx={{ width: '100%', height: '100vh' }}>
+            <NavBar />
+            <Box sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              paddingTop: '2rem',
+              minHeight: 'calc(100vh - 64px)'
+            }}>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/products" element={<ProductList />} />
+                <Route path="/add-product" element={<Checkout />} />
+                <Route path="/create-user" element={<CreateUser />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/myProducts" element={<UserProducts />} />
+                <Route path="/account" element={<UserAccount />} />
+                <Route path="/editUser" element={<EditUser />} />
+                <Route path="/contactUs" element={<ContactUs />} />
+              </Routes>
+            </Box>
           </Box>
-        </Box>
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="error">
-            {error}
-          </Alert>
-        </Snackbar>
-      </Router>
-    </ThemeProvider>
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+          >
+            <Alert onClose={handleClose} severity="error">
+              {error}
+            </Alert>
+          </Snackbar>
+        </Router>
+      </ThemeProvider>
+    </ScrollProvider>
   );
 }
 

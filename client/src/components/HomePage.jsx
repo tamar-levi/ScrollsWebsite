@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import LoginDialog from './LoginDialog';
 import background from '../assets/Bacg.png';
 import About from './About';
 import Contact from './Contact';
 import { createGlobalStyle } from 'styled-components';
+import { useScroll } from '../context/ScrollContext';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -20,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const HomePage = () => {
+  const { aboutRef, contactRef } = useScroll();
   const [openLogin, setOpenLogin] = useState(false);
   const handleOpenLogin = () => {
     setOpenLogin(true);
@@ -124,8 +126,12 @@ const HomePage = () => {
           />
         )}
       </div>
-      <About />
-      <Contact />
+      <div ref={aboutRef}>
+        <About />
+      </div>
+      <div ref={contactRef}>
+        <Contact />
+      </div>
     </>
   );
 };

@@ -16,18 +16,20 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useScroll } from '../context/ScrollContext';
 
 export default function NavBar() {
   const theme = useTheme();
+  const { aboutRef, contactRef } = useScroll();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.currentUser);
   const [openContact, setOpenContact] = useState(false);
   const isLoggedIn = Boolean(user);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -54,13 +56,20 @@ export default function NavBar() {
     { text: 'צור קשר', action: () => setOpenContact(true) }
   ];
 
+  const scrollToSection = (ref) => {
+    navigate('/');
+    setTimeout(() => {
+      ref.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+
   return (
     <>
       <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
         <Toolbar sx={{ minHeight: '100px' }}>
           <AccountMenu isLoggedIn={isLoggedIn} />
           <Box sx={{ flexGrow: 1 }} />
-          
+
           {isMobile ? (
             <>
               <IconButton
@@ -87,7 +96,7 @@ export default function NavBar() {
                 }}
               >
                 {menuItems.map((item) => (
-                  <MenuItem 
+                  <MenuItem
                     key={item.text}
                     onClick={() => {
                       handleClose();
@@ -106,11 +115,17 @@ export default function NavBar() {
             </>
           ) : (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 2, md: 3 } }}>
-              <Button sx={buttonStyles} onClick={() => setOpenContact(true)}>
-                צור קשר
+              <Button sx={buttonStyles}>
+                בקרוב!! סופרים
               </Button>
-              <Button sx={buttonStyles} component={Link} to="/about">
+              <Button sx={buttonStyles}>
+                בקרוב!! מזוזות
+              </Button>
+              <Button sx={buttonStyles} onClick={() => scrollToSection(aboutRef)}>
                 אודות
+              </Button>
+              <Button sx={buttonStyles} onClick={() => scrollToSection(contactRef)}>
+                צור קשר
               </Button>
               <Button sx={buttonStyles} component={Link} to="/products">
                 מגילות
@@ -120,7 +135,6 @@ export default function NavBar() {
               </Button>
             </Box>
           )}
-          
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <img src={logo} alt="Logo" style={{ height: '50px', width: 'auto', paddingRight: '100px', paddingLeft: '20px' }} />
           </Box>

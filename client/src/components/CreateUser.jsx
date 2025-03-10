@@ -131,12 +131,12 @@ const CreateUser = ({ open, onClose }) => {
 
   return (
     <>
-      <Dialog 
-        open={open} 
-        onClose={onClose} 
-        maxWidth="md" 
-        fullWidth 
-        sx={{ 
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="md"
+        fullWidth
+        sx={{
           direction: 'rtl',
           '& .MuiDialog-paper': {
             borderRadius: '24px',
@@ -170,12 +170,12 @@ const CreateUser = ({ open, onClose }) => {
           יצירת משתמש חדש
         </Typography>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-          <form onSubmit={handleCreateUserSubmit} style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '15px', 
-            marginTop: '10px', 
-            width: isMobile ? '95%' : isTablet ? '80%' : '60%' 
+          <form onSubmit={handleCreateUserSubmit} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+            marginTop: '10px',
+            width: isMobile ? '95%' : isTablet ? '80%' : '60%'
           }}>
             <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '10px' }}>
               <div style={{ flex: 1 }}>
@@ -290,7 +290,8 @@ const CreateUser = ({ open, onClose }) => {
                   marginLeft: '8px'
                 }}
               >
-                אני מסכים לתקנון האתר וקבלת דיוור
+                אני מסכים לתקנון האתר וקבלת דיוור&nbsp;
+                <a href="/terms.pdf" target="_blank" rel="noopener noreferrer">צפייה בתקנון</a>
               </Typography>
             }
           />
@@ -318,10 +319,10 @@ const CreateUser = ({ open, onClose }) => {
         </DialogContent>
       </Dialog>
 
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={6000} 
-        onClose={handleCloseSnackbar} 
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
