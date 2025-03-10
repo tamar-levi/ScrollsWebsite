@@ -34,7 +34,7 @@ const UserProducts = () => {
                     console.error('Token not found');
                     return;
                 }
-                const response = await axios.get('https://scrolls-website.onrender.com/productsApi/getAllProducts', {
+                const response = await axios.get('https://scrolls-website.onrender.com/productsApi/getAllProductsByUser', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
