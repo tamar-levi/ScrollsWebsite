@@ -208,7 +208,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 onClose={() => setShowAddingProductSnackbar(false)}
                 autoHideDuration={8000}
                 sx={{ direction: 'rtl' }}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
                 <Alert severity="info">מוסיף את המוצר שלך, אנא המתן...</Alert>
             </Snackbar>
