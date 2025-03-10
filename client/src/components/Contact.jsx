@@ -44,7 +44,7 @@ export default function Contact() {
         setIsSubmitting(true);  // מתחילים לשלוח, כפתור יהיה דיסאייבל
         console.log(formData);
         try {
-            const response = await fetch('http://localhost:5000/usersApi/contactUs', {
+            const response = await fetch('https://scrolls-website.onrender.com/usersApi/contactUs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

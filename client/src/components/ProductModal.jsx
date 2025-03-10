@@ -30,8 +30,8 @@ const ProductModal = ({ product, onClose }) => {
         setLoading(true);
 
         const [primaryImageResponse, additionalImagesResponse] = await Promise.all([
-          fetch(`http://localhost:5000/productsApi/getProductPrimaryImage/${product._id}`),
-          fetch(`http://localhost:5000/productsApi/getProductAdditionalImages/${product._id}`)
+          fetch(`https://scrolls-website.onrender.com/productsApi/getProductPrimaryImage/${product._id}`),
+          fetch(`https://scrolls-website.onrender.com/productsApi/getProductAdditionalImages/${product._id}`)
         ]);
 
         if (!primaryImageResponse.ok || !additionalImagesResponse.ok) {

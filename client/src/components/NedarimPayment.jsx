@@ -22,7 +22,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
         const fetchCurrentUser = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:5000/usersApi/getCurrentUser', {
+                const response = await axios.get('https://scrolls-website.onrender.com/usersApi/getCurrentUser', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     },
@@ -103,7 +103,7 @@ const NedarimPayment = ({ productData, onBack, onNext }) => {
                 Groupe: '',
                 Param1: '',
                 Param2: '',
-                CallBack: 'http://localhost:5000/paymentApi/payment-callback',
+                CallBack: 'https://scrolls-website.onrender.com/paymentApi/payment-callback',
                 CallBackMailError: 'scrollsSite@gmail.com',
             },
         }, "*");

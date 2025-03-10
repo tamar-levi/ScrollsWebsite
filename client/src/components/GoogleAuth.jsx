@@ -11,7 +11,7 @@ const GoogleAuth = ({ onSuccess }) => {
     const login = useGoogleLogin({
         onSuccess: async (response) => {
             try {
-                const serverResponse = await axios.post('http://localhost:5000/usersApi/google-login', {
+                const serverResponse = await axios.post('https://scrolls-website.onrender.com/usersApi/google-login', {
                     googleToken: response.access_token
                 });
                 const token = serverResponse.data.token;
