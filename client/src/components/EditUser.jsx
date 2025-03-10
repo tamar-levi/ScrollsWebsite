@@ -5,20 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import axios from 'axios';
 import { Snackbar, Alert } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close'; // אייקון איקס
+import { Modal } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 
-export default function EditUser() {
+
+export default function EditUser({ open, onClose }) {
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+    document.body.style.overflow = open ? "hidden" : "auto";
+  }, [open]);
+
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [fullName, setFullName] = useState(user?.fullName || '');
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -27,6 +28,7 @@ export default function EditUser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+  const [openModal, setOpenModal] = useState(open);
 
 
   const handleSave = async () => {
@@ -104,94 +106,223 @@ export default function EditUser() {
 
   const handleGoBack = () => {
     navigate('/account');
+    onClose();
   };
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '90vh',
-        padding: '10px',
-      }}
-    >
+    <Modal open={open} onClose={onClose} aria-labelledby="edit-user-modal">
       <Box
         sx={{
-          width: isMobile ? '90%' : '400px',
-          textAlign: 'center',
-          boxShadow: 3,
-          borderRadius: 2,
-          backgroundColor: '#f9f9f9',
-          padding: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '90vh',
+          padding: '10px',
         }}
       >
-        <Avatar sx={{ width: 60, height: 60, margin: 'auto', bgcolor: 'primary.main' }}>
-          {user?.fullName ? user.fullName.charAt(0) : 'א'}
-        </Avatar>
-        <Typography variant="h6" sx={{ mt: 2 }}>עריכת חשבון</Typography>
-        <TextField
-          fullWidth
-          label="שם מלא"
-          value={fullName}
-          onChange={(e) => { setFullName(e.target.value); }}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="שם תצוגה"
-          value={displayName}
-          onChange={(e) => { setDisplayName(e.target.value); }}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="אימייל"
-          value={email}
-          onChange={(e) => { setEmail(e.target.value); }}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="כתובת"
-          value={city}
-          onChange={(e) => { setCity(e.target.value); }}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="טלפון"
-          value={phone}
-          onChange={(e) => { setPhone(e.target.value); }}
-          sx={{ mt: 2 }}
-        />
-        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-          <Button variant="outlined" onClick={handleGoBack}>חזרה</Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-            disabled={loading}
-          >
-            {loading ? 'שומר...' : 'שמירה'}
-          </Button>
-        </Box>
-
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={handleDelete}
-          sx={{ mt: 2 }}
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '600px',
+            height: '500px',  // עדכנתי את הגובה בהתאם כדי לתת מקום לשדות
+            left: 'calc(50% - 600px/2 - 0.4px)',
+            top: 'calc(50% - 500px/2)',
+            backgroundColor: '#FFFFFF',
+            borderRadius: '52px',
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          מחיקת משתמש
-        </Button>
-        <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-          <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+           <IconButton
+            sx={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+            }}
+            onClick={onClose}
+          >
+            <CloseIcon sx={{ color: '#000' }} />
+          </IconButton>
+
+          <Typography
+            sx={{
+              background: 'rgba(230, 219, 201, 1)',
+              borderRadius: '39px',
+              color: 'rgba(0, 0, 0, 1)',
+              fontFamily: 'Heebo, sans-serif',
+              fontWeight: 'bold',
+              padding: '5px 170px',
+              textAlign: 'center',
+              width: 'fit-content',
+              margin: '0 auto',
+              marginBottom: '50px',
+            }}
+          >
+            עריכת פרטי חשבון
+          </Typography>
+
+          <input
+            type="text"
+            placeholder="שם מלא"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            style={{
+              background: '#5A3B41',
+              width: '60%',
+              borderRadius: '78.65px',
+              border: 'none',
+              padding: '5px 20px',
+              color: 'white',
+              outline: 'none',
+              marginBottom: '10px',
+            }}
+          />
+          <input
+            type="text"
+            placeholder="שם תצוגה"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            style={{
+              background: '#5A3B41',
+              width: '60%',
+              borderRadius: '78.65px',
+              border: 'none',
+              padding: '5px 20px',
+              color: 'white',
+              outline: 'none',
+              marginBottom: '10px',
+            }}
+          />
+          <input
+            type="email"
+            placeholder="מייל"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              background: '#5A3B41',
+              width: '60%',
+              borderRadius: '78.65px',
+              border: 'none',
+              padding: '5px 20px',
+              color: 'white',
+              outline: 'none',
+              marginBottom: '10px',
+            }}
+          />
+          <input
+            type="text"
+            placeholder="עיר"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            style={{
+              background: '#5A3B41',
+              width: '60%',
+              borderRadius: '78.65px',
+              border: 'none',
+              padding: '5px 20px',
+              color: 'white',
+              outline: 'none',
+              marginBottom: '10px',
+            }}
+          />
+          <input
+            type="text"
+            placeholder="מספר טלפון"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            style={{
+              background: '#5A3B41',
+              width: '60%',
+              borderRadius: '78.65px',
+              border: 'none',
+              padding: '5px 20px',
+              color: 'white',
+              outline: 'none',
+              marginBottom: '10px',
+            }}
+          />
+
+          {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly', width: '100%', marginTop: '50px' }}>
+            <Button
+              onClick={handleGoBack}
+              sx={{
+                width: '170px',
+                height: '30px',
+                background: '#47515A',
+                borderRadius: '50.05px',
+                color: 'white',
+                fontWeight: 'bold',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+                marginRight: '-50px',
+              }}
+            >
+              חזרה
+            </Button>
+
+            <Button
+              onClick={handleSave}
+              disabled={loading}
+              sx={{
+                width: '170px',
+                height: '30px',
+                background: '#47515A',
+                borderRadius: '50.05px',
+                color: 'white',
+                fontWeight: 'bold',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: 'none',
+                outline: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {loading ? 'שומר...' : 'שמירה'}
+            </Button>
+          </Box>
+
+          {/* כפתור מחיקת משתמש */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '20px' }}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleDelete}
+              sx={{
+                width: '170px',
+                height: '30px',
+                background: '#47515A',
+                borderRadius: '50.05px',
+                color: 'white',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
+                padding: '0 10px',
+                cursor: 'pointer',
+              }}
+            >
+              מחיקת משתמש
+            </Button>
+          </Box>
+
+
+
+          <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+            <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </Box>
       </Box>
-    </Box>
-  );
-}
+    </Modal>
+  )
+};

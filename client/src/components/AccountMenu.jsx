@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -7,28 +7,24 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import InventoryIcon from '@mui/icons-material/Inventory';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { Scroll } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../redux/userSlice';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { Scroll } from 'lucide-react';
+import UserAccount from './UserAccount';  // ייבוא הקומפוננטה של החלונית
 
 export default function AccountMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openAccount, setOpenAccount] = useState(false); // סטייט לפתיחת החלונית
   const user = useSelector((state) => state.user.currentUser);
   const firstLetter = user?.fullName ? user.fullName.charAt(0) : 'א';
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -41,7 +37,6 @@ export default function AccountMenu() {
   const handleLogout = () => {
     setOpenSnackbar(true);
     dispatch(logout());
-    navigate('/');
   };
 
   const handleCloseSnackbar = (event, reason) => {
@@ -55,9 +50,9 @@ export default function AccountMenu() {
     <>
       <Box sx={{ display: 'flex', marginLeft: '50px', justifyContent: 'flex-start' }}>
         <Tooltip title={user?.fullName || 'אורח'}>
-          <IconButton onClick={handleClick} >
+          <IconButton onClick={handleClick}>
             <Avatar sx={{ bgcolor: 'transparent', color: '#47515A' }}>
-            <PersonOutlineIcon sx={{ fontSize: 40 }} />
+              <PersonOutlineIcon sx={{ fontSize: 40 }} />
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -77,7 +72,7 @@ export default function AccountMenu() {
           }}
         >
           <Box sx={{ mb: 2, textAlign: 'center' }}>
-            <Avatar sx={{ width: 50, height: 50, margin: '0 auto', bgcolor: 'rgba(230, 219, 201, 1)', fontFamily: 'Heebo, sans-serif', color: '' }}>
+            <Avatar sx={{ width: 50, height: 50, margin: '0 auto', bgcolor: 'rgba(230, 219, 201, 1)' }}>
               {firstLetter}
             </Avatar>
             <Typography sx={{ mt: 1, fontFamily: 'Heebo, sans-serif' }}>
@@ -91,30 +86,30 @@ export default function AccountMenu() {
           </Box>
 
           {user && (
-        <>
-        <MenuItem component={Link} to="/account" onClick={handleClose} dir="rtl">
-          <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
-            <AccountCircleOutlinedIcon />
-          </ListItemIcon>
-          החשבון שלי
-        </MenuItem>
-        <MenuItem component={Link} to="/myProducts" onClick={handleClose} dir="rtl">
-          <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
-            <Scroll />
-          </ListItemIcon>
-          המגילות שלי
-        </MenuItem>
-        <MenuItem onClick={handleLogout} dir="rtl">
-          <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
-            <LogoutOutlinedIcon />
-          </ListItemIcon>
-          התנתק
-        </MenuItem>
-      </>
-        
+            <>
+              <MenuItem onClick={() => { setOpenAccount(true); handleClose(); }} dir="rtl">
+                <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
+                  <AccountCircleOutlinedIcon />
+                </ListItemIcon>
+                החשבון שלי
+              </MenuItem>
+              <MenuItem dir="rtl">
+                <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
+                  <Scroll />
+                </ListItemIcon>
+                המגילות שלי
+              </MenuItem>
+              <MenuItem onClick={handleLogout} dir="rtl">
+                <ListItemIcon sx={{ marginLeft: 0.5, color: 'rgba(90, 59, 65, 1)' }}>
+                  <LogoutOutlinedIcon />
+                </ListItemIcon>
+                התנתק
+              </MenuItem>
+            </>
           )}
         </Menu>
       </Box>
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
@@ -125,6 +120,9 @@ export default function AccountMenu() {
           התנתקותך בוצעה בהצלחה
         </Alert>
       </Snackbar>
+
+      {/* חלונית "החשבון שלי" */}
+      <UserAccount open={openAccount} onClose={() => setOpenAccount(false)} />
     </>
   );
 }
