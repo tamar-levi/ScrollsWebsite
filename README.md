@@ -38,8 +38,7 @@ Optimized for speed, SEO, and user experience.
 
 ## 📸 Preview
 
-![Home Page](./docs/home_preview.png)
-![Product Page](./docs/product_preview.png)
+https://scrolls-website.vercel.app/
 
 ## 📂 Project Structure
 
